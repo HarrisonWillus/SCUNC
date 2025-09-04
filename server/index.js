@@ -7,14 +7,7 @@ const port = process.env.PORT || 5000;
 
 // Configure CORS to allow credentials
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' 
-    ? [
-        'https://scunc.com',
-        'https://www.scunc.com',
-      ]
-    : [
-        'http://localhost:3000'   // Alternative React dev server
-      ],
+  origin: process.env.CLIENT_URL, // React production build URL
   credentials: true,
   optionsSuccessStatus: 200,
   allowedHeaders: ['Content-Type', 'x-api-key', 'Authorization']
