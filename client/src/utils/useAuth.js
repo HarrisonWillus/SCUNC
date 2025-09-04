@@ -11,7 +11,7 @@ export const useAuth = () => {
         setMessage(null);
 
         try {
-            const response = await fetch('/api/auth/login', {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/login`, {
                 method: 'POST',
                 headers: sendHeaders,
                 body: JSON.stringify({ email, password })

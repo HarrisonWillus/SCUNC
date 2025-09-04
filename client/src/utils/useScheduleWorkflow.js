@@ -20,7 +20,7 @@ const useScheduleWorkflow = () => {
         setMessage({ error: null, success: null, warning: null });
 
         try {
-            const response = await fetch('/api/schedule', {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/schedule`, {
                 method: 'POST',
                 headers: getAuthHeaders(),
                 body: JSON.stringify({
@@ -52,7 +52,7 @@ const useScheduleWorkflow = () => {
         setMessage({ error: null, success: null, warning: null });
 
         try {
-            const response = await fetch('/api/schedule', {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/schedule`, {
                 method: 'PUT',
                 headers: getAuthHeaders(),
                 body: JSON.stringify(updates)
@@ -81,7 +81,7 @@ const useScheduleWorkflow = () => {
         setMessage({ error: null, success: null, warning: null });
 
         try {
-            const response = await fetch('/api/schedule', {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/schedule`, {
                 method: 'DELETE',
                 headers: getAuthHeaders()
             });
@@ -113,7 +113,7 @@ const useScheduleWorkflow = () => {
         setError(null);
 
         try {
-            const response = await fetch('/api/schedule/details', {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/schedule/details`, {
                 method: 'GET',
                 headers: getAuthHeaders()
             });
@@ -164,7 +164,7 @@ const useScheduleWorkflow = () => {
         setMessage({ error: null, success: null, warning: null });
 
         try {
-            const response = await fetch('/api/schedule/days', {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/schedule/days`, {
                 method: 'GET',
                 headers: getAuthHeaders()
             });
@@ -189,7 +189,7 @@ const useScheduleWorkflow = () => {
         setMessage({ error: null, success: null, warning: null });
 
         try {
-            const response = await fetch('/api/schedule/days', {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/schedule/days`, {
                 method: 'POST',
                 headers: getAuthHeaders(),
                 body: JSON.stringify({
@@ -221,7 +221,7 @@ const useScheduleWorkflow = () => {
         setMessage({ error: null, success: null, warning: null });
 
         try {
-            const response = await fetch(`/api/schedule/days/${dayId}`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/schedule/days/${dayId}`, {
                 method: 'PUT',
                 headers: getAuthHeaders(),
                 body: JSON.stringify(updates)
@@ -250,7 +250,7 @@ const useScheduleWorkflow = () => {
         setMessage({ error: null, success: null, warning: null });
 
         try {
-            const response = await fetch(`/api/schedule/days/${dayId}`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/schedule/days/${dayId}`, {
                 method: 'DELETE',
                 headers: getAuthHeaders()
             });
@@ -283,7 +283,7 @@ const useScheduleWorkflow = () => {
         setMessage({ error: null, success: null, warning: null });
 
         try {
-            const response = await fetch(`/api/schedule/days/${dayId}/events`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/schedule/days/${dayId}/events`, {
                 method: 'GET',
                 headers: getAuthHeaders()
             });
@@ -307,7 +307,7 @@ const useScheduleWorkflow = () => {
         setMessage({ error: null, success: null, warning: null });
 
         try {
-            const response = await fetch(`/api/schedule/days/${dayId}/events`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/schedule/days/${dayId}/events`, {
                 method: 'POST',
                 headers: getAuthHeaders(),
                 body: JSON.stringify({
@@ -343,7 +343,7 @@ const useScheduleWorkflow = () => {
         setMessage({ error: null, success: null, warning: null });
 
         try {
-            const response = await fetch(`/api/schedule/events/${eventId}`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/schedule/events/${eventId}`, {
                 method: 'PUT',
                 headers: getAuthHeaders(),
                 body: JSON.stringify(updates)
@@ -376,7 +376,7 @@ const useScheduleWorkflow = () => {
         setMessage({ error: null, success: null, warning: null });
 
         try {
-            const response = await fetch(`/api/schedule/events/${eventId}`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/schedule/events/${eventId}`, {
                 method: 'DELETE',
                 headers: getAuthHeaders()
             });
@@ -408,7 +408,7 @@ const useScheduleWorkflow = () => {
         setMessage({ error: null, success: null, warning: null });
 
         try {
-            const response = await fetch(`/api/schedule/days/${dayId}/events/reorder`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/schedule/days/${dayId}/events/reorder`, {
                 method: 'PUT',
                 headers: getAuthHeaders(),
                 body: JSON.stringify({ eventOrders })

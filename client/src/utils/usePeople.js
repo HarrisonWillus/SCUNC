@@ -8,7 +8,7 @@ export const usePeople = () => {
         setMessage({ error: null, success: null, warning: null });
 
         try {
-            const response = await fetch('/api/secretariates', {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/secretariates`, {
                 method: 'GET',
                 headers: sendHeaders,
             });
@@ -33,7 +33,7 @@ export const usePeople = () => {
         setMessage({ error: null, success: null, warning: null });
 
         try {
-            const response = await fetch('/api/secretariates', {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/secretariates`, {
                 method: 'POST',
                 headers: { ...sendHeaders, Authorization: `Bearer ${sessionStorage.getItem('token')}` },
                 body: JSON.stringify({ name, title, description, pfp })
@@ -59,7 +59,7 @@ export const usePeople = () => {
         setMessage({ error: null, success: null, warning: null });
 
         try {
-            const response = await fetch(`/api/secretariates/${id}`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/secretariates/${id}`, {
                 method: 'PUT',
                 headers: { ...sendHeaders, Authorization: `Bearer ${sessionStorage.getItem('token')}` },
                 body: JSON.stringify({ name, title, description, pfp, order_num }) // Send FormData directly
@@ -86,7 +86,7 @@ export const usePeople = () => {
         setMessage({ error: null, success: null, warning: null });
 
         try {
-            const response = await fetch(`/api/secretariates/${id}`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/secretariates/${id}`, {
                 method: 'DELETE',
                 headers: { ...sendHeaders, Authorization: `Bearer ${sessionStorage.getItem('token')}` }
             });

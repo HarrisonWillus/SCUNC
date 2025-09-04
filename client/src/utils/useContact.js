@@ -7,7 +7,7 @@ export const useContact = () => {
         setLoading(true);
         setMessage({ error: null, success: null, warning: null });
 
-        await fetch('/api/contact', {
+        await fetch(`${process.env.REACT_APP_API_URL}/contact`, {
             method: 'POST',
             headers: { ...sendHeaders },
             body: JSON.stringify({ name, email, subject, message })
@@ -31,7 +31,7 @@ export const useContact = () => {
         setLoading(true);
         setMessage({ error: null, success: null, warning: null });
 
-        await fetch('/api/contact/business', {
+        await fetch(`${process.env.REACT_APP_API_URL}/contact/business`, {
             method: 'POST',
             headers: { ...sendHeaders },
             body: JSON.stringify({ name, email, subject, message, organization, referral })

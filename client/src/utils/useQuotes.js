@@ -6,7 +6,7 @@ export const useQuotes = () => {
 
     const fetchQuotes = async () => {
         try {
-            const response = await fetch('/api/quotes', {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/quotes`, {
                 method: 'GET',
                 headers: sendHeaders,
             });
@@ -26,7 +26,7 @@ export const useQuotes = () => {
 
     const addQuote = async (quoteData) => {
         try {
-            const response = await fetch('/api/quotes', {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/quotes`, {
                 method: 'POST',
                 headers: { ...sendHeaders, 'Authorization': `Bearer ${sessionStorage.getItem('token')}` },
                 body: JSON.stringify(quoteData)
@@ -47,7 +47,7 @@ export const useQuotes = () => {
 
     const updateQuote = async (id, quoteData) => {
         try {
-            const response = await fetch(`/api/quotes/${id}`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/quotes/${id}`, {
                 method: 'PUT',
                 headers: { ...sendHeaders, 'Authorization': `Bearer ${sessionStorage.getItem('token')}` },
                 body: JSON.stringify(quoteData)
@@ -68,7 +68,7 @@ export const useQuotes = () => {
 
     const deleteQuote = async (id) => {
         try {
-            const response = await fetch(`/api/quotes/${id}`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/quotes/${id}`, {
                 method: 'DELETE',
                 headers: { ...sendHeaders, 'Authorization': `Bearer ${sessionStorage.getItem('token')}` }
             });

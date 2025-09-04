@@ -11,7 +11,7 @@ const useCommittees = () => {
         setMessage({ error: null, success: null, warning: null });
 
         try {
-            const response = await fetch('/api/committees', {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/committees`, {
                 method: 'GET',
                 headers: sendHeaders
             });
@@ -37,7 +37,7 @@ const useCommittees = () => {
         setMessage({ error: null, success: null, warning: null });
 
         try {
-            const response = await fetch('/api/committees/category', {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/committees/category`, {
                 method: 'GET',
                 headers: sendHeaders
             });
@@ -64,7 +64,7 @@ const useCommittees = () => {
         setMessage({ error: null, success: null, warning: null });
 
         try {
-            const response = await fetch('/api/committees', {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/committees`, {
                 method: 'POST',
                 headers: { ...sendHeaders, Authorization: `Bearer ${sessionStorage.getItem('token')}` },
                 body: JSON.stringify({ title, description, category_id, image, background_guide, topics })
@@ -103,7 +103,7 @@ const useCommittees = () => {
                 topics 
             };
 
-            const response = await fetch(`/api/committees/${id}`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/committees/${id}`, {
                 method: 'PUT',
                 headers: { ...sendHeaders, Authorization: `Bearer ${sessionStorage.getItem('token')}` },
                 body: JSON.stringify(requestBody)
@@ -134,7 +134,7 @@ const useCommittees = () => {
         try {
             const requestHeaders = { ...sendHeaders, Authorization: `Bearer ${sessionStorage.getItem('token')}` };
 
-            const response = await fetch(`/api/committees/${id}`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/committees/${id}`, {
                 method: 'DELETE',
                 headers: requestHeaders
             });
@@ -161,7 +161,7 @@ const useCommittees = () => {
         setMessage({ error: null, success: null, warning: null });
 
         try {
-            const response = await fetch('/api/committees/category', {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/committees/category`, {
                 method: 'POST',
                 headers: { ...sendHeaders, Authorization: `Bearer ${sessionStorage.getItem('token')}` },
                 body: JSON.stringify({ title })

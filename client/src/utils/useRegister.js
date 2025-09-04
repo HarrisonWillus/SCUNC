@@ -11,8 +11,8 @@ export const useRegister = () => {
     const fetchSchools = async () => {
         setLoading(true);
         setMessage({ error: null, success: null, warning: null });
-        
-        await fetch('/api/schools', {
+
+        await fetch(`${process.env.REACT_APP_API_URL}/schools`, {
             method: 'GET',
             headers: { ...sendHeaders, Authorization: `Bearer ${sessionStorage.getItem('token')}` },
         })
@@ -45,7 +45,7 @@ export const useRegister = () => {
     const fetchRegistrationStatus = async () => {
         setLoading(true);
 
-        await fetch('/api/schools/status', {
+        await fetch(`${process.env.REACT_APP_API_URL}/schools/status`, {
             method: 'GET',
             headers: { ...sendHeaders },
         })
@@ -68,12 +68,9 @@ export const useRegister = () => {
     const registerSchool = async (formData) => {
         setLoading(true);
 
-        await fetch('/api/schools/register', {
+        await fetch(`${process.env.REACT_APP_API_URL}/schools/register`, {
             method: 'POST',
-            headers: { 
-                Authorization: `Bearer ${sessionStorage.getItem('token')}`,
-                'X-API-KEY': process.env.REACT_APP_API_KEY
-            },
+            headers: { ...sendHeaders, Authorization: `Bearer ${sessionStorage.getItem('token')}` },
             body: formData // Send FormData directly, don't set Content-Type header
         })
         .then(response => response.json())
@@ -94,7 +91,7 @@ export const useRegister = () => {
     const changeRegistrationStatus = async (newStatus) => {
         setLoading(true);
 
-        await fetch('/api/schools/status', {
+        await fetch(`${process.env.REACT_APP_API_URL}/schools/status`, {
             method: 'PUT',
             headers: { ...sendHeaders, Authorization: `Bearer ${sessionStorage.getItem('token')}` },
             body: JSON.stringify({ status: newStatus })
@@ -118,7 +115,7 @@ export const useRegister = () => {
     const handleDelete = async (id) => {
         setLoading(true);
 
-        await fetch(`/api/schools/${id}`, {
+        await fetch(`${process.env.REACT_APP_API_URL}/schools/${id}`, {
             method: 'DELETE',
             headers: { ...sendHeaders, Authorization: `Bearer ${sessionStorage.getItem('token')}` },
         })

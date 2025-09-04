@@ -18,8 +18,8 @@ const useHotels = () => {
         setLoading(true);
 
         try {
-            console.log('📡 HOTELS_HOOK: Making API request to /api/hotels');
-            const response = await fetch('/api/hotels', {
+            console.log('📡 HOTELS_HOOK: Making API request');
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/hotels`, {
                 method: 'GET',
                 headers: sendHeaders
             });
@@ -63,7 +63,7 @@ const useHotels = () => {
 
         try {
             console.log('📡 HOTELS_HOOK: Making API request to create hotel');
-            const response = await fetch('/api/hotels', {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/hotels`, {
                 method: 'POST',
                 headers: getAuthHeaders(),
                 body: JSON.stringify({
@@ -114,7 +114,7 @@ const useHotels = () => {
 
         try {
             console.log('📡 HOTELS_HOOK: Making API request to update hotel');
-            const response = await fetch(`/api/hotels/${hotelId}`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/hotels/${hotelId}`, {
                 method: 'PUT',
                 headers: getAuthHeaders(),
                 body: JSON.stringify({ name, description, image, link, extras, extras_title, extras_id })
@@ -149,7 +149,7 @@ const useHotels = () => {
 
         try {
             console.log('📡 HOTELS_HOOK: Making API request to delete hotel');
-            const response = await fetch(`/api/hotels/${hotelId}`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/hotels/${hotelId}`, {
                 method: 'DELETE',
                 headers: getAuthHeaders()
             });
@@ -183,7 +183,7 @@ const useHotels = () => {
 
         try {
             console.log('📡 HOTELS_HOOK: Making API request to get hotel by ID');
-            const response = await fetch(`/api/hotels/${hotelId}`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/hotels/${hotelId}`, {
                 method: 'GET',
                 headers: sendHeaders
             });
