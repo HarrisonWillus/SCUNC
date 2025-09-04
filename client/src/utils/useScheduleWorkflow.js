@@ -111,7 +111,7 @@ const useScheduleWorkflow = () => {
         setLoading(true);
         setMessage({ error: null, success: null, warning: null });
         setError(null);
-
+        
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/schedule/details`, {
                 method: 'GET',
@@ -133,22 +133,15 @@ const useScheduleWorkflow = () => {
                 
                 setCurrentSchedule(data);
                 setDays(data.days || []);
-                setError(null);
                 return data;
             } else {
                 console.error('❌ SCHEDULE_WORKFLOW: API error:', data);
-                const errorMessage = data.error || 'Failed to fetch schedule details';
-                setMessage({ error: errorMessage });
-                setError(new Error(errorMessage));
                 return null;
             }
         } catch (error) {
             console.error('💥 SCHEDULE_WORKFLOW: Network/Parse error:', error);
             console.error('💥 SCHEDULE_WORKFLOW: Error stack:', error.stack);
             
-            const errorMessage = 'An error occurred while fetching schedule details';
-            setMessage({ error: errorMessage });
-            setError(error);
             return null;
         } finally {
             setLoading(false);

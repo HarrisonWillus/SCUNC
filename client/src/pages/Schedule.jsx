@@ -5,6 +5,7 @@ import { useAppContext } from '../utils/appContext';
 import { useScheduleWorkflow } from '../utils/useScheduleWorkflow';
 import '../assets/css/schedule.css';
 import { MapPin, Calendar } from 'lucide-react';
+import { ToastContainer } from 'react-toastify';
 
 const Schedule = () => {
   const { setShowAnimation, showAnimation, isAdmin } = useAppContext();
@@ -32,6 +33,8 @@ const Schedule = () => {
         </div>
       )}
       <ScheduleBuilder />
+
+      <ToastContainer position='top-right' autoClose={4000} />
     </main>
   )
 };
