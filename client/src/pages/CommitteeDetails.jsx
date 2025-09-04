@@ -6,8 +6,6 @@ import {
   Download, 
   Users, 
   Globe, 
-  FileText, 
-  ExternalLink,
   Sparkles,
   Settings,
   ArrowRight
@@ -20,6 +18,7 @@ const CommitteeDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { committees, categories, isAdmin, showAnimation, setShowAnimation } = useAppContext();
+  // eslint-disable-next-line
   const { fetchCommittees } = useCommittees();
 
   // Find committee by ID from URL parameter

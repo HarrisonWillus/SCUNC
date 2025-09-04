@@ -109,15 +109,14 @@
 .my-contact-form {
     position: fixed;
     left: 50%;
-    top: 150%;
-    transform: translate(-50%, 150%);
+    top: 0;
     background-color: #fff;
     color: var(--color-text_p);
     border: 2px #DDB500 solid;
     border-radius: 4px;
     padding: 0 3rem 1rem 3rem;
     z-index: 1000;
-    opacity: 0;
+    transition: transform .3s cubic-bezier(.4, 0, .2, 1);
 
     max-height: 99vh;
     overflow-y: auto;
@@ -125,37 +124,12 @@
 }
 
 .my-contact-form.open {
-    animation: slideIn-Contact .5s ease-out forwards;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .my-contact-form.close {
-    animation: slideOut-Contact 1s ease-out forwards;
-}
-
-@keyframes slideIn-Contact {
-    0% {
-        top: 150%;
-        transform: translate(-50%, 150%);
-        opacity: 0;
-    }
-    100% {
-        top: 50%;
-        transform: translate(-50%, -50%);
-        opacity: 1;
-    }
-}
-
-@keyframes slideOut-Contact {
-    0% {
-        top: 50%;
-        transform: translate(-50%, -50%);
-        opacity: 1;
-    }
-    100% {
-        top: 150%;
-        transform: translate(-50%, 150%);
-        opacity: 0;
-    }
+    transform: translate(-50%, -150%);
 }
 
 .my-contact_input {

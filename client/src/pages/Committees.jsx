@@ -9,6 +9,7 @@ import { useCommittees } from '../utils/useCommittees';
 
 const Committees = () => {
   const { committees, isAdmin, setShowAnimation, showAnimation } = useAppContext();
+  // eslint-disable-next-line
   const { fetchCommittees } = useCommittees();
   const [selectedCategory, setSelectedCategory] = useState('All');
 
