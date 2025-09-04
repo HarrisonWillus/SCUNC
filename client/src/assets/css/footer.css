@@ -1,0 +1,249 @@
+.footer {
+    padding: 20px 20px 0;
+    color: var(--color-text_w);
+    max-width: 85vw;
+    margin: 3rem auto 0;
+}
+
+.footer-grid {
+    display: flex;
+    flex-direction: row;
+    gap: 14rem;    
+}
+
+.footer-content {
+    display: flex;
+    flex-direction: column;
+    min-width: 300px;
+}
+
+.footer-links-content{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.footer-title {
+    color: white;
+    margin-bottom: 2rem;
+    font-size: 1.3rem;
+    position: relative;
+    padding-bottom: 10px;
+    font-size: 24px;
+}
+
+.footer-title::after {
+    content: '';
+    position: absolute;
+    width: 50px;
+    height: 3px;
+    border-radius: 3px;
+    background-color: var(--color-secondary);
+    bottom: 0;
+    left: 0;
+}
+
+.footer-links {
+    list-style: none;
+    margin-bottom: 4rem;
+    line-height: 1.5;
+}
+
+.footer-subtext {
+    font-weight: 600;
+    font-style: none;
+    margin-bottom: .75rem;
+    font-size: 17px;
+}
+
+.footer-link {
+    font-weight: 200;
+    font-size: 14px;
+}
+
+.footer-link:hover {
+    text-decoration: underline;
+}
+
+.footer-extra {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 2rem;
+    gap: 4rem;
+}
+
+.footer-media {
+    height: 2rem;
+}
+
+.subtitle {
+    font-weight: 400;
+    font-size: 17px;
+}
+
+.footer-text {
+    text-align: left;
+    line-height: 1.5;
+    font-weight: 200;
+}
+
+.credits {
+    text-align: center;
+    font-size: .75rem;
+    margin: 1rem 0;
+    cursor: pointer;
+    position: relative;
+}
+
+.credits-box{
+    position: absolute;
+    top: -2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: .5rem 1rem;
+    border-radius: 5px;
+    border: 1px black solid;
+    background-color: rgba(200, 201, 199, .7);
+}
+
+.my-contact-form {
+    position: fixed;
+    left: 50%;
+    background-color: #fff;
+    color: var(--color-text_p);
+    border: 2px #DDB500 solid;
+    border-radius: 4px;
+    padding: 0 3rem 1rem 3rem;
+    z-index: 1000;
+
+    max-height: 99vh;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+.my-contact-form.open {
+    animation: slideIn-Contact .5s ease-out forwards;
+}
+
+.my-contact-form.close {
+    animation: slideOut-Contact 1s ease-out forwards;
+}
+
+@keyframes slideIn-Contact {
+    0% {
+        top: 150%;
+        transform: translate(-50%, 110%); /* start way below center */
+        opacity: 0;
+    }
+    100% {
+        top: 50%;
+        transform: translate(-50%, -50%); /* center it */
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut-Contact {
+    0% {
+        top: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 1;
+    }
+    100% {
+        top: 150%;
+        transform: translate(-50%, 150%); /* move it down */
+        opacity: 0;
+    }
+}
+
+.my-contact_input {
+    background: none;
+    border-radius: 0;
+    border-bottom: 1px rgba(200, 201, 199, .9) solid;
+    max-height: 7vh;
+}
+
+.my-title {
+    padding: 1rem 0 .5rem;
+    text-align: center;
+}
+.my-subtitle{
+    font-size: 16px;
+    font-weight: 300;
+    color: rgba(0,0,0,.7);
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.my-contact-button {
+    align-items: flex-end;
+}
+
+.custom-select {
+    position: relative;
+    width: 100%;
+}
+
+.select-box {
+    display: flex;
+    align-items: center;
+    background-color: var(--color-primary);
+    color: var(--color-text_w);
+    border-radius: 5px;
+    padding: .5rem 1rem;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    justify-content: space-between;
+    font-weight: 200;
+}
+
+.select-box.opened {
+    margin: 0;
+}
+
+.arrow-change {
+    transition: transform .3s ease-in-out;
+}
+
+.arrow-change.opened {
+    transform: rotate(180deg);
+}
+
+.options-list {
+    list-style-type: none;
+    margin: .25rem 0 1rem;
+    border: 1px var(--color-primary) solid;
+    border-radius: 5px;
+}
+
+.options {
+    padding: .5rem 1rem;
+    cursor: pointer;
+}
+
+.options:hover {
+    background-color: rgba(0, 53, 148, .5);
+    color: var(--color-text_w);
+}
+
+.edit-menu-buttons.close {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    cursor: pointer;
+    transition: all .3s ease-in-out;
+}
+
+.edit-menu-buttons.close:hover {
+    color: var(--color-error);
+}
+
+@media screen and (max-width: 770px) {
+    .footer-grid{
+        flex-direction: column;
+        gap: 3rem;
+    }
+
+    .my-contact-form {
+        width: 90vw;
+    }
+}

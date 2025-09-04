@@ -1,0 +1,747 @@
+/* Register Page - Modern University of Pittsburgh Theme */
+
+/* Header Styles */
+.register-header {
+  text-align: center;
+  padding: 4rem 2rem 2rem;
+  background: linear-gradient(135deg, var(--color-pitt-blue) 0%, var(--color-pitt-blue-light) 100%);
+  color: var(--color-pitt-white);
+  position: relative;
+  overflow: hidden;
+}
+
+.register-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(255, 184, 28, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 184, 28, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.header-container {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.register-title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+  background: linear-gradient(135deg, var(--color-pitt-white) 0%, var(--color-pitt-gold) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: slideUp 0.6s ease-out;
+}
+
+.register-subtitle {
+  font-size: 1.2rem;
+  margin: 0;
+  opacity: 0.9;
+  animation: slideUp 0.6s ease-out 0.2s both;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Main Section */
+.register-section {
+  min-height: calc(100vh - 200px);
+  padding: 3rem 2rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+.register-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+/* Pricing Section */
+.pricing-section {
+  animation: slideUp 0.6s ease-out 0.3s both;
+}
+
+.pricing-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.pricing-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1.5rem;
+  padding: 20px;
+  background: linear-gradient(135deg, var(--color-pitt-blue) 0%, var(--color-pitt-blue-light) 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-pitt-white);
+  box-shadow: 0 8px 25px rgba(0, 53, 148, 0.2);
+}
+
+.pricing-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--color-pitt-blue);
+  margin: 0 0 1rem 0;
+}
+
+.pricing-description {
+  font-size: 1.1rem;
+  color: var(--color-pitt-steel);
+  margin: 0;
+}
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.pricing-card {
+  background: var(--color-pitt-white);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 8px 25px rgba(0, 53, 148, 0.1);
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.pricing-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-pitt-gold) 0%, var(--color-pitt-blue) 100%);
+}
+
+.pricing-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 53, 148, 0.15);
+  border-color: var(--color-pitt-gold);
+}
+
+.pricing-card.early {
+  border-color: var(--color-pitt-gold);
+  transform: scale(1.05);
+}
+
+.pricing-card-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.pricing-card-header svg {
+  color: var(--color-pitt-blue);
+  margin-bottom: 1rem;
+}
+
+.pricing-card h3 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--color-pitt-blue);
+  margin: 0 0 0.5rem 0;
+}
+
+.pricing-dates {
+  font-size: 0.9rem;
+  color: var(--color-pitt-steel);
+  margin: 0;
+}
+
+.pricing-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.price-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  border-left: 4px solid var(--color-pitt-blue);
+}
+
+.price-label {
+  font-size: 1rem;
+  color: var(--color-pitt-blue);
+  font-weight: 500;
+}
+
+.price-value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-pitt-gold);
+}
+
+.pricing-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: linear-gradient(135deg, var(--color-pitt-gold) 0%, var(--color-pitt-gold-accent) 100%);
+  color: var(--color-pitt-blue);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Registration Section */
+.registration-section {
+  animation: slideUp 0.6s ease-out 0.4s both;
+}
+
+.registration-card {
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  box-shadow: 0 25px 50px rgba(0, 53, 148, 0.1);
+  padding: 3rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  position: relative;
+  overflow: hidden;
+}
+
+.registration-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-pitt-gold) 0%, var(--color-pitt-blue) 100%);
+}
+
+.registration-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.registration-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1.5rem;
+  background: linear-gradient(135deg, var(--color-pitt-blue) 0%, var(--color-pitt-blue-light) 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-pitt-white);
+  box-shadow: 0 8px 25px rgba(0, 53, 148, 0.2);
+}
+
+.registration-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--color-pitt-blue);
+  margin: 0 0 1rem 0;
+}
+
+.registration-description {
+  font-size: 1.1rem;
+  color: var(--color-pitt-steel);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Form Styles */
+.registration-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-pitt-blue);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.required {
+  color: var(--color-pitt-gold);
+  font-weight: 700;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 1rem;
+  top: 33%;
+  transform: translateY(-50%);
+  color: var(--color-pitt-steel);
+  z-index: 1;
+  transition: color 0.3s ease;
+}
+
+.form-input,
+.form-textarea {
+  width: 100%;
+  padding: 1.2rem 1.2rem 1.2rem 3rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 16px;
+  font-size: 1rem;
+  font-family: inherit;
+  background: var(--color-pitt-white);
+  color: var(--color-pitt-blue);
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--color-pitt-gold);
+  box-shadow: 0 0 0 4px rgba(255, 184, 28, 0.1);
+  transform: translateY(-2px);
+}
+
+.form-input:focus ~ .input-icon,
+.form-textarea:focus ~ .input-icon {
+  color: var(--color-pitt-gold);
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: #a0aec0;
+  opacity: 1;
+}
+
+.form-textarea {
+  min-height: 120px;
+  padding-left: 1.2rem;
+  resize: none;
+  line-height: 1.6;
+}
+
+.char-count {
+  display: block;
+  margin-top: 0.5rem;
+  color: var(--color-pitt-steel);
+  font-size: 0.85rem;
+  text-align: right;
+  opacity: 0.8;
+}
+
+/* Submit Button */
+.submit-button {
+  width: 100%;
+  padding: 1.2rem;
+  background: linear-gradient(135deg, var(--color-pitt-blue) 0%, var(--color-pitt-blue-light) 100%);
+  color: var(--color-pitt-white);
+  border: none;
+  border-radius: 16px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+  box-shadow: 0 8px 25px rgba(0, 53, 148, 0.2);
+}
+
+.submit-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--color-pitt-gold) 0%, var(--color-pitt-gold-accent) 100%);
+  color: var(--color-pitt-blue);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(255, 184, 28, 0.3);
+}
+
+.submit-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+  background: linear-gradient(135deg, var(--color-pitt-steel), var(--color-pitt-steel-dark));
+}
+
+.button-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+/* Loading Spinner */
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Registration Closed */
+.registration-closed {
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  box-shadow: 0 25px 50px rgba(0, 53, 148, 0.1);
+  padding: 4rem 3rem;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  position: relative;
+  overflow: hidden;
+}
+
+.registration-closed::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-pitt-steel) 0%, var(--color-pitt-steel-dark) 100%);
+}
+
+.closed-icon {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 2rem;
+  background: linear-gradient(135deg, var(--color-pitt-steel) 0%, var(--color-pitt-steel-dark) 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-pitt-white);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.closed-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--color-pitt-steel-dark);
+  margin: 0 0 1rem 0;
+}
+
+.closed-message {
+  font-size: 1.2rem;
+  color: var(--color-pitt-steel);
+  margin: 0 0 2rem 0;
+  line-height: 1.6;
+}
+
+.closed-info {
+  padding: 1.5rem;
+  background: #f8fafc;
+  border-radius: 16px;
+  border-left: 4px solid var(--color-pitt-blue);
+}
+
+.closed-info p {
+  margin: 0;
+  color: var(--color-pitt-blue);
+  font-weight: 500;
+}
+
+/* Admin Section */
+.admin-section {
+  animation: slideUp 0.6s ease-out 0.5s both;
+}
+
+.admin-card {
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(0, 53, 148, 0.1);
+  padding: 2rem;
+  border: 1px solid rgba(255, 184, 28, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-pitt-gold) 0%, var(--color-pitt-gold-accent) 100%);
+}
+
+.admin-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.admin-header svg {
+  color: var(--color-pitt-gold);
+}
+
+.admin-header h3 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--color-pitt-blue);
+}
+
+.admin-toggle {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  border-left: 4px solid var(--color-pitt-gold);
+}
+
+.toggle-label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-pitt-blue);
+  margin: 0;
+}
+
+.toggle-status {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-pitt-steel);
+  margin-left: auto;
+}
+
+/* Updated Toggle Switch Styles */
+.checkbox-wrapper-34 {
+  --blue: var(--color-pitt-blue);
+  --gold: var(--color-pitt-gold);
+  --g08: #E1E5EB;
+  --g04: #848ea1;
+}
+
+.checkbox-wrapper-34 .tgl {
+  display: none;
+}
+
+.checkbox-wrapper-34 .tgl,
+.checkbox-wrapper-34 .tgl:after,
+.checkbox-wrapper-34 .tgl:before,
+.checkbox-wrapper-34 .tgl *,
+.checkbox-wrapper-34 .tgl *:after,
+.checkbox-wrapper-34 .tgl *:before,
+.checkbox-wrapper-34 .tgl + .tgl-btn {
+  box-sizing: border-box;
+}
+
+.checkbox-wrapper-34 .tgl + .tgl-btn {
+  outline: 0;
+  display: block;
+  width: 60px;
+  height: 30px;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  font-size: 12px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.checkbox-wrapper-34 .tgl + .tgl-btn:after,
+.checkbox-wrapper-34 .tgl + .tgl-btn:before {
+  position: relative;
+  display: block;
+  content: "";
+  width: 44%;
+  height: 100%;
+}
+
+.checkbox-wrapper-34 .tgl + .tgl-btn:after {
+  left: 0;
+}
+
+.checkbox-wrapper-34 .tgl + .tgl-btn:before {
+  display: inline;
+  position: absolute;
+  top: 8px;
+}
+
+.checkbox-wrapper-34 .tgl:checked + .tgl-btn:after {
+  left: 56.5%;
+}
+
+.checkbox-wrapper-34 .tgl-ios + .tgl-btn {
+  background: var(--g08);
+  border-radius: 20rem;
+  padding: 3px;
+  transition: all 0.4s ease;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+.checkbox-wrapper-34 .tgl-ios + .tgl-btn:after {
+  border-radius: 2em;
+  background: #fff;
+  transition: left 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), padding 0.3s ease, margin 0.3s ease;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.checkbox-wrapper-34 .tgl-ios + .tgl-btn:before {
+  content: "Off";
+  left: 32px;
+  color: var(--g04);
+  transition: left 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  font-weight: 600;
+}
+
+.checkbox-wrapper-34 .tgl-ios + .tgl-btn:active {
+  box-shadow: inset 0 0 0 30px rgba(0, 0, 0, 0.1);
+}
+
+.checkbox-wrapper-34 .tgl-ios:checked + .tgl-btn {
+  background: var(--gold);
+}
+
+.checkbox-wrapper-34 .tgl-ios:checked + .tgl-btn:before {
+  content: "On";
+  left: 6px;
+  color: var(--color-pitt-blue);
+  font-weight: 600;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .register-section {
+    padding: 2rem 1rem;
+  }
+  
+  .register-container {
+    gap: 2rem;
+  }
+  
+  .register-title {
+    font-size: 2.5rem;
+  }
+  
+  .pricing-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .pricing-card.early {
+    transform: none;
+  }
+  
+  .registration-card {
+    padding: 2rem 1.5rem;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .pricing-card {
+    padding: 1.5rem;
+  }
+  
+  .registration-closed {
+    padding: 3rem 2rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .register-header {
+    padding: 3rem 1rem 1.5rem;
+  }
+  
+  .register-title {
+    font-size: 2rem;
+  }
+  
+  .register-subtitle {
+    font-size: 1rem;
+  }
+  
+  .pricing-icon,
+  .registration-icon {
+    width: 60px;
+    height: 60px;
+    padding: 15px;
+  }
+  
+  .pricing-title,
+  .registration-title {
+    font-size: 1.8rem;
+  }
+  
+  .registration-card {
+    padding: 1.5rem 1rem;
+    border-radius: 20px;
+  }
+  
+  .form-input,
+  .form-textarea {
+    padding: 1rem 1rem 1rem 2.75rem;
+  }
+  
+  .input-icon {
+    left: 0.875rem;
+  }
+  
+  .admin-toggle {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}

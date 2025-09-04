@@ -1,0 +1,33 @@
+{
+  "files": {
+    "main.css": "/static/css/main.fe4dea2b.css",
+    "main.js": "/static/js/main.a3533d7c.js",
+    "static/media/committees_pittU.jpg": "/static/media/committees_pittU.7fa47934eeec547365cb.jpg",
+    "static/media/about_pittU.jpeg": "/static/media/about_pittU.0749dd7d5efa67d341b5.jpeg",
+    "static/media/schedule_pittU.jpeg": "/static/media/schedule_pittU.e7b920603fa6847651ba.jpeg",
+    "static/media/pittmunlogo.png": "/static/media/pittmunlogo.34b048e3b3726b5652c8.png",
+    "static/media/home_background.webp": "/static/media/home_background.616e93bf7ff364d46c6c.webp",
+    "static/media/courtyardPhoto.png": "/static/media/courtyardPhoto.70a16c1bf8c3c0a0f6e0.png",
+    "static/media/hamptonPhoto.png": "/static/media/hamptonPhoto.80142ae3b9deffcf6d5c.png",
+    "static/media/hiltonPhoto.png": "/static/media/hiltonPhoto.ba06f5b6a4173e2e76dd.png",
+    "static/media/nfl.jpeg": "/static/media/nfl.6abb4840d7fcd0c23987.jpeg",
+    "static/media/instagram-cta.png": "/static/media/instagram-cta.63517d3708fe431effe6.png",
+    "static/media/anniepfp.jpeg": "/static/media/anniepfp.b9c1f88378fef406b586.jpeg",
+    "static/media/gabbypfp.jpeg": "/static/media/gabbypfp.cf420813e6d23effd1b3.jpeg",
+    "static/media/talispfp.jpeg": "/static/media/talispfp.f476ca8a02636fe84cdd.jpeg",
+    "static/media/maddoxpfp.jpeg": "/static/media/maddoxpfp.bc01dd735b123fa11c30.jpeg",
+    "static/media/Mines.jpeg": "/static/media/Mines.1bc25860412f6cb0c8d3.jpeg",
+    "static/media/SCP.jpeg": "/static/media/SCP.1cd10122bfffb557b8dd.jpeg",
+    "static/media/oaklanderPhoto.jpeg": "/static/media/oaklanderPhoto.851fb75768a520775c23.jpeg",
+    "static/media/Fallout.jpeg": "/static/media/Fallout.415d743f31983154d23f.jpeg",
+    "static/media/CSW.jpeg": "/static/media/CSW.7e9dfdc8346a0a919e8d.jpeg",
+    "static/media/Nepalese.jpeg": "/static/media/Nepalese.4343038b9be6189f1b88.jpeg",
+    "index.html": "/index.html",
+    "main.fe4dea2b.css.map": "/static/css/main.fe4dea2b.css.map",
+    "main.a3533d7c.js.map": "/static/js/main.a3533d7c.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.fe4dea2b.css",
+    "static/js/main.a3533d7c.js"
+  ]
+}

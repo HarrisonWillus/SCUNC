@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+:root {  
+  font-family: 'Merriweather Sans', serif;
+  font-weight: 400;
+
+  /* University of Pittsburgh Official Colors */
+  --color-primary: #003594;           /* Pitt Blue (Primary) */
+  --color-secondary: #FFB81C;         /* Pitt Gold (Secondary) */
+  
+  /* Extended Pitt Blue Palette */
+  --color-pitt-blue: #003594;         /* Official Pitt Blue */
+  --color-pitt-blue-dark: #00205B;    /* Dark Pitt Blue */
+  --color-pitt-blue-light: #4472C4;   /* Light Pitt Blue */
+  --color-pitt-blue-navy: #1B2951;    /* Navy variation */
+  --color-pitt-royal: #1E4A72;        /* Royal Blue accent */
+  
+  /* Extended Pitt Gold Palette */
+  --color-pitt-gold: #FFB81C;         /* Official Pitt Gold */
+  --color-pitt-gold-dark: #E6A817;    /* Dark Gold */
+  --color-pitt-gold-light: #FFCC5C;   /* Light Gold */
+  --color-pitt-gold-accent: #F4B942;  /* Gold accent */
+  --color-pitt-yellow: #FDD023;       /* Bright Yellow */
+  
+  /* Pitt Accent Colors */
+  --color-pitt-steel: #5D6A75;        /* Pittsburgh Steel */
+  --color-pitt-steel-light: #8B9BAE;  /* Light Steel */
+  --color-pitt-steel-dark: #3C4651;   /* Dark Steel */
+  --color-pitt-gray: #6C757D;         /* Medium Gray */
+  --color-pitt-slate: #495057;        /* Slate Gray */
+  
+  /* Pitt Supporting Colors */
+  --color-pitt-white: #FFFFFF;        /* Pure White */
+  --color-pitt-cream: #F8F9FA;        /* Off White/Cream */
+  --color-pitt-silver: #E9ECEF;       /* Light Silver */
+  --color-pitt-charcoal: #343A40;     /* Charcoal */
+  --color-pitt-black: #212529;        /* Near Black */
+  
+  /* Legacy Color Names (keeping for compatibility) */
+  --color-text_p: #00205B;            /* Dark Pitt Blue for text */
+  --color-content: #FFFFFF;           /* White content background */
+  --color-text_w: #FFFFFF;            /* White text */
+  --color-text_b: #000000;            /* Black text */
+  --color-text_g: #C8C9C7;            /* Gray text */
+  --color-register_button: #FFFFFF;   /* White button */
+  --color-register_button_select: #FFFFFF; /* White selected button */
+  
+  /* Semantic Color Usage */
+  --color-background: #FFFFFF;        /* Main background */
+  --color-surface: #F8F9FA;           /* Surface/card background */
+  --color-border: #E9ECEF;            /* Border color */
+  --color-hover: #4472C4;             /* Hover states */
+  --color-active: #00205B;            /* Active states */
+  --color-disabled: #6C757D;          /* Disabled states */
+  
+  /* Status Colors with Pitt Flair */
+  --color-success: #28A745;           /* Success green */
+  --color-warning: #FFB81C;           /* Warning (using Pitt Gold) */
+  --color-error: #DC3545;             /* Error red */
+  --color-info: #003594;              /* Info (using Pitt Blue) */
+}

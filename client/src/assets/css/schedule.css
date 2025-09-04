@@ -1,0 +1,251 @@
+.schedule {
+    background-image: url('../../assets/backgrounds/schedule_pittU.jpeg');
+    width: 100vw;
+    height: 50vh;
+}
+
+.modal-overlay {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.warning {
+    margin: 1rem auto 2rem;
+    font-style: italic;
+    font-size: 14px;
+    width: fit-content;
+    cursor: default;
+}
+
+.schedule-body {
+    margin: 3rem 1.5rem 8rem;
+}
+
+.schedule-grid {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.day-card {
+    flex: 1;
+    background: var(--color-text_w);
+    text-align: center;
+    border: 1px var(--color-primary) solid;
+    border-radius: 10px;
+    color: var(--color-primary);
+    padding: 1rem 1rem;
+    cursor: pointer;
+    opacity: 1;
+    position: relative;
+    transition: all .5s ease;
+    z-index: 2;
+}
+
+.day-card:hover {
+    flex: 1.5;
+}
+
+.day-card.active {
+    flex: 2;
+    background-color: var(--color-text_g);
+}
+
+.event-card {
+    flex: 1;
+    background: var(--color-text_w);
+    text-align: left;
+    border: 1px var(--color-primary) solid;
+    border-radius: 10px;
+    color: var(--color-primary);
+    padding: 1rem 1rem;
+    cursor: pointer;
+    opacity: 1;
+    position: relative;
+    z-index: 1;
+}
+
+@keyframes slideIn {
+    from {
+      transform: translateX(-110%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes slideOut {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-110%);
+    }
+  }
+  
+  .slide-in {
+    animation: slideIn 1s ease forwards;
+  }
+  
+  .slide-out {
+    animation: slideOut 1s ease forwards;
+  }
+  
+
+.schedule-container {
+    display: grid;
+    gap: 1rem;
+    grid-template-rows: repeat(auto-fit, minmax(80px, 1fr));
+}
+
+.event-item {
+    list-style: none;
+    display: flex;
+    gap: 3rem;
+}
+
+.date {
+    font-size: 24px;
+    font-weight: 800;
+    margin: 1rem 0 .5rem;
+    color: var(--color-primary);
+}
+
+.day {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--color-text_b);
+    opacity: 50%;
+}
+
+.event-title {
+    position: relative;
+    margin-bottom: 2rem;
+}
+
+.event-title::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -1rem;
+    width: 100px;
+    border-radius: 5px;
+    height: 3px;
+    background: var(--color-secondary);
+}
+
+.time {
+    text-transform: uppercase;
+    position: relative;
+    margin-left: 1.25rem;
+}
+
+.lower {
+    text-transform: none;
+}
+
+.time::before {
+    content: "";
+    position: absolute;
+    transform: translate(-20px, 5.5px);
+    width: 8px;
+    height: 8px;
+    border-radius: 360px;
+    background: var(--color-secondary);
+}
+
+.event {
+    position: relative;
+}
+
+.event::before {
+    content: "";
+    position: absolute;
+    left: -2rem;
+    top: .5rem;
+    width: 1rem;
+    height: 2px;
+    border-radius: 5px;
+    background: var(--color-text_b);
+}
+
+@media screen and (max-width: 770px) {
+    .schedule-body {
+        margin: 3em 0 8em;
+    }
+    
+    .schedule-grid-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 1rem;
+    }
+    
+    .schedule-grid {
+        display: grid;
+        gap: 1rem;
+        width: 100%;
+        max-width: 800px;
+        margin-bottom: 1rem;
+    }
+
+    .date-title {
+        font-size: 20px;
+    }
+
+    .date-card {
+        grid-template-columns: none;
+    }
+
+    @keyframes slideIn {
+        from {
+          transform: translateY(-100%);
+        }
+        to {
+          transform: translateY(0);
+        }
+      }
+      
+      @keyframes slideOut {
+        from {
+          transform: translateY(0);
+        }
+        to {
+          transform: translateY(-100%);
+        }
+      }
+      
+      .slide-in {
+        animation: slideIn 1s ease forwards;
+      }
+      
+      .slide-out {
+        animation: slideOut 1s ease forwards;
+      }
+
+    .close {
+        margin-left: 95%;
+    }
+
+    .event-grid.clicked {
+        grid-template-columns: none;
+        grid-template-rows: auto 2fr;
+        gap: 1.5rem;
+    }
+
+    .schedule-event-grid.clicked {
+        padding: 2rem 0;
+    }
+    
+    .schedule-event-grid::before{
+        width: 50%;
+        height: 3px;
+    }
+    
+    .date {
+        margin-top: 0;
+    }
+
+    .lower {
+        font-size: 14px;
+    }
+}

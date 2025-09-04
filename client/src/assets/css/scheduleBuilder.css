@@ -1,0 +1,694 @@
+/* =============================================================================
+   SCHEDULE BUILDER COMPONENT STYLES
+   ============================================================================= */
+
+.schedule-builder {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+}
+
+.schedule-builder.opening {
+    opacity: 1;
+    visibility: visible;
+}
+
+.schedule-builder.closing {
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Header */
+.builder-header {
+    background: #1a1a1a;
+    color: white;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #333;
+    min-height: 60px;
+}
+
+.header-nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.breadcrumb h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+/* Main Content */
+.builder-content {
+    flex: 1;
+    background: white;
+    overflow-y: auto;
+    padding: 2rem;
+}
+
+/* =============================================================================
+   WORKFLOW CONTENT STYLES
+   ============================================================================= */
+
+.workflow-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.header-info h2 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.5rem;
+    color: #1f2937;
+}
+
+.header-info p {
+    margin: 0;
+    color: #6b7280;
+}
+
+.header-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+/* =============================================================================
+   SCHEDULES GRID
+   ============================================================================= */
+
+.schedules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+}
+
+.schedule-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: all 0.2s ease;
+}
+
+.schedule-card:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+}
+
+.schedule-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.schedule-card-header h3 {
+    margin: 0;
+    font-size: 1.125rem;
+    color: #1f2937;
+}
+
+.schedule-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.status-published {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: #10b981;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.status-draft {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    color: #f59e0b;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.schedule-card-info {
+    margin-bottom: 1.5rem;
+}
+
+.schedule-card-info p {
+    margin: 0.25rem 0;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.schedule-card-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+/* =============================================================================
+   DAYS LIST
+   ============================================================================= */
+
+.days-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.day-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.day-card:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+}
+
+.day-card-content {
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.day-info h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.125rem;
+    color: #1f2937;
+}
+
+.day-date {
+    margin: 0 0 0.25rem 0;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.day-stats {
+    margin: 0;
+    font-size: 0.75rem;
+    color: #9ca3af;
+    font-weight: 500;
+}
+
+.day-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+/* =============================================================================
+   EVENTS LIST
+   ============================================================================= */
+
+.events-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.event-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.event-card:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+}
+
+.event-card-content {
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.event-info {
+    flex: 1;
+}
+
+.event-info h3 {
+    margin: 0 0 0.75rem 0;
+    font-size: 1.125rem;
+    color: #1f2937;
+}
+
+.event-details {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.event-time,
+.event-location {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.event-description {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #6b7280;
+    line-height: 1.5;
+}
+
+.event-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+    margin-left: 1rem;
+}
+
+/* =============================================================================
+   WORKFLOW FORM STYLES
+   ============================================================================= */
+
+.workflow-form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.form-header h2 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.5rem;
+    color: #1f2937;
+}
+
+.form-header p {
+    margin: 0;
+    color: #6b7280;
+}
+
+.schedule-form {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.field-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #374151;
+    font-size: 0.875rem;
+}
+
+.form-input,
+.form-textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    transition: border-color 0.2s ease;
+    box-sizing: border-box;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.field-help {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+/* =============================================================================
+   PREVIEW STYLES
+   ============================================================================= */
+
+.schedule-preview {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.preview-header {
+    background: #1f2937;
+    color: white;
+    padding: 2rem;
+    text-align: center;
+}
+
+.preview-header h1 {
+    margin: 0 0 0.5rem 0;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.preview-header p {
+    margin: 0;
+    opacity: 0.8;
+}
+
+.preview-days {
+    padding: 2rem;
+}
+
+.preview-day {
+    margin-bottom: 3rem;
+}
+
+.preview-day:last-child {
+    margin-bottom: 0;
+}
+
+.preview-day-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.preview-day-header h2 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.5rem;
+    color: #1f2937;
+}
+
+.preview-day-date {
+    margin: 0;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.preview-events {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.preview-event {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    background: #f9fafb;
+}
+
+.preview-event-time {
+    flex-shrink: 0;
+    font-weight: 600;
+    color: #1f2937;
+    font-size: 0.875rem;
+    min-width: 120px;
+}
+
+.preview-event-content {
+    flex: 1;
+}
+
+.preview-event-content h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.125rem;
+    color: #1f2937;
+}
+
+.preview-event-location {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin: 0 0 0.5rem 0;
+    font-size: 0.875rem;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.preview-event-description {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #6b7280;
+    line-height: 1.5;
+}
+
+.preview-no-events {
+    text-align: center;
+    color: #9ca3af;
+    font-style: italic;
+    margin: 2rem 0;
+}
+
+/* =============================================================================
+   EMPTY STATE
+   ============================================================================= */
+
+.empty-state {
+    text-align: center;
+    padding: 3rem 2rem;
+}
+
+.empty-icon {
+    color: #d1d5db;
+    margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.25rem;
+    color: #6b7280;
+}
+
+.empty-state p {
+    margin: 0 0 1.5rem 0;
+    color: #9ca3af;
+}
+
+/* =============================================================================
+   BUTTON STYLES
+   ============================================================================= */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: #2563eb;
+    border-color: #2563eb;
+}
+
+.btn-secondary {
+    background: #6b7280;
+    color: white;
+    border-color: #6b7280;
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background: #4b5563;
+    border-color: #4b5563;
+}
+
+.btn-outline {
+    background: transparent;
+    color: #6b7280;
+    border-color: #d1d5db;
+}
+
+.btn-outline:hover:not(:disabled) {
+    background: #f9fafb;
+    border-color: #9ca3af;
+    color: #374151;
+}
+
+.btn-success {
+    background: #10b981;
+    color: white;
+    border-color: #10b981;
+}
+
+.btn-success:hover:not(:disabled) {
+    background: #059669;
+    border-color: #059669;
+}
+
+.btn-warning {
+    background: #f59e0b;
+    color: white;
+    border-color: #f59e0b;
+}
+
+.btn-warning:hover:not(:disabled) {
+    background: #d97706;
+    border-color: #d97706;
+}
+
+.btn-danger {
+    background: #ef4444;
+    color: white;
+    border-color: #ef4444;
+}
+
+.btn-danger:hover:not(:disabled) {
+    background: #dc2626;
+    border-color: #dc2626;
+}
+
+.btn-ghost {
+    background: transparent;
+    color: inherit;
+    border: none;
+    padding: 0.5rem;
+}
+
+.btn-ghost:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.close-btn {
+    color: #9ca3af;
+}
+
+.close-btn:hover:not(:disabled) {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* =============================================================================
+   RESPONSIVE DESIGN
+   ============================================================================= */
+
+@media (max-width: 768px) {
+    .builder-header {
+        padding: 1rem;
+    }
+    
+    .builder-content {
+        padding: 1rem;
+    }
+    
+    .content-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .header-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+    
+    .schedules-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .day-card-content,
+    .event-card-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .day-actions,
+    .event-actions {
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .preview-event {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .preview-event-time {
+        min-width: auto;
+    }
+}
