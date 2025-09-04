@@ -1,276 +1,249 @@
-# 🏛️ Steel City United Nations Conference (SCUNC) Website
+# Steel City United Nations Conference (SCUNC) Website
 
-A full-stack web application for the Steel City United Nations Conference, featuring a modern React frontend and robust Node.js backend with PostgreSQL database integration.
+A comprehensive digital platform designed to manage and showcase the Steel City United Nations Conference. This full-stack web application serves as the central hub for conference information, registration, and administration.
 
-## 🌟 Features
+## Purpose & Overview
 
-### Frontend
-- **Modern React Application** with React Router for navigation
-- **Responsive Design** with mobile-first approach
-- **Interactive Components** with drag-and-drop functionality
-- **Real-time Animations** and smooth transitions
-- **Admin Dashboard** for content management
-- **Hotel Booking System** with premium hotel showcase
-- **Committee Management** with detailed committee information
-- **Contact Forms** with email integration
-- **Registration System** for conference attendees
+The SCUNC website is built to serve multiple stakeholders in the Model United Nations community:
 
-### Backend
-- **RESTful API** built with Express.js
-- **PostgreSQL Database** with Supabase integration
-- **JWT Authentication** for secure admin access
-- **Email Service** with Nodemailer integration
-- **Rate Limiting** to prevent abuse
-- **File Upload** capabilities for images
-- **Comprehensive Testing** with Jest
-- **Input Validation** and error handling
+### **For Conference Attendees**
+- Browse detailed committee information and assignments
+- Register for the conference with integrated form handling
+- Access hotel recommendations and booking information
+- View conference schedules and important updates
+- Contact organizers through integrated messaging system
 
-## 🚀 Tech Stack
+### **For Conference Administrators**
+- Manage committee details and delegate assignments
+- Update hotel partnerships and recommendations
+- Handle registration data and attendee information
+- Send announcements and communications
+- Monitor and moderate conference content
 
-### Frontend
-- **React 19** - UI library
-- **React Router DOM** - Client-side routing
-- **Lucide React** - Modern icon library
-- **React Icons** - Additional icon sets
-- **React Toastify** - Toast notifications
-- **DND Kit** - Drag and drop functionality
-- **Firebase** - Additional services
-- **Supabase** - Backend as a service
+### **For the Public**
+- Learn about the Steel City United Nations Conference
+- Understand the mission and goals of the organization
+- Access general conference information
+- Connect with the SCUNC community
 
-### Backend
-- **Node.js** - Runtime environment
-- **Express.js** - Web framework
-- **PostgreSQL** - Primary database
-- **Supabase** - Database hosting and storage
-- **JWT** - Authentication tokens
-- **Nodemailer** - Email service
-- **Multer** - File upload handling
-- **Express Rate Limit** - API rate limiting
-- **Jest** - Testing framework
-- **Supertest** - API testing
+## Architecture & Design
 
-## 📁 Project Structure
+### **Full-Stack Architecture**
+The application follows a modern client-server architecture pattern:
+- **Frontend**: React-based single-page application (SPA)
+- **Backend**: RESTful API server with Express.js
+- **Database**: PostgreSQL with Supabase integration
+- **Authentication**: JWT-based secure authentication
+- **Email**: Integrated email service for communications
+
+### **Key Design Principles**
+- **Responsive First**: Mobile-optimized design that scales to desktop
+- **Performance Focused**: Lazy loading, code splitting, and optimized assets
+- **Security Minded**: Rate limiting, input validation, and secure authentication
+- **User Experience**: Smooth animations, intuitive navigation, and clear feedback
+
+## �Technical Implementation
+
+### **Frontend Technologies**
+- **React 19** - Modern UI library with hooks and functional components
+- **React Router DOM** - Client-side routing for seamless navigation
+- **Lucide React & React Icons** - Comprehensive icon libraries
+- **React Toastify** - User-friendly notification system
+- **DND Kit** - Drag and drop functionality for admin interfaces
+- **Custom CSS** - Tailored styling with modern animations and glass morphism effects
+
+### **Backend Technologies**
+- **Node.js & Express.js** - Server runtime and web framework
+- **PostgreSQL** - Relational database for structured data storage
+- **Supabase** - Database hosting with additional backend services
+- **JWT (JSON Web Tokens)** - Stateless authentication system
+- **Nodemailer** - Email service integration with Gmail
+- **Multer** - File upload and image handling
+- **Express Rate Limit** - API protection and abuse prevention
+- **Jest & Supertest** - Comprehensive testing framework
+
+### **Data Architecture**
+```
+Database Schema:
+├── Users (Authentication & Admin Management)
+├── Committees (Conference Committee Information)
+├── Hotels (Partner Hotel Details & Amenities)
+├── Registrations (Attendee Registration Data)
+├── Quotes (Inspirational Content Management)
+├── Schedules (Conference Timeline & Events)
+└── Schools (Participating Institution Data)
+```
+
+## Application Features
+
+### **Public Interface**
+- **Homepage**: Dynamic hero section with animated elements and conference highlights
+- **About Section**: Detailed information about SCUNC mission and history
+- **Committees Page**: Interactive showcase of available conference committees
+- **Hotels Page**: Premium hotel recommendations with booking integration
+- **Contact System**: Multi-purpose contact forms for inquiries and feedback
+
+### **Registration System**
+- **Student Registration**: Streamlined signup process for conference attendees
+- **School Management**: Institutional registration and delegate coordination
+- **Data Validation**: Comprehensive form validation and error handling
+- **Email Confirmation**: Automated confirmation and communication system
+
+### **Administrative Dashboard**
+- **Content Management**: Full CRUD operations for all conference data
+- **User Authentication**: Secure admin access with JWT tokens
+- **File Upload**: Image management for committees and hotel partnerships
+- **Secretariat Tools**: Specialized interfaces for conference organizers
+
+## Project Organization
 
 ```
 pittwebsite-harrisonwilliams/
-├── client/                 # React frontend
-│   ├── public/            # Static assets
+├── client/                    # React Frontend Application
+│   ├── public/               # Static assets and manifest files
 │   ├── src/
-│   │   ├── components/    # Reusable React components
-│   │   ├── pages/         # Page components
-│   │   ├── assets/        # Images, CSS, and media files
-│   │   ├── config/        # Configuration files
-│   │   └── utils/         # Utility functions and hooks
-│   └── build/             # Production build files
-├── server/                # Node.js backend
-│   ├── config/           # Database and service configurations
-│   ├── controllers/      # Route handlers and business logic
-│   ├── middleware/       # Express middleware functions
-│   ├── routes/           # API route definitions
-│   ├── utils/            # Utility functions
-│   └── __tests__/        # Test files
-└── README.md             # Project documentation
+│   │   ├── components/       # Reusable UI components (Navbar, Footer, Cards)
+│   │   ├── pages/           # Route-specific page components
+│   │   ├── assets/          # Images, backgrounds, and styling resources
+│   │   ├── config/          # Firebase and Supabase configuration
+│   │   └── utils/           # Custom hooks and context providers
+│   └── build/               # Production-ready compiled application
+├── server/                   # Node.js Backend API
+│   ├── config/              # Database and external service configurations
+│   ├── controllers/         # Business logic and route handlers
+│   ├── middleware/          # Authentication, validation, and security
+│   ├── routes/              # API endpoint definitions
+│   ├── utils/               # Helper functions and services
+│   └── __tests__/           # Unit and integration tests
+└── README.md                # Project documentation
 ```
 
-## 🛠️ Installation & Setup
+## How It Works
 
-### Prerequisites
-- Node.js (v16 or higher)
-- npm or yarn
-- PostgreSQL database
-- Gmail account for email service
+### **User Journey - Conference Registration**
+1. **Discovery**: Users visit the homepage and explore conference information
+2. **Research**: Browse available committees and hotel options
+3. **Registration**: Complete the registration form with school and personal details
+4. **Confirmation**: Receive email confirmation with next steps
+5. **Updates**: Access ongoing conference information and updates
 
-### Environment Variables
+### **Admin Workflow - Content Management**
+1. **Authentication**: Secure login with JWT token validation
+2. **Dashboard Access**: Navigate to administrative interface
+3. **Content Updates**: Modify committee details, hotel partnerships, or schedules
+4. **File Management**: Upload and manage images for committees and hotels
+5. **Communication**: Send announcements or handle inquiries through the contact system
 
-Create `.env` files in both `client` and `server` directories:
+### **System Integration**
+- **Frontend-Backend Communication**: RESTful API calls with proper error handling
+- **Database Operations**: Efficient PostgreSQL queries with connection pooling
+- **Email Service**: Automated email sending for confirmations and communications
+- **File Storage**: Integrated image upload and storage via Supabase
+- **Security Layer**: Multi-level protection with rate limiting and input validation
 
-#### Server `.env`
-```env
-# Database
-DATABASE_URL=postgresql://username:password@localhost:5432/dbname
-SUPABASE_URL=your_supabase_url
-SUPABASE_ANON_KEY=your_supabase_anon_key
+## Security & Performance
 
-# Email Configuration
-GMAIL_EMAIL=your_email@gmail.com
-GMAIL_APP_PASSWORD=your_app_password
-BUSINESS_EMAIL=your_business_email@gmail.com
-BUSINESS_APP_PASSWORD=your_business_app_password
+### **Security Measures**
+- **JWT Authentication**: Stateless token-based authentication for admin access
+- **Rate Limiting**: API endpoint protection against abuse and spam
+- **Input Validation**: Comprehensive sanitization of all user inputs
+- **CORS Configuration**: Controlled cross-origin resource sharing
+- **Environment Protection**: Sensitive data secured through environment variables
+- **SQL Injection Prevention**: Parameterized queries and prepared statements
 
-# Authentication
-JWT_SECRET=your_very_long_and_secure_jwt_secret_key_here
-API_KEY=your_api_key_here
+### **Performance Optimizations**
+- **Code Splitting**: Lazy loading of React components for faster initial load
+- **Image Optimization**: Compressed and appropriately sized media assets
+- **Database Indexing**: Optimized queries with proper database indexing
+- **Connection Pooling**: Efficient database connection management
+- **Caching Strategies**: Strategic caching of frequently accessed data
+- **Bundle Optimization**: Minimized and compressed production builds
 
-# Server Configuration
-PORT=5050
-NODE_ENV=development
-```
+## User Experience Design
 
-#### Client `.env`
-```env
-REACT_APP_API_URL=http://localhost:5050/api
-REACT_APP_SUPABASE_URL=your_supabase_url
-REACT_APP_SUPABASE_ANON_KEY=your_supabase_anon_key
-```
+### **Visual Design Philosophy**
+- **Modern Aesthetic**: Clean, professional design suitable for academic conferences
+- **Glass Morphism**: Contemporary visual effects with translucent elements
+- **Responsive Layout**: Fluid design that adapts seamlessly across all devices
+- **Accessibility**: WCAG-compliant design with proper contrast and navigation
+- **Animation System**: Smooth, purposeful animations that enhance user engagement
 
-### Installation Steps
+### **Interaction Patterns**
+- **Intuitive Navigation**: Clear, consistent navigation patterns throughout the application
+- **Form Validation**: Real-time feedback with helpful error messages
+- **Loading States**: Visual feedback during data processing and API calls
+- **Toast Notifications**: Non-intrusive success and error messaging
+- **Interactive Elements**: Hover effects and transitions for better user feedback
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/HarrisonWillus/SCUNC.git
-   cd pittwebsite-harrisonwilliams
-   ```
+## Quality Assurance
 
-2. **Install server dependencies**
-   ```bash
-   cd server
-   npm install
-   ```
+### **Testing Strategy**
+- **Unit Testing**: Comprehensive Jest tests for individual functions and components
+- **Integration Testing**: API endpoint testing with Supertest framework
+- **Email Service Testing**: Mocked email functionality to ensure reliable communication
+- **Authentication Testing**: JWT token validation and security verification
+- **Database Testing**: CRUD operation verification and data integrity checks
 
-3. **Install client dependencies**
-   ```bash
-   cd ../client
-   npm install
-   ```
+## Development Insights
 
-4. **Set up environment variables**
-   - Create `.env` files in both `client` and `server` directories
-   - Add the required environment variables (see above)
+### **API Architecture**
+The backend provides a comprehensive RESTful API structure:
 
-5. **Set up the database**
-   - Create a PostgreSQL database
-   - Run database migrations (if applicable)
-   - Seed initial data (if applicable)
+**Authentication Flow**
+- Secure login system with JWT token generation
+- Token validation middleware for protected routes
+- Role-based access control for administrative functions
 
-## 🚀 Running the Application
+**Data Management**
+- Full CRUD operations for all conference entities
+- Optimized database queries with proper indexing
+- Transaction support for data integrity
 
-### Development Mode
+**Communication System**
+- Multi-channel email service (contact, business inquiries)
+- Rate-limited endpoints to prevent abuse
+- Comprehensive error handling and logging
 
-1. **Start the backend server**
-   ```bash
-   cd server
-   npm run dev
-   ```
-   Server runs on `http://localhost:5050`
+### **Frontend Architecture**
+The React application follows modern development patterns:
 
-2. **Start the frontend development server**
-   ```bash
-   cd client
-   npm start
-   ```
-   Client runs on `http://localhost:3000`
+**Component Structure**
+- Functional components with React Hooks
+- Custom hooks for data fetching and state management
+- Reusable UI components with consistent design patterns
 
-### Production Mode
+**State Management**
+- Context API for global application state
+- Local state management for component-specific data
+- Optimized re-rendering with proper dependency arrays
 
-1. **Build the frontend**
-   ```bash
-   cd client
-   npm run build
-   ```
+**User Interface**
+- Responsive design with CSS Grid and Flexbox
+- Custom CSS animations and transitions
+- Progressive enhancement for better accessibility
 
-2. **Start the production server**
-   ```bash
-   cd server
-   npm start
-   ```
+## Project Impact
 
-## 🧪 Testing
+### **Conference Management**
+This platform streamlines the entire conference management process, from initial registration to final execution. It eliminates manual paperwork, reduces administrative overhead, and provides a centralized system for all stakeholders.
 
-### Backend Testing
-```bash
-cd server
+### **User Experience**
+The modern, intuitive interface makes conference participation more accessible to students and educators. The responsive design ensures functionality across all devices, while the comprehensive information architecture helps users find what they need quickly.
 
-# Run all tests
-npm test
+### **Scalability**
+Built with growth in mind, the application can accommodate increasing numbers of participants, additional committee types, and expanded functionality as the conference evolves.
 
-# Run tests in watch mode
-npm run dev:test
-
-# Run tests before starting server
-npm run prestart
-```
-
-### Test Coverage
-- **Email Service**: Comprehensive unit tests with mocking
-- **API Endpoints**: Integration tests with Supertest
-- **Authentication**: JWT token validation tests
-- **Database Operations**: CRUD operation tests
-
-## 📚 API Documentation
-
-### Authentication Endpoints
-- `POST /api/auth/login` - User login
-- `POST /api/auth/logout` - User logout
-- `GET /api/auth/verify` - Verify JWT token
-
-### Email Endpoints
-- `POST /api/email/contact` - Send contact email
-- `POST /api/email/business` - Send business inquiry email
-
-### Hotel Endpoints
-- `GET /api/hotels` - Get all hotels
-- `POST /api/hotels` - Create new hotel (Admin)
-- `PUT /api/hotels/:id` - Update hotel (Admin)
-- `DELETE /api/hotels/:id` - Delete hotel (Admin)
-
-### Committee Endpoints
-- `GET /api/committees` - Get all committees
-- `POST /api/committees` - Create committee (Admin)
-- `PUT /api/committees/:id` - Update committee (Admin)
-- `DELETE /api/committees/:id` - Delete committee (Admin)
-
-## 🔒 Security Features
-
-- **JWT Authentication** for admin access
-- **Rate Limiting** on API endpoints
-- **Input Validation** and sanitization
-- **CORS Configuration** for cross-origin requests
-- **Environment Variable Protection** for sensitive data
-- **SQL Injection Prevention** with parameterized queries
-
-## 🎨 UI/UX Features
-
-- **Modern Design** with glass morphism effects
-- **Smooth Animations** and transitions
-- **Responsive Layout** for all device sizes
-- **Interactive Elements** with hover effects
-- **Loading States** and error handling
-- **Toast Notifications** for user feedback
-- **Dark/Light Mode** compatibility
-
-## 🚀 Deployment
-
-### Recommended Hosting
-- **Frontend**: Vercel or Netlify
-- **Backend**: Railway, Heroku, or DigitalOcean
-- **Database**: Railway PostgreSQL or Supabase
-
-### Environment Setup
-1. Set production environment variables
-2. Configure CORS for production domains
-3. Set up SSL certificates
-4. Configure custom domain
-5. Set up monitoring and logging
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📝 License
+## License
 
 This project is licensed under the ISC License.
 
-## 👥 Team
+## Team
 
 - **Development Team**: Harrison Williams
 - **Project Type**: Conference Management System
 - **Institution**: Steel City United Nations Conference
 
-## 📞 Support
+## Support
 
 For support and inquiries:
 - **Email**: [Contact through the website contact form]
