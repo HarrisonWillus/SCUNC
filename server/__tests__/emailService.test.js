@@ -24,7 +24,7 @@ mockCreateTransport.mockReturnValue({
 });
 
 // Import AFTER mocking and environment setup
-const { sendContactEmail, sendBusinessEmail } = require('../utils/emailService');
+const { sendContactEmailCore, sendBusinessEmailCore } = require('../utils/emailService');
 
 describe('Email Service Unit Tests', () => {
   beforeAll(() => {
@@ -54,14 +54,16 @@ describe('Email Service Unit Tests', () => {
     });
   });
 
-  describe('sendContactEmail', () => {
+  describe('sendContactEmailCore', () => {
     test('should successfully send contact email with valid parameters', async () => {
-      const result = await sendContactEmail(
-        'John Doe',
-        'john@example.com',
-        'Test Subject',
-        'This is a test message'
-      );
+      const formData = {
+        name: 'John Doe',
+        email: 'john@example.com',
+        subject: 'Test Subject',
+        message: 'This is a test message'
+      };
+
+      const result = await sendContactEmailCore(formData);
 
       expect(result).toEqual({
         success: true,
@@ -79,72 +81,92 @@ describe('Email Service Unit Tests', () => {
     });
 
     test('should throw error when name is missing', async () => {
-      await expect(sendContactEmail(
-        '', 
-        'john@example.com', 
-        'Test Subject', 
-        'Test message'
-      )).rejects.toThrow('Missing required email parameters');
+      const formData = {
+        name: '',
+        email: 'john@example.com',
+        subject: 'Test Subject',
+        message: 'Test message'
+      };
+
+      await expect(sendContactEmailCore(formData))
+        .rejects.toThrow('Missing required email parameters');
     });
 
     test('should throw error when email is missing', async () => {
-      await expect(sendContactEmail(
-        'John Doe', 
-        '', 
-        'Test Subject', 
-        'Test message'
-      )).rejects.toThrow('Missing required email parameters');
+      const formData = {
+        name: 'John Doe',
+        email: '',
+        subject: 'Test Subject',
+        message: 'Test message'
+      };
+
+      await expect(sendContactEmailCore(formData))
+        .rejects.toThrow('Missing required email parameters');
     });
 
     test('should throw error when subject is missing', async () => {
-      await expect(sendContactEmail(
-        'John Doe', 
-        'john@example.com', 
-        '', 
-        'Test message'
-      )).rejects.toThrow('Missing required email parameters');
+      const formData = {
+        name: 'John Doe',
+        email: 'john@example.com',
+        subject: '',
+        message: 'Test message'
+      };
+
+      await expect(sendContactEmailCore(formData))
+        .rejects.toThrow('Missing required email parameters');
     });
 
     test('should throw error when message is missing', async () => {
-      await expect(sendContactEmail(
-        'John Doe', 
-        'john@example.com', 
-        'Test Subject', 
-        ''
-      )).rejects.toThrow('Missing required email parameters');
+      const formData = {
+        name: 'John Doe',
+        email: 'john@example.com',
+        subject: 'Test Subject',
+        message: ''
+      };
+
+      await expect(sendContactEmailCore(formData))
+        .rejects.toThrow('Missing required email parameters');
     });
 
     test('should throw error for invalid email format', async () => {
-      await expect(sendContactEmail(
-        'John Doe',
-        'invalid-email-format',
-        'Test Subject',
-        'Test message'
-      )).rejects.toThrow('Invalid email format');
+      const formData = {
+        name: 'John Doe',
+        email: 'invalid-email-format',
+        subject: 'Test Subject',
+        message: 'Test message'
+      };
+
+      await expect(sendContactEmailCore(formData))
+        .rejects.toThrow('Invalid email format');
     });
 
     test('should handle email sending failure', async () => {
       mockSendMail.mockRejectedValue(new Error('SMTP connection failed'));
 
-      await expect(sendContactEmail(
-        'John Doe',
-        'john@example.com',
-        'Test Subject',
-        'Test message'
-      )).rejects.toThrow('Error sending email');
+      const formData = {
+        name: 'John Doe',
+        email: 'john@example.com',
+        subject: 'Test Subject',
+        message: 'Test message'
+      };
+
+      await expect(sendContactEmailCore(formData))
+        .rejects.toThrow('Error sending email');
     });
   });
 
-  describe('sendBusinessEmail', () => {
+  describe('sendBusinessEmailCore', () => {
     test('should successfully send business email with all parameters', async () => {
-      const result = await sendBusinessEmail(
-        'Jane Smith',
-        'jane@company.com',
-        'Business Inquiry',
-        'This is a business message',
-        'Company Inc',
-        'Website referral'
-      );
+      const formData = {
+        name: 'Jane Smith',
+        email: 'jane@company.com',
+        subject: 'Business Inquiry',
+        message: 'This is a business message',
+        organization: 'Company Inc',
+        referral: 'Website referral'
+      };
+
+      const result = await sendBusinessEmailCore(formData);
 
       expect(result).toEqual({
         success: true,
@@ -165,14 +187,16 @@ describe('Email Service Unit Tests', () => {
     });
 
     test('should send business email with optional parameters as null', async () => {
-      const result = await sendBusinessEmail(
-        'Jane Smith',
-        'jane@company.com',
-        'Business Inquiry',
-        'This is a business message',
-        null,
-        null
-      );
+      const formData = {
+        name: 'Jane Smith',
+        email: 'jane@company.com',
+        subject: 'Business Inquiry',
+        message: 'This is a business message',
+        organization: null,
+        referral: null
+      };
+
+      const result = await sendBusinessEmailCore(formData);
 
       expect(result).toEqual({
         success: true,
@@ -185,32 +209,41 @@ describe('Email Service Unit Tests', () => {
     });
 
     test('should throw error for missing required business email parameters', async () => {
-      await expect(sendBusinessEmail(
-        '', 
-        'jane@company.com', 
-        'Subject', 
-        'Message'
-      )).rejects.toThrow('Missing required email parameters');
+      const formData = {
+        name: '',
+        email: 'jane@company.com',
+        subject: 'Subject',
+        message: 'Message'
+      };
+
+      await expect(sendBusinessEmailCore(formData))
+        .rejects.toThrow('Missing required email parameters');
     });
 
     test('should throw error for invalid business email format', async () => {
-      await expect(sendBusinessEmail(
-        'Jane Smith',
-        'invalid-email',
-        'Business Inquiry',
-        'Message'
-      )).rejects.toThrow('Invalid email format');
+      const formData = {
+        name: 'Jane Smith',
+        email: 'invalid-email',
+        subject: 'Business Inquiry',
+        message: 'Message'
+      };
+
+      await expect(sendBusinessEmailCore(formData))
+        .rejects.toThrow('Invalid email format');
     });
 
     test('should handle business email sending failure', async () => {
       mockSendMail.mockRejectedValue(new Error('Authentication failed'));
 
-      await expect(sendBusinessEmail(
-        'Jane Smith',
-        'jane@company.com',
-        'Business Inquiry',
-        'Message'
-      )).rejects.toThrow('Error sending email');
+      const formData = {
+        name: 'Jane Smith',
+        email: 'jane@company.com',
+        subject: 'Business Inquiry',
+        message: 'Message'
+      };
+
+      await expect(sendBusinessEmailCore(formData))
+        .rejects.toThrow('Error sending email');
     });
   });
 });
