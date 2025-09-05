@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { SpeedInsights } from "@vercel/speed-insights/react"
 import { AppProvider } from './utils/appContext';
 
 // Components
@@ -35,7 +36,7 @@ const AppContent = () => {
   const location = useLocation();
 
   return (
-    <>
+    <div>
       <ScrollToTop />
       <div className='solid__bg'>
         {location.pathname !== '/admin-login' && <Navbar />}
@@ -59,7 +60,8 @@ const AppContent = () => {
         
         {location.pathname !== '/admin-login' && <Footer />}
       </div>
-    </>
+      <SpeedInsights />
+    </div>
   );
 };
 
