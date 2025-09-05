@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import AddSecretariat from '../../components/adminButtons/AddSecretariat';
 import AddQuote from '../../components/adminButtons/AddQuote';
 import SecretariateOrderManager from '../../components/adminButtons/SecretariateOrderManager';
+import { SEOHelmet } from '../../components/SEOHelmet';
 
 // context and hooks
 import { usePeople } from '../../utils/usePeople';
@@ -24,7 +25,14 @@ const Secretariat = () => {
   }, []);
 
   return (
-    <main>
+    <>
+      <SEOHelmet 
+        title="Meet the Secretariat - SCUNC 2026"
+        description="Meet the dedicated student leaders organizing the Steel City United Nations Conference. Learn about our Secretariat team driving Pittsburgh's first collegiate Model UN conference."
+        keywords="SCUNC Secretariat, Model UN leadership, Pittsburgh MUN team, University of Pittsburgh students, conference organizers, Steel City United Nations Conference team"
+        canonical="https://scuncmun.org/about/secretariat"
+      />
+      <main>
         <header className='page-header'>
             <div className='header-container'>
                 <h1 className='aboutsub-title'>Meet the Secretariat</h1>
@@ -70,6 +78,7 @@ const Secretariat = () => {
           />
         )}
     </main>
+    </>
   )
 }
 

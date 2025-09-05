@@ -2,6 +2,7 @@ import HotelCard from '../../components/cards/HotelCard';
 import HotelManager from '../../components/adminButtons/HotelManager';
 import { useAppContext } from '../../utils/appContext';
 import { MapPin, Clock, Star, Info, Building2, Wifi, Car } from 'lucide-react';
+import { SEOHelmet } from '../../components/SEOHelmet';
 import '../../assets/css/aboutSubclass.css';
 import { useHotels } from '../../utils/useHotels';
 
@@ -14,7 +15,14 @@ const Hotels = () => {
   console.log('⏳ HOTELS_PAGE: Loading state:', loading);
 
   return (
-    <main className="hotels-page">
+    <>
+      <SEOHelmet 
+        title="Hotels & Accommodation - SCUNC 2026"
+        description="Find premium hotel options near the University of Pittsburgh campus for SCUNC 2026. Discover convenient accommodations within walking distance of conference venues."
+        keywords="SCUNC hotels, Pittsburgh hotels, University of Pittsburgh accommodation, Model UN hotels, Steel City United Nations Conference hotels, campus hotels"
+        canonical="https://scuncmun.org/about/hotels"
+      />
+      <main className="hotels-page">
       {/* Hero Section */}
       <section className="hotels-hero">
         <div className="hero-content">
@@ -148,6 +156,7 @@ const Hotels = () => {
         {isAdmin && <HotelManager />}
       </section>
     </main>
+    </>
   )
 }
 

@@ -168,6 +168,24 @@
     background: var(--color-text_b);
 }
 
+.schedule-loading {
+    text-align: center;
+    font-size: 18px;
+    color: var(--color-primary);
+}
+
+.schedule-loading::after {
+    content: "";
+    display: inline-block;
+    margin-left: 10px;
+    width: 32px;
+    height: 32px;
+    border: 2px solid var(--color-primary);
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
 @media screen and (max-width: 770px) {
     .schedule-body {
         margin: 3em 0 8em;

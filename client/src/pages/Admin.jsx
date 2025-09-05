@@ -9,6 +9,7 @@ import {
   BarChart3
 } from 'lucide-react';
 import { useAppContext } from '../utils/appContext';
+import { SEOHelmet } from '../components/SEOHelmet';
 import '../assets/css/admin.css';
 import { useNavigate } from 'react-router-dom';
 import { useRegister } from '../utils/useRegister';
@@ -45,7 +46,13 @@ const Admin = () => {
   }
 
   return (
-    <main>
+    <>
+      <SEOHelmet 
+        title="Admin Dashboard - SCUNC 2026"
+        description="Administrative dashboard for managing SCUNC 2026 registrations and conference data. Access restricted to authorized personnel only."
+        canonical="https://scuncmun.org/admin-dashboard"
+      />
+      <main>
       <header className='admin-header'>
         <div className='admin-header-container'>
           <div className='header-left'>
@@ -189,6 +196,7 @@ const Admin = () => {
         </div>
       </section>
     </main>
+    </>
   );
 };
 

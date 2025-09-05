@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import AddCommittee from '../components/adminButtons/AddCommittee';
-import { ToastContainer } from 'react-toastify';
+import { SEOHelmet } from '../components/SEOHelmet';
 import { Link } from 'react-router-dom';
 import { useAppContext } from '../utils/appContext';
 import { ExternalLink, Download, Users, Settings } from 'lucide-react';
@@ -35,7 +35,14 @@ const Committees = () => {
     : groupedCommittees[selectedCategory] || [];
 
   return (
-    <main>
+    <>
+      <SEOHelmet 
+        title="Committees - SCUNC 2026"
+        description="Explore diverse Model UN committees at SCUNC including Crisis Committees, General Assembly, and ECOSOC. Find background guides and committee details."
+        keywords="Model UN committees, SCUNC committees, Crisis Committee, General Assembly, ECOSOC, background guides, Model UN topics"
+        canonical="https://scuncmun.org/committees"
+      />
+      <main>
       <header className='page-header-img committees'>
         <div className='header-container-img'>
           <h1 className='title' style={{fontSize: '56px'}}>Committees</h1>
@@ -190,8 +197,8 @@ const Committees = () => {
 
       <AddCommittee />
 
-      <ToastContainer position='top-right' autoClose={4000} />
     </main>
+    </>
   )
 }
 

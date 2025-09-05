@@ -1,7 +1,8 @@
 import { useEffect, useState} from 'react';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { User, Mail, Users, Phone, School, Calendar } from 'lucide-react';
 import { useAppContext } from '../utils/appContext';
+import { SEOHelmet } from '../components/SEOHelmet';
 import '../assets/css/register.css';
 import { useRegister } from '../utils/useRegister';
 
@@ -89,7 +90,14 @@ const Register = () => {
   };
 
   return (
-    <main>
+    <>
+      <SEOHelmet 
+        title="Register - SCUNC 2026"
+        description="Register your school for the Steel City United Nations Conference 2026. Early registration: $60/delegation, $65/delegate. Conference dates: February 26th - March 1st, 2026."
+        keywords="SCUNC registration, Model UN registration, Pittsburgh MUN, University of Pittsburgh conference, Steel City United Nations Conference registration, delegate registration"
+        canonical="https://scuncmun.org/register"
+      />
+      <main>
       <header className='register-header'>
         <div className='header-container'>
           <h1 className='register-title'>Conference Registration</h1>
@@ -268,9 +276,8 @@ const Register = () => {
           )}
         </div>
       </section>
-      
-      <ToastContainer position='top-right' autoClose={4000} />
     </main>
+    </>
   )
 }
 

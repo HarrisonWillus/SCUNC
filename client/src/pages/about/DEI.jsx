@@ -1,11 +1,19 @@
 import '../../assets/css/aboutSubclass.css';
 import { Link } from 'react-router-dom';
 import { DEIinfo } from '../formData';
+import { SEOHelmet } from '../../components/SEOHelmet';
 
 const DEI = () => {
 
   return (
-    <main>
+    <>
+      <SEOHelmet 
+        title="Diversity, Equity & Inclusion - SCUNC 2026"
+        description="Learn about SCUNC's commitment to diversity, equity, and inclusion. Read our DEI policy and access our anonymous reporting form for concerns."
+        keywords="SCUNC DEI, diversity equity inclusion, Model UN diversity, inclusive conference, Pittsburgh MUN diversity policy, anonymous reporting"
+        canonical="https://scuncmun.org/about/dei"
+      />
+      <main>
       <header className='page-header'>
         <div className='header-container'>
             <h1 className='aboutsub-title'>SCUNC Diversity, Equity, and Inclusion Policy</h1>
@@ -28,6 +36,7 @@ const DEI = () => {
         </div>
       </section>
     </main>
+    </>
   )
 }
 

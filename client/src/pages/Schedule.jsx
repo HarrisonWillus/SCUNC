@@ -3,15 +3,22 @@ import useScreenWidth from '../components/useScreenWidth';
 import ScheduleBuilder from '../components/adminButtons/ScheduleBuilder';
 import { useAppContext } from '../utils/appContext';
 import { useScheduleWorkflow } from '../utils/useScheduleWorkflow';
+import { SEOHelmet } from '../components/SEOHelmet';
 import '../assets/css/schedule.css';
 import { MapPin, Calendar } from 'lucide-react';
-import { ToastContainer } from 'react-toastify';
 
 const Schedule = () => {
   const { setShowAnimation, showAnimation, isAdmin } = useAppContext();
 
   return (
-    <main>
+    <>
+      <SEOHelmet 
+        title="Schedule - SCUNC 2026"
+        description="View the detailed conference schedule for SCUNC 2026. Find session times, committee meetings, and special events for February 26th - March 1st, 2026."
+        keywords="SCUNC schedule, Model UN schedule, conference schedule, Pittsburgh MUN, Steel City United Nations Conference schedule, February 2026"
+        canonical="https://scuncmun.org/schedule"
+      />
+      <main>
       <header className='page-header-img schedule'>
         <div className='header-container-img' style={{marginTop: '30vh'}}>
           <h1 className='title' style={{fontSize: '32px'}}>Conference Schedule</h1>
@@ -33,10 +40,9 @@ const Schedule = () => {
         </div>
       )}
       <ScheduleBuilder />
-
-      <ToastContainer position='top-right' autoClose={4000} />
     </main>
-  )
+    </>
+  );
 };
 
 const ScheduleDisplay = () => {
@@ -60,7 +66,6 @@ const ScheduleDisplay = () => {
     return (
       <section className='schedule-body'>
         <div className='schedule-loading'>
-          <p>Loading schedule...</p>
         </div>
       </section>
     );

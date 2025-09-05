@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Mail, User, MessageSquare } from 'lucide-react';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { useAppContext } from '../utils/appContext';
 import { useContact } from '../utils/useContact';
+import { SEOHelmet } from '../components/SEOHelmet';
 
 import '../assets/css/contact.css';
 
@@ -53,7 +54,14 @@ const Contact = () => {
   };
 
   return (
-    <main>
+    <>
+      <SEOHelmet 
+        title="Contact Us - SCUNC 2026"
+        description="Get in touch with the Steel City United Nations Conference team. Send us your questions, concerns, or feedback about our Model UN conference."
+        keywords="contact SCUNC, Model UN contact, Steel City United Nations Conference, Pittsburgh MUN, University of Pittsburgh contact"
+        canonical="https://scuncmun.org/contact"
+      />
+      <main>
       <section className='contact-container'>
         <div className='contact-card'>
           <div className='contact-header'>
@@ -143,9 +151,8 @@ const Contact = () => {
           </form>
         </div>
       </section>
-      
-      <ToastContainer position='top-right' autoClose={4000} />
     </main>
+    </>
   )
 }
 

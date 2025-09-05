@@ -1,6 +1,7 @@
 import { letter } from './formData';
 import { useState, useEffect } from 'react';
 import { ChevronDown, Calendar, MapPin } from 'lucide-react';
+import { SEOHelmet } from '../components/SEOHelmet';
 import '../assets/css/home.css';
 
 const Home = () => {
@@ -17,7 +18,14 @@ const Home = () => {
   };
 
   return (
-    <main className='home'>
+    <>
+      <SEOHelmet 
+        title="SCUNC - Steel City United Nations Conference"
+        description="Pittsburgh's first collegiate Model UN conference. Join us February 26th - March 1st, 2026 for an unforgettable diplomatic experience at the University of Pittsburgh."
+        keywords="SCUNC, Steel City United Nations Conference, Model UN, Pittsburgh, University of Pittsburgh, Pitt, diplomacy, international relations, February 2026"
+        canonical="https://scuncmun.org/"
+      />
+      <main className='home'>
       <header className='home-hero'>
         <div className='hero-background-overlay'></div>
         <div className='hero-particles'>
@@ -74,6 +82,7 @@ const Home = () => {
         </div>
       </section>
     </main>
+    </>
   )
 }
 

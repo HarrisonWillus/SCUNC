@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAppContext } from '../utils/appContext';
+import { SEOHelmet } from '../components/SEOHelmet';
 import { 
   ArrowLeft, 
   Download, 
@@ -52,7 +53,14 @@ const CommitteeDetails = () => {
   const category = categories.find(cat => cat.id === committee.category_id);
 
   return (
-    <div className="committee-details">
+    <>
+      <SEOHelmet 
+        title={`${committee.title} - SCUNC 2026`}
+        description={`Learn about the ${committee.title} committee at SCUNC 2026. ${committee.description ? committee.description.substring(0, 150) : 'Explore topics, download background guides, and register for this Model UN committee.'}`}
+        keywords={`${committee.title}, SCUNC committee, Model UN committee, ${category?.title || 'committee'}, Steel City United Nations Conference`}
+        canonical={`https://scuncmun.org/committees/${committee.id}`}
+      />
+      <div className="committee-details">
       {/* Hero Section */}
       <section className="hero-section">
         <div 
@@ -165,6 +173,7 @@ const CommitteeDetails = () => {
       <AddCommittee />
 
     </div>
+    </>
   );
 };
 

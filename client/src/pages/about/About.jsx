@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ChevronRight, Users, Globe, Award, ArrowDown } from 'lucide-react';
+import { SEOHelmet } from '../../components/SEOHelmet';
 import '../../assets/css/about.css';
 import { aboutInfo, infoCardInfo } from '../formData';
 import TestimonialCard from '../../components/cards/TestimonialCard';
@@ -24,7 +25,14 @@ const About = () => {
   };
 
   return (
-    <main className="about-main">
+    <>
+      <SEOHelmet 
+        title="About SCUNC - Steel City United Nations Conference"
+        description="Learn about Pittsburgh's first collegiate Model UN conference. Discover our student-led vision, creative committee formats, and commitment to diplomacy and international relations."
+        keywords="About SCUNC, Steel City United Nations Conference, Pittsburgh Model UN, University of Pittsburgh MUN, student-led conference, diplomacy, international relations"
+        canonical="https://scuncmun.org/about"
+      />
+      <main className="about-main">
       {/* Hero Section */}
       <section className='about-hero'>
         <div className='hero-overlay'></div>
@@ -160,6 +168,7 @@ const About = () => {
 
       <AddQuote />
     </main>
+    </>
   )
 }
 
