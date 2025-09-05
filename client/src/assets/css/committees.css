@@ -286,46 +286,6 @@
     color: var(--color-pitt-cream);
 }
 
-.feedback-card {
-    max-width: 600px;
-    margin: 0 auto;
-    text-align: center;
-    padding: 40px;
-    background: var(--color-pitt-white);
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-}
-
-.feedback-card h2 {
-    margin-bottom: 16px;
-    font-size: 1.5rem;
-}
-
-.feedback-card p {
-    margin-bottom: 24px;
-    font-size: 1.1rem;
-}
-
-.feedback-button {
-    background: var(--color-pitt-blue);
-    color: var(--color-pitt-white);
-    border: none;
-    padding: 14px 28px;
-    border-radius: 8px;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-.feedback-button:hover {
-    background: var(--color-pitt-blue-dark);
-    transform: translateY(-2px);
-    color: var(--color-pitt-white);
-}
-
 /* Responsive Design */
 @media (max-width: 768px) {
     .committees-grid {
