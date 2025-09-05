@@ -1,4 +1,4 @@
-import { Helmet } from 'react-helmet-async';
+import { Helmet } from 'react-helmet';
 
 export const SEOHelmet = ({ 
   title = "Pitt Model UN", 
