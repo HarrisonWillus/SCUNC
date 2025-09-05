@@ -254,7 +254,6 @@ fieldset {
     background-color: var(--color-primary);
     color: var(--color-text_w);
     border-radius: 10px;
-    width: 60%;
     padding: 1.5rem;
     display: flex;
     flex-direction: column;

@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { Mail, User, MessageSquare, Send } from 'lucide-react';
+import { Mail, User, MessageSquare } from 'lucide-react';
 import { toast, ToastContainer } from 'react-toastify';
-
 import { useAppContext } from '../utils/appContext';
 import { useContact } from '../utils/useContact';
 
@@ -38,20 +37,19 @@ const Contact = () => {
       return;
     }
 
-    await sendEmail(
-      formData.name,
-      formData.email,
-      formData.subject,
-      formData.message
-    ).then(() => {
-      setFormData({
-        name: '',
-        email: '',
-        subject: '',
-        message: '',
+    await sendEmail(formData)
+      .then(() => {
+        toast.success("Email sent successfully!");
+        setFormData({
+          name: '',
+          email: '',
+          subject: '',
+          message: '',
+        });
+      })
+      .catch((error) => {
+        toast.error(error.message || 'Failed to send email. Please try again.');
       });
-    });
-
   };
 
   return (
@@ -71,7 +69,7 @@ const Contact = () => {
           <form onSubmit={handleSubmit} className='contact-form'>
             <div className='form-row'>
               <div className='input-group'>
-                <label className='input-label'>
+                <label className='contact-message-label'>
                   Name <span className='required'>*</span>
                 </label>
                 <div className='input-wrapper'>
@@ -88,7 +86,7 @@ const Contact = () => {
               </div>
 
               <div className='input-group'>
-                <label className='input-label'>
+                <label className='contact-message-label'>
                   Email <span className='required'>*</span>
                 </label>
                 <div className='input-wrapper'>
@@ -106,7 +104,7 @@ const Contact = () => {
             </div>
 
             <div className='input-group'>
-              <label className='input-label'>
+              <label className='contact-message-label'>
                 Subject <span className='required'>*</span>
               </label>
               <div className='input-wrapper'>
@@ -123,7 +121,7 @@ const Contact = () => {
             </div>
 
             <div className='input-group'>
-              <label className='input-label'>
+              <label className='contact-message-label'>
                 Message <span className='required'>*</span>
               </label>
               <div className='input-wrapper'>
@@ -141,25 +139,7 @@ const Contact = () => {
               </div>
             </div>
 
-            <button 
-              type='submit' 
-              className={`contact-button ${loading ? 'loading' : ''}`}
-              disabled={loading}
-            >
-              <div className='button-content'>
-                {loading ? (
-                  <>
-                    <div className='spinner'></div>
-                    <span>Sending...</span>
-                  </>
-                ) : (
-                  <>
-                    <Send size={20} />
-                    <span>Send Message</span>
-                  </>
-                )}
-              </div>
-            </button>
+            <button type='submit' className='my-contact_button' disabled={loading}>{loading ? 'Sending...' : 'Send Message'}</button>
           </form>
         </div>
       </section>

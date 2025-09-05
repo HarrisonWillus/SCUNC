@@ -118,8 +118,8 @@
     z-index: 1000;
     transition: transform .3s cubic-bezier(.4, 0, .2, 1);
 
-    max-height: 99vh;
-    overflow-y: auto;
+    max-height: 98vh;
+    overflow-x: hidden;
     box-sizing: border-box;
 }
 
@@ -212,6 +212,53 @@
 
 .edit-menu-buttons.close:hover {
     color: var(--color-error);
+}
+
+.my-contact_button {
+    background-color: var(--color-primary);
+    color: var(--color-text_w);
+    border: none;
+    border-radius: 5px;
+    padding: .5rem 1.5rem;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 300;
+    transition: background-color .3s ease-in-out, color .3s ease-in-out;
+    display: flex;
+    align-items: center;
+    width: fit-content;
+}
+
+.my-contact_button:hover {
+    background-color: var(--color-secondary);
+    color: var(--color-text_w);
+}
+
+.my-contact_button:disabled {
+    background-color: grey;
+    cursor: not-allowed;
+}
+
+.my-contact_button:disabled::after {
+    color: var(--color-secondary);
+    animation: spinning 1s linear infinite;
+    content: '';
+    display: inline-block;
+    border: 2px solid var(--color-text_w);
+    border-top: 2px solid var(--color-secondary);
+    border-radius: 50%;
+    width: 12px;
+    height: 12px;
+    margin-left: 8px;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: transparent;
+}
+
+@keyframes spinning {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 @media screen and (max-width: 770px) {

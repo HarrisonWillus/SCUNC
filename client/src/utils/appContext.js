@@ -47,7 +47,7 @@ export const AppProvider = ({ children }) => {
     // check if token is there and is valid if it is setIsAdmin to true
     const token = sessionStorage.getItem('token');
     if (token) {
-      fetch('/api/auth/verifyToken', {
+      fetch(`${process.env.REACT_APP_API_URL}/auth/verifyToken`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

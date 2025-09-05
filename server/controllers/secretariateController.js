@@ -3,25 +3,25 @@ const supabase = require('../config/supabaseClient');
 
 // get all the secretariates
 exports.getAllSecretariates = async (req, res) => {
-    console.log('👥 SECRETARIATES: GET all secretariates request received');
+    console.log('Step 1: GET all secretariates request received and processing');
     
     try {
-        console.log('🔍 SECRETARIATES: Querying database for all secretariates...');
+        console.log('Step 2: Querying database for all secretariates data');
         const result = await pool.query('SELECT * FROM secretariates ORDER BY order_num ASC');
-        console.log('✅ SECRETARIATES: Found', result.rows.length, 'secretariates');
+        console.log('Step 3: Successfully found secretariates count:', result.rows.length);
 
         res.status(200).json({ secretariate: result.rows, message: 'Secretariates fetched successfully' });
     } catch (error) {
-        console.error('💥 SECRETARIATES: Error fetching secretariates:', error);
+        console.error('Step 4: Error occurred while fetching secretariates:', error);
         res.status(500).json({ message: 'Server error' });
     }
 };
 
 // Create a new Secretariate
 exports.createSecretariate = async (req, res) => {
-    console.log('👥 SECRETARIATES: Create secretariate request received');
-    console.log('� FULL REQUEST BODY:', JSON.stringify(req.body, null, 2));
-    console.log('�👤 Name:', req.body.name);
+    console.log('Step 1: Create secretariate request received and processing');
+    console.log('Step 2: Full request body analysis:', JSON.stringify(req.body, null, 2));
+    console.log('Step 3: Name field validation:', req.body.name);
     console.log('🏷️ Title:', req.body.title);
     console.log('📄 Description length:', req.body.description ? req.body.description.length : 0);
     console.log('🖼️ PFP provided:', !!req.body.pfp);

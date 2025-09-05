@@ -3,11 +3,11 @@ const supabase = require('../config/supabaseClient');
 
 // Get all committees with topics
 exports.getAllCommittees = async (req, res) => {
-    console.log('🔵 getAllCommittees - Function started');
-    console.log('📥 getAllCommittees - Request received from:', req.ip || 'unknown IP');
+    console.log('Step 1: getAllCommittees function initiated');
+    console.log('Step 2: Request received from IP address:', req.ip || 'unknown IP');
     
     try {
-        console.log('🗄️ getAllCommittees - Executing database query to fetch all committees with topics');
+        console.log('Step 3: Executing database query to fetch all committees with topics');
         const result = await pool.query(`SELECT c.*, 
                                         cat.title as category_title, 
                                         cat.id AS category_id,
@@ -25,113 +25,112 @@ exports.getAllCommittees = async (req, res) => {
                                         GROUP BY c.id, cat.id, cat.title
                                         ORDER BY c.order_num ASC, c.created_at ASC`);
         
-        console.log('✅ getAllCommittees - Database query successful');
-        console.log('📊 getAllCommittees - Retrieved', result.rows.length, 'committees');
-        console.log('📋 getAllCommittees - Committee data preview:', result.rows.map(c => ({ id: c.id, title: c.title, category: c.category_title })));
+        console.log('Step 4: Database query executed successfully');
+        console.log('Step 5: Committee data preview:', result.rows.map(c => ({ id: c.id, title: c.title, category: c.category_title })));
         
-        console.log('🔵 getAllCommittees - Function completed successfully');
+        console.log('Step 6: getAllCommittees function completed successfully');
         res.status(200).json({ committees: result.rows });
     } catch (error) {
-        console.error('❌ getAllCommittees - Database error occurred:', error.message);
-        console.error('📍 getAllCommittees - Error stack:', error.stack);
-        console.error('🔴 getAllCommittees - Function failed');
+        console.error('Step 7: Database error occurred during query execution:', error.message);
+        console.error('Step 8: Error stack trace:', error.stack);
+        console.error('Step 9: getAllCommittees function failed');
         res.status(500).json({ message: 'Server error' });
     }
 };
 
 // Get all categories
 exports.getCategories = async (req, res) => {
-    console.log('🔵 getCategories - Function started');
-    console.log('📥 getCategories - Request received from:', req.ip || 'unknown IP');
+    console.log('Step 1: getCategories function initiated');
+    console.log('Step 2: Request received from IP address:', req.ip || 'unknown IP');
     
     try {
-        console.log('🗄️ getCategories - Executing database query to fetch all categories');
+        console.log('Step 3: Executing database query to fetch all categories');
         const result = await pool.query('SELECT * FROM categories ORDER BY title ASC');
         
-        console.log('✅ getCategories - Database query successful');
-        console.log('📊 getCategories - Retrieved', result.rows.length, 'categories');
-        console.log('📋 getCategories - Categories:', result.rows.map(c => ({ id: c.id, title: c.title })));
+        console.log('Step 4: Database query executed successfully');
+        console.log('Step 5: Retrieved category count:', result.rows.length);
+        console.log('Step 6: Categories list:', result.rows.map(c => ({ id: c.id, title: c.title })));
         
-        console.log('🔵 getCategories - Function completed successfully');
+        console.log('Step 7: getCategories function completed successfully');
         res.status(200).json({ categories: result.rows });
     } catch (error) {
-        console.error('❌ getCategories - Database error occurred:', error.message);
-        console.error('📍 getCategories - Error stack:', error.stack);
-        console.error('🔴 getCategories - Function failed');
+        console.error('Step 8: Database error occurred during query execution:', error.message);
+        console.error('Step 9: Error stack trace:', error.stack);
+        console.error('Step 10: getCategories function failed');
         res.status(500).json({ message: 'Server error' });
     }
 };
 
 // Create a new committee
 exports.createCommittee = async (req, res) => {
-    console.log('📝 COMMITTEES: Create committee request received');
-    console.log('📦 FULL REQUEST BODY:', JSON.stringify(req.body, null, 2));
-    console.log('🏷️ Name:', req.body.title);
-    console.log('🏢 Category ID:', req.body.category_id);
-    console.log('📄 Description length:', req.body.description ? req.body.description.length : 0);
-    console.log('🖼️ Image provided:', !!req.body.image);
-    console.log('🖼️ Image type:', typeof req.body.image);
-    console.log('🖼️ Image value (first 100 chars):', req.body.image ? req.body.image.substring(0, 100) + '...' : null);
-    console.log('✉️ Background guide:', req.body.background_guide);
-    console.log('📝 Topics provided:', !!req.body.topics);
-    console.log('📝 Topics type:', typeof req.body.topics);
-    console.log('📝 Topics length:', req.body.topics ? req.body.topics.length : 0);
+    console.log('Step 1: Create committee request received and processing');
+    console.log('Step 2: Full request body analysis:', JSON.stringify(req.body, null, 2));
+    console.log('Step 3: Committee name validation:', req.body.title);
+    console.log('Step 4: Category ID verification:', req.body.category_id);
+    console.log('Step 5: Description length check:', req.body.description ? req.body.description.length : 0);
+    console.log('Step 6: Image data presence verification:', !!req.body.image);
+    console.log('Step 7: Image data type analysis:', typeof req.body.image);
+    console.log('Step 8: Image data preview:', req.body.image ? req.body.image.substring(0, 100) + '...' : null);
+    console.log('Step 9: Background guide validation:', req.body.background_guide);
+    console.log('Step 10: Topics data presence check:', !!req.body.topics);
+    console.log('Step 11: Topics data type verification:', typeof req.body.topics);
+    console.log('Step 12: Topics array length validation:', req.body.topics ? req.body.topics.length : 0);
     
     const { title, description, category_id, image, background_guide, topics } = req.body;
 
     if (!title || !description || !category_id || !image) {
-        console.log('❌ COMMITTEES: Missing required fields');
+        console.log('Step 13: Required fields validation failed');
         return res.status(400).json({ message: 'Missing required fields' });
     }
 
     try {
-        console.log('☁️ COMMITTEES: Processing image upload...');
+        console.log('Step 14: Beginning image upload processing workflow');
         
         // Handle base64 image data from frontend
         let imageBuffer, fileName, mimeType;
         let backgroundGuideUrl = null;
 
         if (typeof image === 'string') {
-            console.log('📝 COMMITTEES: Image is base64 string, processing...');
-            console.log('🔍 COMMITTEES: Raw image string length:', image.length);
-            console.log('🔍 COMMITTEES: Image string start (first 150 chars):', image.substring(0, 150));
+            console.log('Step 15: Image detected as base64 string, initiating processing');
+            console.log('Step 16: Raw image string length measurement:', image.length);
+            console.log('Step 17: Image string header analysis:', image.substring(0, 150));
 
             // Extract filename from data URL if present
             let originalFilename = null;
             const nameMatch = image.match(/data:[^;]+;name=([^;]+);/);
             if (nameMatch) {
                 originalFilename = decodeURIComponent(nameMatch[1]);
-                console.log('📁 COMMITTEES: Original filename found:', originalFilename);
+                console.log('Step 18: Original filename extracted successfully:', originalFilename);
             } else {
-                console.log('⚠️ COMMITTEES: No filename found in data URL');
+                console.log('Step 19: No filename found in data URL structure');
             }
             
             // Check if the data URL is properly formatted
             const dataUrlMatch = image.match(/^data:([^;]+);(name=[^;]+;)?base64,(.+)$/);
             if (!dataUrlMatch) {
-                console.log('❌ COMMITTEES: Invalid data URL format');
-                console.log('🔍 COMMITTEES: Expected format: data:mime/type;name=filename;base64,data');
+                console.log('Step 20: Invalid data URL format detected');
+                console.log('Step 21: Expected format verification: data:mime/type;name=filename;base64,data');
                 throw new Error('Invalid base64 data URL format');
             }
             
             const mimeTypeFromUrl = dataUrlMatch[1];
             const base64Data = dataUrlMatch[3];
             
-            console.log('🎯 COMMITTEES: Extracted MIME type:', mimeTypeFromUrl);
-            console.log('🎯 COMMITTEES: Base64 data length:', base64Data.length);
-            console.log('🎯 COMMITTEES: Base64 data start (first 50 chars):', base64Data.substring(0, 50));
+            console.log('Step 22: MIME type extraction completed:', mimeTypeFromUrl);
+            console.log('Step 23: Base64 data length measurement:', base64Data.length);
+            console.log('Step 24: Base64 data header preview:', base64Data.substring(0, 50));
             
             // Validate base64 data
             if (!base64Data || base64Data.length < 100) {
-                console.log('❌ COMMITTEES: Base64 data is too short or empty');
+                console.log('Step 25: Base64 data validation failed - insufficient length or empty');
                 throw new Error('Invalid base64 image data');
             }
             
             try {
                 imageBuffer = Buffer.from(base64Data, 'base64');
-                console.log('✅ COMMITTEES: Buffer created successfully');
+                console.log('Step 26: Buffer creation from base64 data completed successfully');
             } catch (bufferError) {
-                console.log('❌ COMMITTEES: Failed to create buffer from base64:', bufferError.message);
+                console.log('Step 27: Buffer creation from base64 data failed:', bufferError.message);
                 throw new Error('Failed to process base64 image data');
             }
             
@@ -139,31 +138,31 @@ exports.createCommittee = async (req, res) => {
             fileName = originalFilename || `committee_${Date.now()}.jpg`;
             mimeType = mimeTypeFromUrl || 'image/jpeg';
             
-            console.log('   - Using filename:', fileName);
-            console.log('   - MIME type:', mimeType);
-            console.log('   - Buffer size:', imageBuffer.length);
-            console.log('   - Buffer is valid:', imageBuffer && imageBuffer.length > 0);
+            console.log('Step 28: Using filename for storage:', fileName);
+            console.log('Step 29: MIME type assignment:', mimeType);
+            console.log('Step 30: Buffer size verification:', imageBuffer.length);
+            console.log('Step 31: Buffer validity confirmation:', imageBuffer && imageBuffer.length > 0);
         } else if (image && image.buffer) {
-            console.log('📁 COMMITTEES: Image is file object, processing...');
+            console.log('Step 32: Image detected as file object, processing accordingly');
             imageBuffer = image.buffer;
             fileName = image.originalname || `committee_${Date.now()}.jpg`;
             mimeType = image.mimetype || 'image/jpeg';
 
-            console.log('   - Original filename:', fileName);
-            console.log('   - MIME type:', mimeType);
-            console.log('   - Buffer size:', imageBuffer.length);
+            console.log('Step 33: Original filename from file object:', fileName);
+            console.log('Step 34: MIME type from file object:', mimeType);
+            console.log('Step 35: Buffer size from file object:', imageBuffer.length);
         } else {
-            console.log('❌ COMMITTEES: Invalid image format');
+            console.log('Step 36: Invalid image format detected');
             throw new Error('Invalid image format');
         }
 
-        console.log('☁️ COMMITTEES: Uploading to Supabase storage...');
+        console.log('Step 37: Initiating Supabase storage upload process');
         
         // Debug the buffer before upload
-        console.log('🔍 COMMITTEES: Pre-upload buffer validation:');
-        console.log('   - Buffer length:', imageBuffer.length);
-        console.log('   - Buffer start (hex):', imageBuffer.slice(0, 20).toString('hex'));
-        console.log('   - Is valid JPEG header:', imageBuffer.slice(0, 3).toString('hex') === 'ffd8ff');
+        console.log('Step 38: Pre-upload buffer validation process');
+        console.log('Step 39: Buffer length verification:', imageBuffer.length);
+        console.log('Step 40: Buffer start bytes in hex format:', imageBuffer.slice(0, 20).toString('hex'));
+        console.log('Step 41: JPEG header validation check:', imageBuffer.slice(0, 3).toString('hex') === 'ffd8ff');
         
         const { data, error } = await supabase.storage
             .from('committee-images')
@@ -174,14 +173,14 @@ exports.createCommittee = async (req, res) => {
             });
 
         if (error) {
-            console.log('❌ COMMITTEES: Supabase upload error:', error.message);
-            console.log('🔍 COMMITTEES: Full error object:', JSON.stringify(error, null, 2));
+            console.log('Step 42: Supabase upload process failed:', error.message);
+            console.log('Step 43: Full error object analysis:', JSON.stringify(error, null, 2));
             throw error;
         }
 
-        console.log('✅ COMMITTEES: Image uploaded successfully');
-        console.log('📊 COMMITTEES: Upload response data:', data);
-        console.log('🔗 COMMITTEES: Getting public URL...');
+        console.log('Step 44: Image upload to Supabase completed successfully');
+        console.log('Step 45: Upload response data verification:', data);
+        console.log('Step 46: Initiating public URL retrieval process');
         
         // Get the public URL
         const { data: publicUrlData } = supabase.storage
@@ -189,7 +188,7 @@ exports.createCommittee = async (req, res) => {
             .getPublicUrl(fileName);
 
         const imageUrl = publicUrlData.publicUrl;
-        console.log('🔗 COMMITTEES: Public URL:', imageUrl);
+        console.log('Step 47: Public URL generation completed:', imageUrl);
 
         // Handle background guide upload if provided
         if (background_guide) {

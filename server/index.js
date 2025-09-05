@@ -15,6 +15,13 @@ const corsOptions = {
 
 const validateApiKey = require('./middleware/validAPIKey');
 
+app.use((req, res, next) => {
+    if (req.headers['x-forwarded-for'] && !app.get('trust proxy')) {
+        app.set('trust proxy', 1);
+        console.log('✅ Auto-enabled trust proxy due to X-Forwarded-For header');
+    }
+    next();
+});
 app.use(cors(corsOptions));
 app.use(validateApiKey);
 

@@ -132,7 +132,7 @@
 .input-icon {
   position: absolute;
   left: 1rem;
-  top: 50%;
+  top: 33%;
   transform: translateY(-50%);
   color: var(--color-pitt-steel);
   z-index: 1;
@@ -142,7 +142,7 @@
 .contact-input,
 .contact-textarea {
   width: 100%;
-  padding: 1.2rem 1.2rem 1.2rem 2rem;
+  padding: 1.2rem 1.2rem 1.2rem 3rem;
   border: 2px solid #e2e8f0;
   border-radius: 16px;
   font-size: 1rem;
@@ -161,6 +161,10 @@
   box-shadow: 0 0 0 4px rgba(255, 184, 28, 0.1);
   transform: translateY(-2px);
   background: var(--color-pitt-white);
+}
+
+.contact-message-label {
+  color: var(--color-pitt-blue);
 }
 
 .contact-input:focus ~ .input-icon,

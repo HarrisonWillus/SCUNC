@@ -222,10 +222,6 @@
         animation: slideOut 1s ease forwards;
       }
 
-    .close {
-        margin-left: 95%;
-    }
-
     .event-grid.clicked {
         grid-template-columns: none;
         grid-template-rows: auto 2fr;

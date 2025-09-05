@@ -3,20 +3,20 @@ const JWT = require('jsonwebtoken');
 
 // Function to handle user Login
 exports.login = async (req, res) => {
-    console.log('🔐 AUTH: Login attempt received');
-    console.log('📧 Email:', req.body.email);
-    console.log('🔑 Password length:', req.body.password ? req.body.password.length : 0);
+    console.log('Step 1: Login attempt received');
+    console.log('Step 2: Processing email:', req.body.email);
+    console.log('Step 3: Password length validation:', req.body.password ? req.body.password.length : 0);
     
     const { email, password } = req.body;
 
     try {
-        console.log('🚀 AUTH: Attempting Supabase authentication...');
-        console.log('🔍 AUTH: Supabase object type:', typeof supabase);
-        console.log('🔍 AUTH: Supabase.auth available:', !!supabase?.auth);
-        console.log('🔍 AUTH: signInWithPassword available:', !!supabase?.auth?.signInWithPassword);
+        console.log('Step 4: Initiating Supabase authentication process');
+        console.log('Step 5: Validating Supabase object type:', typeof supabase);
+        console.log('Step 6: Checking Supabase auth availability:', !!supabase?.auth);
+        console.log('Step 7: Verifying signInWithPassword method availability:', !!supabase?.auth?.signInWithPassword);
         
         if (!supabase || !supabase.auth || !supabase.auth.signInWithPassword) {
-            console.error('❌ AUTH: Supabase client not properly initialized');
+            console.error('Step 8: Supabase client initialization failure detected');
             return res.status(500).json({ error: 'Authentication service unavailable' });
         }
         
@@ -27,20 +27,20 @@ exports.login = async (req, res) => {
         });
 
         if (error) {
-            console.log('❌ AUTH: Supabase authentication failed:', error.message);
+            console.log('Step 9: Supabase authentication failed with error:', error.message);
             return res.status(401).json({ error: 'Invalid email or password' });
         }
 
-        console.log('✅ AUTH: Supabase authentication successful');
-        console.log('👤 User ID:', data.user?.id);
+        console.log('Step 10: Supabase authentication completed successfully');
+        console.log('Step 11: Retrieved user ID from authentication data:', data.user?.id);
         
         // Generate a session token
         const token = JWT.sign({ isAdmin: true, id: data.user?.id, email: data.user?.email }, process.env.JWT_KEY, { expiresIn: '1h' });
-        console.log('🎫 AUTH: JWT token generated successfully');
+        console.log('Step 12: JWT token generation completed successfully');
         
         res.status(200).json({ token, message: 'Login successful' });
     } catch (error) {
-        console.error('💥 AUTH: Login error:', error);
+        console.error('Step 13: Login process encountered error:', error);
         res.status(500).json({ error: 'Server error during login' });
     }
 };
