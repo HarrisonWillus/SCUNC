@@ -2,9 +2,9 @@ const pool = require('../config/db');
 
 // get all quotes
 exports.getAllQuotes = async (req, res) => {
-    console.log('quoteController.getAllQuotes: Function called - quotes retrieval request received');
+    console.log('GET QUOTE: Function called - quotes retrieval request received');
     try {
-        console.log('quoteController.getAllQuotes: Database query execution started for quotes with secretariate data');
+        console.log('GET QUOTE: Database query execution started for quotes with secretariate data');
         const result = await pool.query(`
             SELECT 
                 q.*,
@@ -15,17 +15,17 @@ exports.getAllQuotes = async (req, res) => {
             LEFT JOIN secretariates s ON q.person_id = s.id
             ORDER BY q.created_at DESC
         `);
-        console.log('quoteController.getAllQuotes: Database query successful - quotes retrieved');
+        console.log('GET QUOTE: Database query successful - quotes retrieved\n');
         res.json(result.rows);
     } catch (error) {
-        console.error('quoteController.getAllQuotes: Function failed with error:', error.message);
+        console.error('GET QUOTE: Function failed with error:', error.message, '\n');
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
 
 // Adds a new quote
 exports.addQuote = async (req, res) => {
-    console.log('quoteController.addQuote: Function called - quote creation request received');
+    console.log('ADD QUOTE: Function called - quote creation request received');
     const { title, text, name, position, person_id } = req.body;
     
     try {
@@ -33,7 +33,7 @@ exports.addQuote = async (req, res) => {
         
         // If person_id is provided, fetch data from secretariates table
         if (person_id) {
-            console.log('quoteController.addQuote: Secretariate data retrieval initiated for person_id:', person_id);
+            console.log('ADD QUOTE: Secretariate data retrieval initiated for person_id:', person_id);
             
             const secretariateResult = await pool.query(
                 'SELECT name, title, pfp_url FROM secretariates WHERE id = $1',
@@ -42,7 +42,7 @@ exports.addQuote = async (req, res) => {
             
             if (secretariateResult.rows.length > 0) {
                 const secretariate = secretariateResult.rows[0];
-                console.log('quoteController.addQuote: Secretariate data retrieval successful');
+                console.log('ADD QUOTE: Secretariate data retrieval successful');
                 
                 // Use secretariate data, but allow manual override if provided in request
                 quoteData = {
@@ -54,33 +54,33 @@ exports.addQuote = async (req, res) => {
                     person_id: person_id
                 };
             } else {
-                console.log('quoteController.addQuote: Secretariate not found for person_id:', person_id);
+                console.log('ADD QUOTE: Secretariate not found for person_id:', person_id, '\n');
                 return res.status(404).json({ error: 'Secretariate not found with provided person_id' });
             }
         }
         
-        console.log('quoteController.addQuote: Database quote insertion initiated');
+        console.log('ADD QUOTE: Database quote insertion initiated');
         
         const result = await pool.query(
             'INSERT INTO quotes (title, quote, name, position, picture_url, person_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
             [quoteData.title, quoteData.text, quoteData.name, quoteData.position, quoteData.picture_url || null, quoteData.person_id || null]
         );
         
-        console.log('quoteController.addQuote: Quote creation completed successfully');
+        console.log('ADD QUOTE: Quote creation completed successfully\n');
         res.status(201).json(result.rows[0]);
     } catch (error) {
-        console.error('quoteController.addQuote: Function failed with error:', error.message);
+        console.error('ADD QUOTE: Function failed with error:', error.message, '\n');
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
 
 // Get quotes by person_id (secretariate)
 exports.getQuotesByPersonId = async (req, res) => {
-    console.log('quoteController.getQuotesByPersonId: Function called - quotes by person_id retrieval request received');
+    console.log('GET QUOTES BY PERSON ID: Function called - quotes by person_id retrieval request received');
     const { person_id } = req.params;
     
     try {
-        console.log('quoteController.getQuotesByPersonId: Database query execution started for person_id:', person_id);
+        console.log('GET QUOTES BY PERSON ID: Database query execution started for person_id:', person_id);
         
         const result = await pool.query(`
             SELECT 
@@ -94,28 +94,28 @@ exports.getQuotesByPersonId = async (req, res) => {
             ORDER BY q.created_at DESC
         `, [person_id]);
         
-        console.log('quoteController.getQuotesByPersonId: Database query successful - found', result.rows.length, 'quotes');
+        console.log('GET QUOTES BY PERSON ID: Database query successful - found', result.rows.length, 'quotes\n');
         res.json(result.rows);
     } catch (error) {
-        console.error('quoteController.getQuotesByPersonId: Function failed with error:', error.message);
+        console.error('GET QUOTES BY PERSON ID: Function failed with error:', error.message, '\n');
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
 
 // Update a quote
 exports.updateQuote = async (req, res) => {
-    console.log('quoteController.updateQuote: Function called - quote update request received');
+    console.log('UPDATE QUOTE: Function called - quote update request received');
     const { id } = req.params;
     const { title, text, name, position, person_id } = req.body;
     
     try {
-        console.log('quoteController.updateQuote: Quote update processing initiated for ID:', id);
+        console.log('UPDATE QUOTE: Quote update processing initiated for ID:', id);
         
         let quoteData = { title, text, name, position };
         
         // If person_id is provided, fetch fresh data from secretariates table
         if (person_id) {
-            console.log('quoteController.updateQuote: Updated secretariate data retrieval initiated for person_id:', person_id);
+            console.log('UPDATE QUOTE: Updated secretariate data retrieval initiated for person_id:', person_id);
             
             const secretariateResult = await pool.query(
                 'SELECT name, title, pfp_url FROM secretariates WHERE id = $1',
@@ -124,7 +124,7 @@ exports.updateQuote = async (req, res) => {
             
             if (secretariateResult.rows.length > 0) {
                 const secretariate = secretariateResult.rows[0];
-                console.log('quoteController.updateQuote: Updated secretariate data retrieval successful');
+                console.log('UPDATE QUOTE: Updated secretariate data retrieval successful');
                 
                 // Use secretariate data, but allow manual override if provided in request
                 quoteData = {
@@ -136,49 +136,49 @@ exports.updateQuote = async (req, res) => {
                     person_id: person_id
                 };
             } else {
-                console.log('quoteController.updateQuote: Secretariate not found for person_id:', person_id);
+                console.log('UPDATE QUOTE: Secretariate not found for person_id:', person_id, '\n');
                 return res.status(404).json({ error: 'Secretariate not found with provided person_id' });
             }
         }
         
-        console.log('quoteController.updateQuote: Database quote update initiated');
+        console.log('UPDATE QUOTE: Database quote update initiated');
         const result = await pool.query(
             'UPDATE quotes SET title = $1, quote = $2, name = $3, position = $4, picture_url = $5, person_id = $6, updated_at = CURRENT_TIMESTAMP WHERE id = $7 RETURNING *',
             [quoteData.title, quoteData.text, quoteData.name, quoteData.position, quoteData.picture_url || null, quoteData.person_id || null, id]
         );
         
         if (result.rows.length === 0) {
-            console.log('quoteController.updateQuote: Quote not found for update - ID:', id);
+            console.log('UPDATE QUOTE: Quote not found for update - ID:', id, '\n');
             return res.status(404).json({ error: 'Quote not found' });
         }
         
-        console.log('quoteController.updateQuote: Quote update completed successfully');
+        console.log('UPDATE QUOTE: Quote update completed successfully\n');
         res.json(result.rows[0]);
     } catch (error) {
-        console.error('quoteController.updateQuote: Function failed with error:', error.message);
+        console.error('UPDATE QUOTE: Function failed with error:', error.message, '\n');
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
 
 // Delete a quote
 exports.deleteQuote = async (req, res) => {
-    console.log('quoteController.deleteQuote: Function called - quote deletion request received');
+    console.log('DELETE QUOTE: Function called - quote deletion request received');
     const { id } = req.params;
     
     try {
-        console.log('quoteController.deleteQuote: Database quote deletion initiated for ID:', id);
+        console.log('DELETE QUOTE: Database quote deletion initiated for ID:', id);
         
         const result = await pool.query('DELETE FROM quotes WHERE id = $1 RETURNING *', [id]);
         
         if (result.rows.length === 0) {
-            console.log('quoteController.deleteQuote: Quote not found for deletion - ID:', id);
+            console.log('DELETE QUOTE: Quote not found for deletion - ID:', id, '\n');
             return res.status(404).json({ error: 'Quote not found' });
         }
         
-        console.log('quoteController.deleteQuote: Quote deletion completed successfully');
+        console.log('DELETE QUOTE: Quote deletion completed successfully\n');
         res.json({ message: 'Quote deleted successfully', quote: result.rows[0] });
     } catch (error) {
-        console.error('quoteController.deleteQuote: Function failed with error:', error.message);
+        console.error('DELETE QUOTE: Function failed with error:', error.message, '\n');
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };

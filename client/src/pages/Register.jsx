@@ -7,8 +7,8 @@ import '../assets/css/register.css';
 import { useRegister } from '../utils/useRegister';
 
 const Register = () => {
-  const { isAdmin, loading } = useAppContext();
-  const { registerSchool, status, changeRegistrationStatus, fetchRegistrationStatus } = useRegister();
+  const { isAdmin, loading, schools } = useAppContext();
+  const { registerSchool, status, changeRegistrationStatus, fetchRegistrationStatus, fetchSchools } = useRegister();
 
   const [formData, setFormData] = useState({
     personEmail: '',   
@@ -31,6 +31,7 @@ const Register = () => {
 
   useEffect(() => {
     fetchRegistrationStatus();
+    fetchSchools();
     // eslint-disable-next-line
   }, []);
 
@@ -43,6 +44,11 @@ const Register = () => {
 
     if(!formData.personEmail || !formData.schoolName || !formData.numDelegates || !formData.headDName || !formData.headDCP || !formData.primEmail) {
       toast.error("Please fill in all required fields!");
+      return;
+    }
+
+    if(schools.some(school => school.school_name.toLowerCase() === formData.schoolName.toLowerCase())) {
+      toast.error("A school with this name has already registered!");
       return;
     }
 
