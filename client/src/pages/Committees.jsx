@@ -2,6 +2,7 @@ import { useState } from 'react';
 import AddCommittee from '../components/adminButtons/AddCommittee';
 import { SEOHelmet } from '../components/SEOHelmet';
 import { Link } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 import { useAppContext } from '../utils/appContext';
 import { ExternalLink, Download, Users, Settings } from 'lucide-react';
 import '../assets/css/committees.css';
@@ -197,6 +198,7 @@ const Committees = () => {
 
       <AddCommittee />
 
+      <ToastContainer position="bottom-right" autoClose={3000} />
     </main>
     </>
   )

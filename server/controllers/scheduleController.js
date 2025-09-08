@@ -6,36 +6,33 @@ const pool = require('../config/db');
 
 // Get single schedule with all days and events
 exports.getSchedule = async (req, res) => {
-    console.log('Step 1: Starting request for single schedule retrieval');
-    console.log('Step 2: User authorization info check:', {
-        user: req.headers.authorization ? 'Present' : 'None',
-        isAdmin: req.user?.isAdmin || false
-    });
+    console.log('scheduleController.getSchedule: Function called - schedule retrieval request received');
+    console.log('scheduleController.getSchedule: User authorization validation initiated');
     
     try {
         const isAdmin = req.user?.isAdmin || false;
-        console.log('Step 3: Admin authorization check result:', isAdmin);
+        console.log('scheduleController.getSchedule: Admin authorization check completed');
         
         // First, let's try a very simple approach to isolate the issue
-        console.log('Step 4: Testing database connection functionality');
+        console.log('scheduleController.getSchedule: Database connection functionality test initiated');
         const testQuery = await pool.query('SELECT NOW() as current_time');
-        console.log('Step 5: Database connection verified successfully:', testQuery.rows[0]);
+        console.log('scheduleController.getSchedule: Database connection verified successfully');
         
         // Get the single schedule info with minimal query
-        console.log('Step 6: Fetching schedule basic information');
+        console.log('scheduleController.getSchedule: Schedule basic information retrieval initiated');
         let scheduleQuery = 'SELECT id, name, is_published, release_date FROM schedule';
         if (!isAdmin) {
             scheduleQuery += ' WHERE is_published = true OR release_date <= NOW()';
-            console.log('Step 7: Non-admin user detected - applying published filter');
+            console.log('scheduleController.getSchedule: Non-admin user filter applied');
         }
         scheduleQuery += ' LIMIT 1';
         
-        console.log('Step 8: Executing schedule query:', scheduleQuery);
+        console.log('scheduleController.getSchedule: Schedule query execution initiated');
         const scheduleResult = await pool.query(scheduleQuery);
-        console.log('Step 9: Schedule query result rows count:', scheduleResult.rows.length);
+        console.log('scheduleController.getSchedule: Schedule query completed - rows found:', scheduleResult.rows.length);
         
         if (scheduleResult.rows.length === 0) {
-            console.log('Step 10: No schedule found in database');
+            console.log('scheduleController.getSchedule: No schedule found in database');
             return res.status(404).json({ 
                 error: 'Schedule not found',
                 debug: { isAdmin, queryUsed: scheduleQuery }
@@ -43,23 +40,18 @@ exports.getSchedule = async (req, res) => {
         }
         
         const schedule = scheduleResult.rows[0];
-        console.log('Step 11: Successfully found schedule:', {
-            id: schedule.id,
-            name: schedule.name,
-            is_published: schedule.is_published,
-            release_date: schedule.release_date
-        });
+        console.log('scheduleController.getSchedule: Schedule data retrieval successful');
         
         // Try simplified days query first
-        console.log('Step 12: Fetching days with simplified query approach');
+        console.log('scheduleController.getSchedule: Days data retrieval with simplified query initiated');
         const simpleDaysQuery = 'SELECT id, date, label FROM days WHERE schedule_id = $1 ORDER BY date';
         const daysResult = await pool.query(simpleDaysQuery, [schedule.id]);
-        console.log('Step 13: Days query result rows count:', daysResult.rows.length);
+        console.log('scheduleController.getSchedule: Days query completed - days found:', daysResult.rows.length);
         
         // For each day, get events separately to avoid complex JSON aggregation
         const daysWithEvents = [];
         for (const day of daysResult.rows) {
-            console.log('Step 14: Fetching events for day ID:', day.id);
+            console.log('scheduleController.getSchedule: Events retrieval initiated for day ID:', day.id);
             const eventsQuery = 'SELECT id, title, start_time, end_time, location, description FROM events WHERE day_id = $1 ORDER BY start_time';
             const eventsResult = await pool.query(eventsQuery, [day.id]);
             
@@ -68,7 +60,7 @@ exports.getSchedule = async (req, res) => {
                 events: eventsResult.rows
             });
             
-            console.log('Step 15: Day processing completed - day ID:', day.id, 'has', eventsResult.rows.length, 'events');
+            console.log('scheduleController.getSchedule: Day processing completed - events found:', eventsResult.rows.length);
         }
         
         const responseData = {
@@ -79,15 +71,12 @@ exports.getSchedule = async (req, res) => {
             days: daysWithEvents
         };
         
-        console.log('Step 16: Sending response with days count:', daysWithEvents.length);
-        console.log('Step 17: Total events across all days:', daysWithEvents.reduce((sum, day) => sum + day.events.length, 0));
+        console.log('scheduleController.getSchedule: Function completed successfully - response prepared');
         
         res.json(responseData);
     } catch (error) {
-        console.error('Step 18: Database error occurred:', error);
-        console.error('Step 19: Error message details:', error.message);
-        console.error('Step 20: Error code information:', error.code);
-        console.error('Step 21: Error stack trace:', error.stack);
+        console.error('scheduleController.getSchedule: Function failed with error:', error.message);
+        console.error('scheduleController.getSchedule: Error details:', error.stack);
         
         // Send detailed error info for debugging
         res.status(500).json({ 

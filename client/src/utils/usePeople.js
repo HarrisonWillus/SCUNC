@@ -1,11 +1,12 @@
 import { useAppContext } from "./appContext"
+import { toast } from "react-toastify";
 
 export const usePeople = () => {
-    const { setSecretariates, setLoading, setMessage, sendHeaders } = useAppContext();
+    const { setSecretariates, setLoading, sendHeaders } = useAppContext();
 
     const fetchSecretariates = async () => {
         setLoading(true);
-        setMessage({ error: null, success: null, warning: null });
+        console.log('Fetching secretariates...');
 
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/secretariates`, {
@@ -16,21 +17,23 @@ export const usePeople = () => {
             const data = await response.json();
 
             if (response.ok) {
+                console.log('Secretariates fetched:', data.secretariate);
                 setSecretariates(data.secretariate);
-                setMessage({ success: data.message });
             } else {
-                setMessage({ error: data.error || 'Failed to fetch secretariates' });
+                console.error('Failed to fetch secretariates:', data.error || 'Unknown error');
             }
         } catch (error) {
-            setMessage({ error: 'An error occurred while fetching secretariates' });
+            console.error('An error occurred while fetching secretariates:', error);
         } finally {
+            console.log('Finished fetching secretariates');
             setLoading(false);
         }
     };
 
     const createNewSecretariate = async (name, title, description, pfp) => {
+        console.log('Starting createNewSecretariate...');
+        console.log('Secretariate data:', { name, title, description, pfp });
         setLoading(true);
-        setMessage({ error: null, success: null, warning: null });
 
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/secretariates`, {
@@ -42,21 +45,26 @@ export const usePeople = () => {
             const data = await response.json();
 
             if (response.ok) {
+                console.log('Secretariate created successfully:', data.secretariate);
                 setSecretariates(data.secretariate);
-                setMessage({ success: data.message });
+                toast.success('✅ PEOPLE_HOOK: Secretariate created successfully!');
             } else {
-                setMessage({ error: data.error || 'Failed to create secretariate' });
+                console.error('Failed to create secretariate:', data.error || 'Unknown error');
+                toast.error('Failed to create secretariate');
             }
         } catch (error) {
-            setMessage({ error: 'An error occurred while creating secretariate' });
+            console.error('An error occurred while creating secretariate:', error);
+            toast.error('An error occurred while creating secretariate');
         } finally {
+            console.log('Finished createNewSecretariate');
             setLoading(false);
         }
     };
 
     const updateSecretariate = async (id, name, title, description, pfp, order_num) => {
         setLoading(true);
-        setMessage({ error: null, success: null, warning: null });
+        console.log('Starting updateSecretariate...');
+        console.log('Update data:', { id, name, title, description, pfp, order_num });
 
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/secretariates/${id}`, {
@@ -68,22 +76,26 @@ export const usePeople = () => {
             const data = await response.json();
 
             if (response.ok) {
+                console.log('Secretariate updated successfully:', data.secretariate);
                 setSecretariates(data.secretariate);
-                setMessage({ success: data.message });
+                toast.success('Secretariate updated successfully!');
             } else {
-                setMessage({ error: data.error || 'Failed to update secretariate' });
+                console.error('Failed to update secretariate:', data.error || 'Unknown error');
+                toast.error('Failed to update secretariate');
             }
         } catch (error) {
             console.error('Update error:', error);
-            setMessage({ error: 'An error occurred while updating secretariate' });
+            toast.error('An error occurred while updating secretariate');
         } finally {
+            console.log('Finished updateSecretariate');
             setLoading(false);
         }
     };
 
     const deleteSecretariate = async (id) => {
         setLoading(true);
-        setMessage({ error: null, success: null, warning: null });
+        console.log('Starting deleteSecretariate...');
+        console.log('Deleting secretariate with ID:', id);
 
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/secretariates/${id}`, {
@@ -94,14 +106,18 @@ export const usePeople = () => {
             const data = await response.json();
 
             if (response.ok) {
+                console.log('Secretariate deleted successfully:', data.secretariate);
                 setSecretariates(data.secretariate);
-                setMessage({ success: data.message });
+                toast.success(data.message || 'Secretariate deleted successfully!');
             } else {
-                setMessage({ error: data.error || 'Failed to delete secretariate' });
+                console.error('Failed to delete secretariate:', data.error || 'Unknown error');
+                toast.error('Failed to delete secretariate');
             }
         } catch (error) {
-            setMessage({ error: 'An error occurred while deleting secretariate' });
+            console.error('An error occurred while deleting secretariate:', error);
+            toast.error('An error occurred while deleting secretariate');
         } finally {
+            console.log('Finished deleteSecretariate');
             setLoading(false);
         }
     };

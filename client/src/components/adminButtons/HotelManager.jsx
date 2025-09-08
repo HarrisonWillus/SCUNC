@@ -93,10 +93,10 @@ const HotelManager = () => {
                 return;
             }
             
-            // Validate file size (10MB max)
-            const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+            // Validate file size (50MB max)
+            const maxSize = 50 * 1024 * 1024; // 50MB in bytes
             if (selectedFile.size > maxSize) {
-                toast.error('Image file size must be less than 10MB');
+                toast.error('Image file size must be less than 50MB');
                 return;
             }
 
@@ -181,11 +181,9 @@ const HotelManager = () => {
                 setNewAmenity('');
                 setImageFile(null);
                 setImagePreviewUrl('');
-                toast.success(`${formData.name} hotel has been created successfully!`);
             }
         } catch (error) {
             console.error('Error creating hotel:', error);
-            toast.error('Failed to create hotel. Please try again.');
         }
     };
 
@@ -217,20 +215,23 @@ const HotelManager = () => {
         try {
             const imageData = imageFile ? await fileToBase64(imageFile) : selectedHotel.image_url;
             
-            const result = await updateHotel(selectedHotel.id, {
+            await updateHotel(selectedHotel.id, {
                 name: name.trim(),
                 description: description.trim(),
                 link: formData.link.trim(),
                 image: imageData,
                 amenities: amenities
+            })
+            .then(() => {
+                setShowAddModal(false);
+                setFormData({ name: '', description: '', link: '' });
+                setAmenities([]);
+                setNewAmenity('');
+                setImageFile(null);
+                setImagePreviewUrl('');
             });
-            
-            if (result) {
-                toast.success(`${name} hotel has been updated successfully!`);
-            }
         } catch (error) {
             console.error('Error updating hotel:', error);
-            toast.error('Failed to update hotel. Please try again.');
         }
     };
 
@@ -244,17 +245,7 @@ const HotelManager = () => {
         const confirmDelete = window.confirm(`Are you sure you want to delete "${selectedHotel.name}" hotel? This action cannot be undone.`);
         
         if (confirmDelete) {
-            try {
-                const result = await deleteHotel(selectedHotel.id);
-                if (result) {
-                    // Reset selection to first hotel if current is deleted
-                    setSelectedHotelIndex(0);
-                    toast.success(`${selectedHotel.name} hotel has been deleted`);
-                }
-            } catch (error) {
-                console.error('Error deleting hotel:', error);
-                toast.error('Failed to delete hotel. Please try again.');
-            }
+            await deleteHotel(selectedHotel.id);
         }
     };
 

@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import { useAppContext } from './appContext';
 
 const useScheduleWorkflow = () => {
-    const { loading, setLoading, message, setMessage, days, setDays, events, setEvents, sendHeaders } = useAppContext();
+    const { setLoading, days, setDays, events, setEvents, sendHeaders } = useAppContext();
     const [currentSchedule, setCurrentSchedule] = useState(null);
-    const [error, setError] = useState(null);
 
     const getAuthHeaders = () => ({
         ...sendHeaders,
@@ -17,8 +17,8 @@ const useScheduleWorkflow = () => {
 
     const createOrUpdateSchedule = async (name, releaseDate) => {
         setLoading(true);
-        setMessage({ error: null, success: null, warning: null });
-
+        console.log('Creating or updating schedule with name:', name, 'and release date:', releaseDate);
+        
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/schedule`, {
                 method: 'POST',
@@ -32,24 +32,29 @@ const useScheduleWorkflow = () => {
             const data = await response.json();
 
             if (response.ok) {
-                setMessage({ success: 'Schedule saved successfully!' });
+                console.log('Schedule saved successfully!', data);
+                toast.success('Schedule saved successfully!');
+                setCurrentSchedule(data);
                 await fetchScheduleDetails();
                 return data;
             } else {
-                setMessage({ error: data.error || 'Failed to save schedule' });
+                console.error('Failed to save schedule:', data.error || 'Unknown error');
+                toast.error(data.error || 'Failed to save schedule');
                 return null;
             }
         } catch (error) {
-            setMessage({ error: 'An error occurred while saving schedule' });
+            console.error('An error occurred while saving schedule:', error);
+            toast.error('An error occurred while saving schedule');
             return null;
         } finally {
+            console.log('Finished createOrUpdateSchedule');
             setLoading(false);
         }
     };
 
     const updateSchedule = async (updates) => {
         setLoading(true);
-        setMessage({ error: null, success: null, warning: null });
+        console.log('Updating schedule with updates:', updates);
 
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/schedule`, {
@@ -61,24 +66,28 @@ const useScheduleWorkflow = () => {
             const data = await response.json();
 
             if (response.ok) {
-                setMessage({ success: 'Schedule updated successfully!' });
+                console.log('Schedule updated successfully!');
+                toast.success('Schedule updated successfully!');
                 await fetchScheduleDetails();
                 return data;
             } else {
-                setMessage({ error: data.error || 'Failed to update schedule' });
+                console.error('Failed to update schedule:', data.error || 'Unknown error');
+                toast.error(data.error || 'Failed to update schedule');
                 return null;
             }
         } catch (error) {
-            setMessage({ error: 'An error occurred while updating schedule' });
+            console.error('An error occurred while updating schedule:', error);
+            toast.error('An error occurred while updating schedule');
             return null;
         } finally {
+            console.log('Finished updateSchedule');
             setLoading(false);
         }
     };
 
     const resetSchedule = async () => {
         setLoading(true);
-        setMessage({ error: null, success: null, warning: null });
+        console.log("Resetting schedule...");
 
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/schedule`, {
@@ -89,28 +98,30 @@ const useScheduleWorkflow = () => {
             const data = await response.json();
 
             if (response.ok) {
-                setMessage({ success: 'Schedule reset successfully!' });
+                console.log('Schedule reset successfully!');
+                toast.success('Schedule reset successfully!');
                 await fetchScheduleDetails();
                 setDays([]);
                 setEvents([]);
                 return true;
             } else {
-                setMessage({ error: data.error || 'Failed to reset schedule' });
+                console.error('Failed to reset schedule:', data.error || 'Unknown error');
+                toast.error(data.error || 'Failed to reset schedule');
                 return false;
             }
         } catch (error) {
-            setMessage({ error: 'An error occurred while resetting schedule' });
+            console.error('An error occurred while resetting schedule:', error);
+            toast.error('An error occurred while resetting schedule');
             return false;
         } finally {
+            console.log('Finished resetSchedule');
             setLoading(false);
         }
     };
 
     const fetchScheduleDetails = async () => {
-        console.log('🔍 SCHEDULE_WORKFLOW: Starting fetchScheduleDetails...');
+        console.log('Starting fetchScheduleDetails...');
         setLoading(true);
-        setMessage({ error: null, success: null, warning: null });
-        setError(null);
         
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/schedule/details`, {
@@ -118,13 +129,13 @@ const useScheduleWorkflow = () => {
                 headers: getAuthHeaders()
             });
 
-            console.log('📋 SCHEDULE_WORKFLOW: Response status:', response.status);
+            console.log('Response status:', response.status);
             const data = await response.json();
-            console.log('📋 SCHEDULE_WORKFLOW: Response data:', data);
+            console.log('Response data:', data);
 
             if (response.ok) {
-                console.log('✅ SCHEDULE_WORKFLOW: Schedule fetched successfully');
-                console.log('📅 SCHEDULE_WORKFLOW: Schedule details:', {
+                console.log('Schedule fetched successfully');
+                console.log('Schedule details:', {
                     id: data.id,
                     name: data.name,
                     is_published: data.is_published,
@@ -135,15 +146,16 @@ const useScheduleWorkflow = () => {
                 setDays(data.days || []);
                 return data;
             } else {
-                console.error('❌ SCHEDULE_WORKFLOW: API error:', data);
+                console.error('API error:', data);
                 return null;
             }
         } catch (error) {
-            console.error('💥 SCHEDULE_WORKFLOW: Network/Parse error:', error);
-            console.error('💥 SCHEDULE_WORKFLOW: Error stack:', error.stack);
+            console.error('Network/Parse error:', error);
+            console.error('Error stack:', error.stack);
             
             return null;
         } finally {
+            console.log('Finished fetchScheduleDetails');
             setLoading(false);
         }
     };
@@ -154,7 +166,7 @@ const useScheduleWorkflow = () => {
 
     const fetchDays = async () => {
         setLoading(true);
-        setMessage({ error: null, success: null, warning: null });
+        console.log('Fetching days...');
 
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/schedule/days`, {
@@ -168,18 +180,19 @@ const useScheduleWorkflow = () => {
                 console.log('Fetched days:', data);
                 setDays(data || []);
             } else {
-                setMessage({ error: data.error || 'Failed to fetch days' });
+                console.error('Failed to fetch days:', data.error || 'Unknown error');
             }
         } catch (error) {
-            setMessage({ error: 'An error occurred while fetching days' });
+            console.error('An error occurred while fetching days:', error);
         } finally {
+            console.log('Finished fetching days');
             setLoading(false);
         }
     };
 
     const createDay = async (date, label) => {
         setLoading(true);
-        setMessage({ error: null, success: null, warning: null });
+        console.log('Creating day with date:', date, 'and label:', label);
 
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/schedule/days`, {
@@ -194,24 +207,28 @@ const useScheduleWorkflow = () => {
             const data = await response.json();
 
             if (response.ok) {
-                setMessage({ success: 'Day created successfully!' });
+                console.log('Day created successfully!');
+                toast.success('Day created successfully!');
                 await fetchDays();
                 return data;
             } else {
-                setMessage({ error: data.error || 'Failed to create day' });
+                console.error('Failed to create day:', data.error || 'Unknown error');
+                toast.error(data.error || 'Failed to create day');
                 return null;
             }
         } catch (error) {
-            setMessage({ error: 'An error occurred while creating day' });
+            console.error('An error occurred while creating day:', error);
+            toast.error('An error occurred while creating day');
             return null;
         } finally {
+            console.log('Finished creating day');
             setLoading(false);
         }
     };
 
     const updateDay = async (dayId, updates) => {
         setLoading(true);
-        setMessage({ error: null, success: null, warning: null });
+        console.log('Updating day with ID:', dayId, 'and updates:', updates);
 
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/schedule/days/${dayId}`, {
@@ -223,24 +240,28 @@ const useScheduleWorkflow = () => {
             const data = await response.json();
 
             if (response.ok) {
-                setMessage({ success: 'Day updated successfully!' });
+                console.log('Day updated successfully!');
+                toast.success('Day updated successfully!');
                 await fetchDays();
                 return data;
             } else {
-                setMessage({ error: data.error || 'Failed to update day' });
+                console.error('Failed to update day:', data.error || 'Unknown error');
+                toast.error(data.error || 'Failed to update day');
                 return null;
             }
         } catch (error) {
-            setMessage({ error: 'An error occurred while updating day' });
+            console.error('An error occurred while updating day:', error);
+            toast.error('An error occurred while updating day');
             return null;
         } finally {
+            console.log('Finished updating day');
             setLoading(false);
         }
     };
 
     const deleteDay = async (dayId) => {
         setLoading(true);
-        setMessage({ error: null, success: null, warning: null });
+        console.log('Deleting day with ID:', dayId);
 
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/schedule/days/${dayId}`, {
@@ -251,18 +272,22 @@ const useScheduleWorkflow = () => {
             const data = await response.json();
 
             if (response.ok) {
-                setMessage({ success: 'Day deleted successfully!' });
+                console.log('Day deleted successfully!');
+                toast.success('Day deleted successfully!');
                 await fetchDays();
                 setEvents([]); // Clear events if we were viewing this day
                 return true;
             } else {
-                setMessage({ error: data.error || 'Failed to delete day' });
+                console.error('Failed to delete day:', data.error || 'Unknown error');
+                toast.error(data.error || 'Failed to delete day');
                 return false;
             }
         } catch (error) {
-            setMessage({ error: 'An error occurred while deleting day' });
+            console.error('An error occurred while deleting day:', error);
+            toast.error('An error occurred while deleting day');
             return false;
         } finally {
+            console.log('Finished deleting day');
             setLoading(false);
         }
     };
@@ -273,7 +298,7 @@ const useScheduleWorkflow = () => {
 
     const fetchEvents = async (dayId) => {
         setLoading(true);
-        setMessage({ error: null, success: null, warning: null });
+        console.log('Fetching events for day ID:', dayId);
 
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/schedule/days/${dayId}/events`, {
@@ -284,20 +309,24 @@ const useScheduleWorkflow = () => {
             const data = await response.json();
 
             if (response.ok) {
+                console.log('Fetched events:', data);
                 setEvents(data || []);
             } else {
-                setMessage({ error: data.error || 'Failed to fetch events' });
+                console.error('Failed to fetch events:', data.error || 'Unknown error');
+                toast.error(data.error || 'Failed to fetch events');
             }
         } catch (error) {
-            setMessage({ error: 'An error occurred while fetching events' });
+            console.error('An error occurred while fetching events:', error);
+            toast.error('An error occurred while fetching events');
         } finally {
+            console.log('Finished fetching events');
             setLoading(false);
         }
     };
 
     const createEvent = async (dayId, eventData) => {
         setLoading(true);
-        setMessage({ error: null, success: null, warning: null });
+        console.log('Creating event for day ID:', dayId);
 
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/schedule/days/${dayId}/events`, {
@@ -316,24 +345,28 @@ const useScheduleWorkflow = () => {
             const data = await response.json();
 
             if (response.ok) {
-                setMessage({ success: 'Event created successfully!' });
+                console.log('Event created successfully!');
+                toast.success('Event created successfully!');
                 await fetchEvents(dayId);
                 return data;
             } else {
-                setMessage({ error: data.error || 'Failed to create event' });
+                console.error('Failed to create event:', data.error || 'Unknown error');
+                toast.error(data.error || 'Failed to create event');
                 return null;
             }
         } catch (error) {
-            setMessage({ error: 'An error occurred while creating event' });
+            console.error('An error occurred while creating event:', error);
+            toast.error('An error occurred while creating event');
             return null;
         } finally {
+            console.log('Finished creating event');
             setLoading(false);
         }
     };
 
     const updateEvent = async (eventId, updates) => {
         setLoading(true);
-        setMessage({ error: null, success: null, warning: null });
+        console.log('Updating event with ID:', eventId);
 
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/schedule/events/${eventId}`, {
@@ -345,7 +378,8 @@ const useScheduleWorkflow = () => {
             const data = await response.json();
 
             if (response.ok) {
-                setMessage({ success: 'Event updated successfully!' });
+                console.log('Event updated successfully!');
+                toast.success('Event updated successfully!');
                 // Refresh events - need to know which day this event belongs to
                 const currentEvent = events.find(e => e.id === eventId);
                 if (currentEvent) {
@@ -353,20 +387,23 @@ const useScheduleWorkflow = () => {
                 }
                 return data;
             } else {
-                setMessage({ error: data.error || 'Failed to update event' });
+                console.error('Failed to update event:', data.error || 'Unknown error');
+                toast.error(data.error || 'Failed to update event');
                 return null;
             }
         } catch (error) {
-            setMessage({ error: 'An error occurred while updating event' });
+            console.error('An error occurred while updating event:', error);
+            toast.error('An error occurred while updating event');
             return null;
         } finally {
+            console.log('Finished updating event');
             setLoading(false);
         }
     };
 
     const deleteEvent = async (eventId) => {
         setLoading(true);
-        setMessage({ error: null, success: null, warning: null });
+        console.log('Deleting event with ID:', eventId);
 
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/schedule/events/${eventId}`, {
@@ -377,7 +414,8 @@ const useScheduleWorkflow = () => {
             const data = await response.json();
 
             if (response.ok) {
-                setMessage({ success: 'Event deleted successfully!' });
+                console.log('Event deleted successfully!');
+                toast.success('Event deleted successfully!');
                 // Refresh events - need to know which day this event belongs to
                 const currentEvent = events.find(e => e.id === eventId);
                 if (currentEvent) {
@@ -385,20 +423,23 @@ const useScheduleWorkflow = () => {
                 }
                 return true;
             } else {
-                setMessage({ error: data.error || 'Failed to delete event' });
+                console.error('Failed to delete event:', data.error || 'Unknown error');
+                toast.error(data.error || 'Failed to delete event');
                 return false;
             }
         } catch (error) {
-            setMessage({ error: 'An error occurred while deleting event' });
+            console.error('An error occurred while deleting event:', error);
+            toast.error('An error occurred while deleting event');
             return false;
         } finally {
+            console.log('Finished deleting event');
             setLoading(false);
         }
     };
 
     const reorderEvents = async (dayId, eventOrders) => {
         setLoading(true);
-        setMessage({ error: null, success: null, warning: null });
+        console.log('Reordering events for day ID:', dayId);
 
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/schedule/days/${dayId}/events/reorder`, {
@@ -411,16 +452,20 @@ const useScheduleWorkflow = () => {
 
             if (response.ok) {
                 setEvents(data || []);
-                setMessage({ success: 'Events reordered successfully!' });
+                console.log('Events reordered successfully!');
+                toast.success('Events reordered successfully!');
                 return data;
             } else {
-                setMessage({ error: data.error || 'Failed to reorder events' });
+                console.error('Failed to reorder events:', data.error || 'Unknown error');
+                toast.error(data.error || 'Failed to reorder events');
                 return null;
             }
         } catch (error) {
-            setMessage({ error: 'An error occurred while reordering events' });
+            console.error('An error occurred while reordering events:', error);
+            toast.error('An error occurred while reordering events');
             return null;
         } finally {
+            console.log('Finished reordering events');
             setLoading(false);
         }
     };
@@ -437,17 +482,6 @@ const useScheduleWorkflow = () => {
         return await updateSchedule({ is_published: false });
     };
 
-    // Clear messages after a delay
-    useEffect(() => {
-        if (message.error || message.success || message.warning) {
-            const timer = setTimeout(() => {
-                setMessage({ error: null, success: null, warning: null });
-            }, 5000);
-            return () => clearTimeout(timer);
-        }
-        // eslint-disable-next-line
-    }, [message]);
-
     // Auto-fetch schedule on mount with error recovery
     useEffect(() => {
         fetchScheduleDetails();
@@ -459,9 +493,6 @@ const useScheduleWorkflow = () => {
         currentSchedule,
         days,
         events,
-        loading,
-        message,
-        error, // Add error to return values
         
         // Schedule Management (Single Schedule)
         createOrUpdateSchedule,
@@ -486,8 +517,6 @@ const useScheduleWorkflow = () => {
         
         // Utility
         setCurrentSchedule,
-        setMessage,
-        setError
     };
 };
 

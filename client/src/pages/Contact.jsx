@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Mail, User, MessageSquare } from 'lucide-react';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import { useAppContext } from '../utils/appContext';
 import { useContact } from '../utils/useContact';
 import { SEOHelmet } from '../components/SEOHelmet';
@@ -40,7 +40,6 @@ const Contact = () => {
 
     await sendEmail(formData)
       .then(() => {
-        toast.success("Email sent successfully!");
         setFormData({
           name: '',
           email: '',
@@ -48,9 +47,6 @@ const Contact = () => {
           message: '',
         });
       })
-      .catch((error) => {
-        toast.error(error.message || 'Failed to send email. Please try again.');
-      });
   };
 
   return (
@@ -151,6 +147,8 @@ const Contact = () => {
           </form>
         </div>
       </section>
+
+      <ToastContainer position="bottom-right" autoClose={3000} />
     </main>
     </>
   )

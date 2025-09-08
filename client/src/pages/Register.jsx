@@ -1,5 +1,5 @@
 import { useEffect, useState} from 'react';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import { User, Mail, Users, Phone, School, Calendar } from 'lucide-react';
 import { useAppContext } from '../utils/appContext';
 import { SEOHelmet } from '../components/SEOHelmet';
@@ -60,7 +60,6 @@ const Register = () => {
 
     await registerSchool(formDataObj)
       .then(() => {
-        toast.success("School registered successfully!");
         // Reset form
         setFormData({
           personEmail: '',
@@ -72,9 +71,6 @@ const Register = () => {
           extraInfo: ''
         });
       })
-      .catch((error) => {
-        toast.error(error.message || 'Registration failed. Please try again.');
-      });
   };
   // Icon mapping for form fields
   const getFieldIcon = (fieldName) => {
@@ -276,6 +272,8 @@ const Register = () => {
           )}
         </div>
       </section>
+
+      <ToastContainer position="bottom-right" autoClose={3000} />
     </main>
     </>
   )

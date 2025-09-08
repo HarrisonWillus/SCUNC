@@ -3,14 +3,13 @@ import { toast } from 'react-toastify';
 import { useAppContext } from "./appContext";
 
 export const useRegister = () => {
-    const { setLoading, setMessage, sendHeaders, setSchools, setIsAdmin } = useAppContext();
+    const { setLoading, sendHeaders, setSchools, setIsAdmin } = useAppContext();
     const [status, setStatus] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
     const fetchSchools = async () => {
         setLoading(true);
-        setMessage({ error: null, success: null, warning: null });
 
         await fetch(`${process.env.REACT_APP_API_URL}/schools`, {
             method: 'GET',
@@ -26,7 +25,7 @@ export const useRegister = () => {
                 setSchools(data);
                 console.log('Successfully set schools:', data.length, 'schools');
             } else if (data.error) {
-                setMessage({ error: data.error });
+                console.error('Error fetching schools:', data.error);
                 setSchools([]);
             } else {
                 // Fallback for unexpected response format
@@ -37,13 +36,13 @@ export const useRegister = () => {
         .catch((error) => {
             setLoading(false);
             console.error('Error fetching schools:', error);
-            setMessage({ error: 'Failed to fetch schools. Please try again.' });
             setSchools([]);
         })
     };
 
     const fetchRegistrationStatus = async () => {
         setLoading(true);
+        console.log('Fetching registration status...');
 
         await fetch(`${process.env.REACT_APP_API_URL}/schools/status`, {
             method: 'GET',
@@ -54,19 +53,21 @@ export const useRegister = () => {
                 console.log(data);
                 setLoading(false);
                 if (data.isOpen !== undefined) {
+                    console.log('Registration status fetched:', data.isOpen);
                     setStatus(data.isOpen);
                 } else if (data.error) {
-                    toast.error(data.error);
+                    console.error('Error fetching registration status:', data.error);
                 }
             })
             .catch(error => {
                 setLoading(false);
-                toast.error('Failed to fetch registration status. Please try again.');
+                console.error('Failed to fetch registration status:', error);
             });
     }
 
     const registerSchool = async (formData) => {
         setLoading(true);
+        console.log('Registering school with data:', formData);
 
         await fetch(`${process.env.REACT_APP_API_URL}/schools/register`, {
             method: 'POST',
@@ -77,19 +78,23 @@ export const useRegister = () => {
         .then(data => {
             setLoading(false);
             if (data.message) {
+                console.log('Registration successful:', data.message);
                 toast.success(data.message);
             } else if (data.error) {
+                console.error('Registration error:', data.error);
                 toast.error(data.error);
             }
         })
         .catch(error => {
             setLoading(false);
+            console.error('Registration failed:', error);
             toast.error('Registration failed. Please try again.');
         })
     };
 
     const changeRegistrationStatus = async (newStatus) => {
         setLoading(true);
+        console.log('Changing registration status to:', newStatus);
 
         await fetch(`${process.env.REACT_APP_API_URL}/schools/status`, {
             method: 'PUT',
@@ -100,20 +105,24 @@ export const useRegister = () => {
         .then(data => {
             setLoading(false);
             if (data.message) {
+                console.log('Registration status changed successfully:', data.message);
                 setStatus(newStatus); // Update local status state
                 toast.success(data.message);
             } else if (data.error) {
+                console.error('Failed to change registration status:', data.error);
                 toast.error(data.error);
             }
         })
         .catch(error => {
             setLoading(false);
+            console.error('Error changing registration status:', error);
             toast.error('Failed to change registration status. Please try again.');
         })
     };
 
     const handleDelete = async (id) => {
         setLoading(true);
+        console.log('Deleting school with ID:', id);
 
         await fetch(`${process.env.REACT_APP_API_URL}/schools/${id}`, {
             method: 'DELETE',
@@ -123,14 +132,17 @@ export const useRegister = () => {
         .then(data => {
             setLoading(false);
             if (data.message) {
+                console.log('School deleted successfully:', data.message);
                 toast.success(data.message);
                 fetchSchools(); // Refresh the list after deletion
             } else if (data.error) {
+                console.error('Failed to delete school:', data.error);
                 toast.error(data.error);
             }
         })
         .catch(error => {
             setLoading(false);
+            console.error('Error deleting school:', error);
             toast.error('Failed to delete school. Please try again.');
         });
     };

@@ -2,134 +2,126 @@ const pool = require('../config/db');
 
 // Get all schools
 exports.getAllSchools = async (req, res) => {
-    console.log('Step 1: GET all schools request received and processing');
+    console.log('schoolController.getAllSchools: Function called - schools data retrieval request received');
     
     try {
-        console.log('Step 2: Querying database for all schools data');
+        console.log('schoolController.getAllSchools: Database query execution started for all schools');
         const result = await pool.query('SELECT * FROM schools');
-        console.log('Step 3: Successfully found school count:', result.rows.length);
+        console.log('schoolController.getAllSchools: Database query successful - school count retrieved:', result.rows.length);
         
         res.status(200).json(result.rows);
     } catch (error) {
-        console.error('Step 4: Error occurred while fetching schools:', error);
+        console.error('schoolController.getAllSchools: Function failed with error:', error.message);
         res.status(500).json({ message: 'Server error' });
     }
 };
 
 // register a new school
 exports.registerSchool = async (req, res) => {
-    console.log('Step 1: School registration request received and processing');
-    console.log('Step 2: Person email validation:', req.body.personEmail);
-    console.log('Step 3: School name verification:', req.body.schoolName);
-    console.log('Step 4: Number of delegates check:', req.body.numDelegates);
+    console.log('schoolController.registerSchool: Function called - school registration request received');
+    console.log('schoolController.registerSchool: Request data validation initiated');
     
     const { personEmail, schoolName, numDelegates, headDName, headDCP, primEmail, extraInfo } = req.body;
 
     if(!personEmail || !schoolName || !numDelegates || !headDName || !headDCP || !primEmail) {
-        console.log('Step 5: Required fields validation failed');
+        console.log('schoolController.registerSchool: Required field validation failed - missing data');
         return res.status(400).json({ message: 'Missing required fields' });
     }
 
-    console.log('Step 6: Checking for existing school with same name');
+    console.log('schoolController.registerSchool: Duplicate school name validation initiated');
     const existingSchool = await pool.query('SELECT * FROM schools WHERE school_name = $1', [schoolName]);
 
     if (existingSchool.rows.length > 0) {
-        console.log('Step 7: School with name already exists:', schoolName);
+        console.log('schoolController.registerSchool: Duplicate school name detected - registration rejected');
         return res.status(400).json({ message: 'School with this name already exists' });
     }
 
     try {
-        console.log('Step 8: Inserting new school into database');
+        console.log('schoolController.registerSchool: Database school insertion initiated');
         const result = await pool.query(
             'INSERT INTO schools (person_email, school_name, num_delegates, head_delegate_name, head_delegate_contact_phone, primary_email, extra_info) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
             [personEmail, schoolName, numDelegates, headDName, headDCP, primEmail, extraInfo]
         );
         
-        console.log('Step 9: School registered successfully with ID:', result.rows[0].id);
-        console.log('Step 10: Sending notification email process initiated');
+        console.log('schoolController.registerSchool: School registration completed successfully - ID:', result.rows[0].id);
+        console.log('schoolController.registerSchool: Notification email process initiated');
         res.status(201).json({ result: result.rows[0], message: 'School registered successfully' });
     } catch (error) {
-        console.error('Step 11: Error occurred while registering school:', error);
+        console.error('schoolController.registerSchool: Function failed with error:', error.message);
         res.status(500).json({ message: 'Server error' });
     }
 };
 
 // fetch the registration status
 exports.getRegistrationStatus = async (req, res) => {
-    console.log('Step 1: Fetch registration status request received and processing');
+    console.log('schoolController.getRegistrationStatus: Function called - registration status retrieval request received');
 
     try {
+        console.log('schoolController.getRegistrationStatus: Database query execution started for registration status');
         const result = await pool.query('SELECT is_open FROM registration WHERE id = 1');
         if (result.rows.length === 0) {
-            console.log('Step 2: No registration status found in database');
+            console.log('schoolController.getRegistrationStatus: No registration status found in database');
             return res.status(404).json({ message: 'Registration status not found' });
         }
 
         const isOpen = result.rows[0].is_open;
-        console.log('Step 3: Registration status currently set to:', isOpen ? 'OPEN' : 'CLOSED');
+        console.log('schoolController.getRegistrationStatus: Registration status retrieval successful - status:', isOpen ? 'OPEN' : 'CLOSED');
         res.status(200).json({ isOpen });
     } catch (error) {
-        console.error('Step 4: Error occurred while fetching registration status:', error);
+        console.error('schoolController.getRegistrationStatus: Function failed with error:', error.message);
         res.status(500).json({ message: 'Server error' });
     }
 };
 
 // Opens or closes the registration
 exports.changeRegistrationStatus = async (req, res) => {
-    console.log('Step 1: Registration status change request received and processing');
-    console.log('Step 2: Request body analysis:', req.body);
+    console.log('schoolController.changeRegistrationStatus: Function called - registration status change request received');
     
     const { status } = req.body;
-    console.log('Step 3: Status value verification:', status, 'Type:', typeof status);
+    console.log('schoolController.changeRegistrationStatus: Status value validation completed');
 
     if (typeof status !== 'boolean') {
-        console.log('Step 4: Invalid status value detected - must be boolean, received:', typeof status);
+        console.log('schoolController.changeRegistrationStatus: Invalid status value - must be boolean, received:', typeof status);
         return res.status(400).json({ message: 'Invalid status value' });
     }
 
     try {
-        console.log('Step 5: Updating registration status in database');
-        console.log('Step 6: Setting is_open field to:', status, 'for registration id = 1');
+        console.log('schoolController.changeRegistrationStatus: Database registration status update initiated');
         
         const result = await pool.query('UPDATE registration SET is_open = $1 WHERE id = 1', [status]);
         
-        console.log('Step 7: Database update completed successfully');
-        console.log('Step 8: Rows affected by update:', result.rowCount);
-        console.log('Step 9: Registration status now set to:', status ? 'OPEN' : 'CLOSED');
+        console.log('schoolController.changeRegistrationStatus: Registration status update completed successfully');
+        console.log('schoolController.changeRegistrationStatus: Database rows affected:', result.rowCount);
+        console.log('schoolController.changeRegistrationStatus: Registration status set to:', status ? 'OPEN' : 'CLOSED');
         
         res.status(200).json({ message: `Registration ${status ? 'opened' : 'closed'} successfully` });
     } catch (error) {
-        console.error('Step 10: Error occurred while changing registration status:', error);
-        console.error('Step 11: Error details analysis:', {
-            message: error.message,
-            code: error.code,
-            detail: error.detail
-        });
+        console.error('schoolController.changeRegistrationStatus: Function failed with error:', error.message);
         res.status(500).json({ message: 'Server error' });
     }
 };
 
 // Delete a school
 exports.deleteSchool = async (req, res) => {
-    console.log('Step 1: Delete school request received and processing');
+    console.log('schoolController.deleteSchool: Function called - school deletion request received');
     const { id } = req.params;
 
     try {
-        console.log('Step 2: Checking if school exists with ID:', id);
+        console.log('schoolController.deleteSchool: School existence validation initiated for ID:', id);
         const existingSchool = await pool.query('SELECT * FROM schools WHERE id = $1', [id]);
 
         if (existingSchool.rows.length === 0) {
-            console.log('Step 3: No school found with ID:', id);
+            console.log('schoolController.deleteSchool: School not found for deletion - ID:', id);
             return res.status(404).json({ message: 'School not found' });
         }
 
-        console.log('Step 4: Deleting school from database with ID:', id);
+        console.log('schoolController.deleteSchool: Database school deletion initiated');
         await pool.query('DELETE FROM schools WHERE id = $1', [id]);
 
-        console.log('Step 5: School deleted successfully');
+        console.log('schoolController.deleteSchool: School deletion completed successfully');
         res.status(200).json({ message: 'School deleted successfully' });
     } catch (error) {
-        console.error('Step 6: Error occurred while deleting school:', error);
+        console.error('schoolController.deleteSchool: Function failed with error:', error.message);
         res.status(500).json({ message: 'Server error' });
     }
 };

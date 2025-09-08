@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { useAppContext } from '../utils/appContext';
 import { SEOHelmet } from '../components/SEOHelmet';
+import { ToastContainer } from 'react-toastify';
 import '../assets/css/admin.css';
 import { useNavigate } from 'react-router-dom';
 import { useRegister } from '../utils/useRegister';
@@ -195,6 +196,8 @@ const Admin = () => {
           )}
         </div>
       </section>
+
+      <ToastContainer position="bottom-right" autoClose={3000} />
     </main>
     </>
   );

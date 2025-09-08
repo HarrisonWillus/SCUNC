@@ -3,16 +3,16 @@ const supabase = require('../config/supabaseClient');
 
 // get all the secretariates
 exports.getAllSecretariates = async (req, res) => {
-    console.log('Step 1: GET all secretariates request received and processing');
+    console.log('secretariateController.getAllSecretariates: Function called - secretariates data retrieval request received');
     
     try {
-        console.log('Step 2: Querying database for all secretariates data');
+        console.log('secretariateController.getAllSecretariates: Database query execution started for all secretariates');
         const result = await pool.query('SELECT * FROM secretariates ORDER BY order_num ASC');
-        console.log('Step 3: Successfully found secretariates count:', result.rows.length);
+        console.log('secretariateController.getAllSecretariates: Database query successful - secretariates count:', result.rows.length);
 
         res.status(200).json({ secretariate: result.rows, message: 'Secretariates fetched successfully' });
     } catch (error) {
-        console.error('Step 4: Error occurred while fetching secretariates:', error);
+        console.error('secretariateController.getAllSecretariates: Function failed with error:', error.message);
         res.status(500).json({ message: 'Server error' });
     }
 };

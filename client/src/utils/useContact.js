@@ -1,19 +1,15 @@
 import { useAppContext } from "./appContext";
+import { toast } from 'react-toastify';
 
 export const useContact = () => {
-    const { setLoading, setMessage, sendHeaders } = useAppContext();
+    const { setLoading, sendHeaders } = useAppContext();
 
     const sendEmail = async (formData ) => {
-        console.log('📤 USECONTACT_DEBUG: Starting sendEmail function');
-        console.log('📤 USECONTACT_DEBUG: Form data received:', formData);
-        console.log('📤 USECONTACT_DEBUG: Form data type:', typeof formData);
-        console.log('📤 USECONTACT_DEBUG: Form data keys:', Object.keys(formData));
-
+        console.log('Starting sendEmail function');
         setLoading(true);
-        setMessage({ error: null, success: null, warning: null });
 
         try {
-            console.log('🚀 USECONTACT_DEBUG: Making fetch request...');
+            console.log('Making fetch request...');
             const response = await fetch(`${process.env.REACT_APP_API_URL}/contact`, {
                 method: 'POST',
                 headers: { ...sendHeaders },
@@ -24,33 +20,29 @@ export const useContact = () => {
             
             setLoading(false);
             if (data.message) {
-                console.log('✅ USECONTACT_DEBUG: Success message:', data.message);
-                setMessage({ success: data.message });
+                toast.success(data.message);
+                console.log('Success message:', data.message);
             } else if (data.error) {
-                console.log('❌ USECONTACT_DEBUG: Error message:', data.error);
-                setMessage({ error: data.error });
+                toast.error(data.error);
+                console.log('Error message:', data.error);
             }
         } catch (error) {
-            console.error('💥 USECONTACT_DEBUG: Catch block error:', error);
-            console.error('💥 USECONTACT_DEBUG: Error stack:', error.stack);
+            console.error('Catch block error:', error);
+            console.error('Error stack:', error.stack);
             setLoading(false);
-            setMessage({ error: 'Failed to send email. Please try again.' });
+            toast.error('Failed to send email. Please try again.');
         }
     };
 
     const sendBusinessEmail = async (formData) => {
-        console.log('📤 USECONTACT_DEBUG: Starting sendBusinessEmail function');
-        console.log('📤 USECONTACT_DEBUG: Form data received:', formData);
-        console.log('📤 USECONTACT_DEBUG: Form data type:', typeof formData);
-        console.log('📤 USECONTACT_DEBUG: Form data keys:', Object.keys(formData));
+        console.log('Starting sendBusinessEmail function');
         
         setLoading(true);
-        setMessage({ error: null, success: null, warning: null });
 
         const requestBody = JSON.stringify(formData);
 
         try {
-            console.log('🚀 USECONTACT_DEBUG: Making business email fetch request...');
+            console.log('Making business email fetch request...');
             const response = await fetch(`${process.env.REACT_APP_API_URL}/contact/business`, {
                 method: 'POST',
                 headers: { ...sendHeaders },
@@ -61,19 +53,19 @@ export const useContact = () => {
             
             setLoading(false);
             if (data.message) {
-                console.log('✅ USECONTACT_DEBUG: Business success message:', data.message);
-                setMessage({ success: data.message });
+                toast.success(data.message);
+                console.log('Business success message:', data.message);
             } else if (data.error) {
-                console.log('❌ USECONTACT_DEBUG: Business error message:', data.error);
-                setMessage({ error: data.error });
+                toast.error(data.error);
+                console.log('Business error message:', data.error);
             }
         } catch (error) {
-            console.error('💥 USECONTACT_DEBUG: Business email catch block error:', error);
-            console.error('💥 USECONTACT_DEBUG: Business error name:', error.name);
-            console.error('💥 USECONTACT_DEBUG: Business error message:', error.message);
-            console.error('💥 USECONTACT_DEBUG: Business error stack:', error.stack);
+            console.error('Business email catch block error:', error);
+            console.error('Business error name:', error.name);
+            console.error('Business error message:', error.message);
+            console.error('Business error stack:', error.stack);
             setLoading(false);
-            setMessage({ error: 'Failed to send business email. Please try again.' });
+            toast.error('Failed to send business email. Please try again.');
         }
     };
 

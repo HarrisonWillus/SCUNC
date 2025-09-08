@@ -25,8 +25,6 @@ const ScheduleBuilder = () => {
         currentSchedule,
         days,
         events,
-        loading,
-        message,
         createOrUpdateSchedule,
         resetSchedule,
         fetchScheduleDetails,
@@ -65,17 +63,6 @@ const ScheduleBuilder = () => {
         location: '',
         description: ''
     });
-
-    // Show messages as toasts
-    useEffect(() => {
-        if (message.success) {
-            toast.success(message.success);
-        } else if (message.error) {
-            toast.error(message.error);
-        } else if (message.warning) {
-            toast.warning(message.warning);
-        }
-    }, [message]);
 
     // Reset form when switching modes
     useEffect(() => {

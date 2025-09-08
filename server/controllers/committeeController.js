@@ -3,11 +3,10 @@ const supabase = require('../config/supabaseClient');
 
 // Get all committees with topics
 exports.getAllCommittees = async (req, res) => {
-    console.log('Step 1: getAllCommittees function initiated');
-    console.log('Step 2: Request received from IP address:', req.ip || 'unknown IP');
+    console.log('committeeController.getAllCommittees: Function called - fetching all committees data');
     
     try {
-        console.log('Step 3: Executing database query to fetch all committees with topics');
+        console.log('committeeController.getAllCommittees: Database query execution started for committees with topics');
         const result = await pool.query(`SELECT c.*, 
                                         cat.title as category_title, 
                                         cat.id AS category_id,
@@ -25,112 +24,97 @@ exports.getAllCommittees = async (req, res) => {
                                         GROUP BY c.id, cat.id, cat.title
                                         ORDER BY c.order_num ASC, c.created_at ASC`);
         
-        console.log('Step 4: Database query executed successfully');
-        console.log('Step 5: Committee data preview:', result.rows.map(c => ({ id: c.id, title: c.title, category: c.category_title })));
+        console.log('committeeController.getAllCommittees: Database query successful - retrieved committee data');
+        console.log('committeeController.getAllCommittees: Committee data processing completed successfully');
         
-        console.log('Step 6: getAllCommittees function completed successfully');
+        console.log('committeeController.getAllCommittees: Function completed successfully - sending response');
         res.status(200).json({ committees: result.rows });
     } catch (error) {
-        console.error('Step 7: Database error occurred during query execution:', error.message);
-        console.error('Step 8: Error stack trace:', error.stack);
-        console.error('Step 9: getAllCommittees function failed');
+        console.error('committeeController.getAllCommittees: Database query failed with error:', error.message);
+        console.error('committeeController.getAllCommittees: Function failed - error details:', error.stack);
         res.status(500).json({ message: 'Server error' });
     }
 };
 
 // Get all categories
 exports.getCategories = async (req, res) => {
-    console.log('Step 1: getCategories function initiated');
-    console.log('Step 2: Request received from IP address:', req.ip || 'unknown IP');
+    console.log('committeeController.getCategories: Function called - fetching categories data');
     
     try {
-        console.log('Step 3: Executing database query to fetch all categories');
+        console.log('committeeController.getCategories: Database query execution started for all categories');
         const result = await pool.query('SELECT * FROM categories ORDER BY title ASC');
         
-        console.log('Step 4: Database query executed successfully');
-        console.log('Step 5: Retrieved category count:', result.rows.length);
-        console.log('Step 6: Categories list:', result.rows.map(c => ({ id: c.id, title: c.title })));
+        console.log('committeeController.getCategories: Database query successful - categories retrieved');
+        console.log('committeeController.getCategories: Category processing completed - count:', result.rows.length);
         
-        console.log('Step 7: getCategories function completed successfully');
+        console.log('committeeController.getCategories: Function completed successfully - sending response');
         res.status(200).json({ categories: result.rows });
     } catch (error) {
-        console.error('Step 8: Database error occurred during query execution:', error.message);
-        console.error('Step 9: Error stack trace:', error.stack);
-        console.error('Step 10: getCategories function failed');
+        console.error('committeeController.getCategories: Database query failed with error:', error.message);
+        console.error('committeeController.getCategories: Function failed - error details:', error.stack);
         res.status(500).json({ message: 'Server error' });
     }
 };
 
 // Create a new committee
 exports.createCommittee = async (req, res) => {
-    console.log('Step 1: Create committee request received and processing');
-    console.log('Step 2: Full request body analysis:', JSON.stringify(req.body, null, 2));
-    console.log('Step 3: Committee name validation:', req.body.title);
-    console.log('Step 4: Category ID verification:', req.body.category_id);
-    console.log('Step 5: Description length check:', req.body.description ? req.body.description.length : 0);
-    console.log('Step 6: Image data presence verification:', !!req.body.image);
-    console.log('Step 7: Image data type analysis:', typeof req.body.image);
-    console.log('Step 8: Image data preview:', req.body.image ? req.body.image.substring(0, 100) + '...' : null);
-    console.log('Step 9: Background guide validation:', req.body.background_guide);
-    console.log('Step 10: Topics data presence check:', !!req.body.topics);
-    console.log('Step 11: Topics data type verification:', typeof req.body.topics);
-    console.log('Step 12: Topics array length validation:', req.body.topics ? req.body.topics.length : 0);
+    console.log('committeeController.createCommittee: Function called - committee creation request received');
+    console.log('committeeController.createCommittee: Request data validation started');
+    console.log('committeeController.createCommittee: Background guide processing initiated');
+    console.log('committeeController.createCommittee: Topics array processing started');
     
     const { title, description, category_id, image, background_guide, topics } = req.body;
 
     if (!title || !description || !category_id || !image) {
-        console.log('Step 13: Required fields validation failed');
+        console.log('committeeController.createCommittee: Required field validation failed - missing data');
         return res.status(400).json({ message: 'Missing required fields' });
     }
 
     try {
-        console.log('Step 14: Beginning image upload processing workflow');
+        console.log('committeeController.createCommittee: Image upload processing workflow initiated');
         
         // Handle base64 image data from frontend
         let imageBuffer, fileName, mimeType;
         let backgroundGuideUrl = null;
 
         if (typeof image === 'string') {
-            console.log('Step 15: Image detected as base64 string, initiating processing');
-            console.log('Step 16: Raw image string length measurement:', image.length);
-            console.log('Step 17: Image string header analysis:', image.substring(0, 150));
+            console.log('committeeController.createCommittee: Base64 image string processing started');
+            console.log('committeeController.createCommittee: Image data validation and parsing initiated');
 
             // Extract filename from data URL if present
             let originalFilename = null;
             const nameMatch = image.match(/data:[^;]+;name=([^;]+);/);
             if (nameMatch) {
                 originalFilename = decodeURIComponent(nameMatch[1]);
-                console.log('Step 18: Original filename extracted successfully:', originalFilename);
+                console.log('committeeController.createCommittee: Original filename extraction successful');
             } else {
-                console.log('Step 19: No filename found in data URL structure');
+                console.log('committeeController.createCommittee: No filename found in data URL - using default');
             }
             
             // Check if the data URL is properly formatted
             const dataUrlMatch = image.match(/^data:([^;]+);(name=[^;]+;)?base64,(.+)$/);
             if (!dataUrlMatch) {
-                console.log('Step 20: Invalid data URL format detected');
-                console.log('Step 21: Expected format verification: data:mime/type;name=filename;base64,data');
+                console.log('committeeController.createCommittee: Data URL format validation failed');
                 throw new Error('Invalid base64 data URL format');
             }
             
             const mimeTypeFromUrl = dataUrlMatch[1];
             const base64Data = dataUrlMatch[3];
             
-            console.log('Step 22: MIME type extraction completed:', mimeTypeFromUrl);
-            console.log('Step 23: Base64 data length measurement:', base64Data.length);
-            console.log('Step 24: Base64 data header preview:', base64Data.substring(0, 50));
+            console.log('committeeController.createCommittee: MIME type extraction completed successfully');
+            console.log('committeeController.createCommittee: Base64 data parsing completed');
             
             // Validate base64 data
             if (!base64Data || base64Data.length < 100) {
-                console.log('Step 25: Base64 data validation failed - insufficient length or empty');
+                console.log('committeeController.createCommittee: Base64 data validation failed - insufficient data');
                 throw new Error('Invalid base64 image data');
             }
             
             try {
                 imageBuffer = Buffer.from(base64Data, 'base64');
-                console.log('Step 26: Buffer creation from base64 data completed successfully');
+                console.log('committeeController.createCommittee: Buffer creation from base64 data successful');
             } catch (bufferError) {
-                console.log('Step 27: Buffer creation from base64 data failed:', bufferError.message);
+                console.log('committeeController.createCommittee: Buffer creation from base64 data failed:', bufferError.message);
                 throw new Error('Failed to process base64 image data');
             }
             
@@ -138,31 +122,26 @@ exports.createCommittee = async (req, res) => {
             fileName = originalFilename || `committee_${Date.now()}.jpg`;
             mimeType = mimeTypeFromUrl || 'image/jpeg';
             
-            console.log('Step 28: Using filename for storage:', fileName);
-            console.log('Step 29: MIME type assignment:', mimeType);
-            console.log('Step 30: Buffer size verification:', imageBuffer.length);
-            console.log('Step 31: Buffer validity confirmation:', imageBuffer && imageBuffer.length > 0);
+            console.log('committeeController.createCommittee: Filename assignment completed for storage');
+            console.log('committeeController.createCommittee: MIME type configuration set successfully');
+            console.log('committeeController.createCommittee: Buffer validation completed - ready for upload');
         } else if (image && image.buffer) {
-            console.log('Step 32: Image detected as file object, processing accordingly');
+            console.log('committeeController.createCommittee: File object image processing started');
             imageBuffer = image.buffer;
             fileName = image.originalname || `committee_${Date.now()}.jpg`;
             mimeType = image.mimetype || 'image/jpeg';
 
-            console.log('Step 33: Original filename from file object:', fileName);
-            console.log('Step 34: MIME type from file object:', mimeType);
-            console.log('Step 35: Buffer size from file object:', imageBuffer.length);
+            console.log('committeeController.createCommittee: File object data extraction completed');
         } else {
-            console.log('Step 36: Invalid image format detected');
+            console.log('committeeController.createCommittee: Image format validation failed - invalid format');
             throw new Error('Invalid image format');
         }
 
-        console.log('Step 37: Initiating Supabase storage upload process');
+        console.log('committeeController.createCommittee: Supabase storage upload process initiated');
         
         // Debug the buffer before upload
-        console.log('Step 38: Pre-upload buffer validation process');
-        console.log('Step 39: Buffer length verification:', imageBuffer.length);
-        console.log('Step 40: Buffer start bytes in hex format:', imageBuffer.slice(0, 20).toString('hex'));
-        console.log('Step 41: JPEG header validation check:', imageBuffer.slice(0, 3).toString('hex') === 'ffd8ff');
+        console.log('committeeController.createCommittee: Pre-upload buffer validation started');
+        console.log('committeeController.createCommittee: Image header validation completed');
         
         const { data, error } = await supabase.storage
             .from('committee-images')
@@ -173,14 +152,12 @@ exports.createCommittee = async (req, res) => {
             });
 
         if (error) {
-            console.log('Step 42: Supabase upload process failed:', error.message);
-            console.log('Step 43: Full error object analysis:', JSON.stringify(error, null, 2));
+            console.log('committeeController.createCommittee: Supabase upload process failed:', error.message);
             throw error;
         }
 
-        console.log('Step 44: Image upload to Supabase completed successfully');
-        console.log('Step 45: Upload response data verification:', data);
-        console.log('Step 46: Initiating public URL retrieval process');
+        console.log('committeeController.createCommittee: Image upload to Supabase completed successfully');
+        console.log('committeeController.createCommittee: Public URL generation initiated');
         
         // Get the public URL
         const { data: publicUrlData } = supabase.storage
@@ -188,57 +165,51 @@ exports.createCommittee = async (req, res) => {
             .getPublicUrl(fileName);
 
         const imageUrl = publicUrlData.publicUrl;
-        console.log('Step 47: Public URL generation completed:', imageUrl);
+        console.log('committeeController.createCommittee: Public URL generation completed successfully');
 
         // Handle background guide upload if provided
         if (background_guide) {
-            console.log('📋 COMMITTEES: Processing background guide upload...');
-            console.log('📋 COMMITTEES: Background guide type:', typeof background_guide);
-            console.log('📋 COMMITTEES: Background guide length:', background_guide.length);
+            console.log('committeeController.createCommittee: Background guide processing initiated');
             
             let bgBuffer, bgFileName, bgMimeType;
 
             if (typeof background_guide === 'string') {
-                console.log('📋 COMMITTEES: Background guide is base64 string, processing...');
-                console.log('🔍 COMMITTEES: Raw background guide string length:', background_guide.length);
-                console.log('🔍 COMMITTEES: Background guide string start (first 150 chars):', background_guide.substring(0, 150));
+                console.log('committeeController.createCommittee: Background guide base64 string processing started');
 
                 // Extract filename from data URL if present
                 let originalBgFilename = null;
                 const bgNameMatch = background_guide.match(/data:[^;]+;name=([^;]+);/);
                 if (bgNameMatch) {
                     originalBgFilename = decodeURIComponent(bgNameMatch[1]);
-                    console.log('📁 COMMITTEES: Original background guide filename found:', originalBgFilename);
+                    console.log('committeeController.createCommittee: Background guide filename extraction successful');
                 } else {
-                    console.log('⚠️ COMMITTEES: No filename found in background guide data URL');
+                    console.log('committeeController.createCommittee: No filename found in background guide data URL');
                 }
                 
                 // Check if the data URL is properly formatted
                 const bgDataUrlMatch = background_guide.match(/^data:([^;]+);(name=[^;]+;)?base64,(.+)$/);
                 if (!bgDataUrlMatch) {
-                    console.log('❌ COMMITTEES: Invalid background guide data URL format');
-                    console.log('🔍 COMMITTEES: Expected format: data:mime/type;name=filename;base64,data');
+                    console.log('committeeController.createCommittee: Background guide data URL format validation failed');
                     throw new Error('Invalid background guide base64 data URL format');
                 }
                 
                 const bgMimeTypeFromUrl = bgDataUrlMatch[1];
                 const bgBase64Data = bgDataUrlMatch[3];
                 
-                console.log('🎯 COMMITTEES: Background guide extracted MIME type:', bgMimeTypeFromUrl);
-                console.log('🎯 COMMITTEES: Background guide base64 data length:', bgBase64Data.length);
-                console.log('🎯 COMMITTEES: Background guide base64 data start (first 50 chars):', bgBase64Data.substring(0, 50));
+                console.log('committeeController.createCommittee: Background guide MIME type extraction completed');
+                console.log('committeeController.createCommittee: Background guide base64 data parsing completed');
                 
                 // Validate base64 data
                 if (!bgBase64Data || bgBase64Data.length < 100) {
-                    console.log('❌ COMMITTEES: Background guide base64 data is too short or empty');
+                    console.log('committeeController.createCommittee: Background guide base64 data validation failed');
                     throw new Error('Invalid background guide base64 data');
                 }
                 
                 try {
                     bgBuffer = Buffer.from(bgBase64Data, 'base64');
-                    console.log('✅ COMMITTEES: Background guide buffer created successfully');
+                    console.log('committeeController.createCommittee: Background guide buffer creation successful');
                 } catch (bufferError) {
-                    console.log('❌ COMMITTEES: Failed to create buffer from background guide base64:', bufferError.message);
+                    console.log('committeeController.createCommittee: Background guide buffer creation failed:', bufferError.message);
                     throw new Error('Failed to process background guide base64 data');
                 }
                 
@@ -246,31 +217,25 @@ exports.createCommittee = async (req, res) => {
                 bgFileName = originalBgFilename || `background_guide_${Date.now()}.pdf`;
                 bgMimeType = bgMimeTypeFromUrl || 'application/pdf';
                 
-                console.log('   - Using background guide filename:', bgFileName);
-                console.log('   - Background guide MIME type:', bgMimeType);
-                console.log('   - Background guide buffer size:', bgBuffer.length);
-                console.log('   - Background guide buffer is valid:', bgBuffer && bgBuffer.length > 0);
+                console.log('committeeController.createCommittee: Background guide filename assignment completed');
+                console.log('committeeController.createCommittee: Background guide MIME type configuration set');
+                console.log('committeeController.createCommittee: Background guide buffer validation completed');
             } else if (background_guide && background_guide.buffer) {
-                console.log('📁 COMMITTEES: Background guide is file object, processing...');
+                console.log('committeeController.createCommittee: Background guide file object processing started');
                 bgBuffer = background_guide.buffer;
                 bgFileName = background_guide.originalname || `background_guide_${Date.now()}.pdf`;
                 bgMimeType = background_guide.mimetype || 'application/pdf';
 
-                console.log('   - Original background guide filename:', bgFileName);
-                console.log('   - Background guide MIME type:', bgMimeType);
-                console.log('   - Background guide buffer size:', bgBuffer.length);
+                console.log('committeeController.createCommittee: Background guide file object data extraction completed');
             } else {
-                console.log('❌ COMMITTEES: Invalid background guide format');
+                console.log('committeeController.createCommittee: Background guide format validation failed');
                 throw new Error('Invalid background guide format');
             }
 
-            console.log('☁️ COMMITTEES: Uploading background guide to Supabase storage...');
+            console.log('committeeController.createCommittee: Background guide Supabase upload initiated');
             
             // Debug the buffer before upload
-            console.log('🔍 COMMITTEES: Pre-upload background guide buffer validation:');
-            console.log('   - Buffer length:', bgBuffer.length);
-            console.log('   - Buffer start (hex):', bgBuffer.slice(0, 20).toString('hex'));
-            console.log('   - Is valid PDF header:', bgBuffer.slice(0, 4).toString('hex') === '25504446');
+            console.log('committeeController.createCommittee: Background guide pre-upload validation started');
             
             const { data: bgData, error: bgError } = await supabase.storage
                 .from('committee-background-guides')
@@ -281,14 +246,12 @@ exports.createCommittee = async (req, res) => {
                 });
 
             if (bgError) {
-                console.log('❌ COMMITTEES: Supabase background guide upload error:', bgError.message);
-                console.log('🔍 COMMITTEES: Full background guide error object:', JSON.stringify(bgError, null, 2));
+                console.log('committeeController.createCommittee: Background guide Supabase upload failed:', bgError.message);
                 throw bgError;
             }
 
-            console.log('✅ COMMITTEES: Background guide uploaded successfully');
-            console.log('📊 COMMITTEES: Background guide upload response data:', bgData);
-            console.log('🔗 COMMITTEES: Getting background guide public URL...');
+            console.log('committeeController.createCommittee: Background guide upload completed successfully');
+            console.log('committeeController.createCommittee: Background guide public URL generation initiated');
             
             // Get the public URL for background guide
             const { data: bgPublicUrlData } = supabase.storage
@@ -296,13 +259,13 @@ exports.createCommittee = async (req, res) => {
                 .getPublicUrl(bgFileName);
 
             backgroundGuideUrl = bgPublicUrlData.publicUrl;
-            console.log('🔗 COMMITTEES: Background guide public URL:', backgroundGuideUrl);
+            console.log('committeeController.createCommittee: Background guide public URL generation completed');
         } else {
-            console.log('⚠️ COMMITTEES: No background guide provided');
+            console.log('committeeController.createCommittee: No background guide provided - skipping');
         }
 
         // Create the committee in database
-        console.log('💾 COMMITTEES: Creating committee in database...');
+        console.log('committeeController.createCommittee: Database committee insertion initiated');
         const createResult = await pool.query(
             `INSERT INTO committees (title, description, category_id, image_url, background_guide_url) 
              VALUES ($1, $2, $3, $4, $5) 
@@ -311,24 +274,24 @@ exports.createCommittee = async (req, res) => {
         );
         
         const newCommittee = createResult.rows[0];
-        console.log('✅ COMMITTEES: Committee created with ID:', newCommittee.id);
+        console.log('committeeController.createCommittee: Committee database insertion successful - ID:', newCommittee.id);
 
         // Handle topics if provided
         if (topics && Array.isArray(topics) && topics.length > 0) {
-            console.log('📝 COMMITTEES: Adding topics to committee...');
+            console.log('committeeController.createCommittee: Topics processing initiated for committee');
             for (const topic of topics) {
                 if (topic.trim()) {
                     await pool.query(
                         'INSERT INTO committee_topics (committee_id, topic) VALUES ($1, $2)',
                         [newCommittee.id, topic.trim()]
                     );
-                    console.log('✅ COMMITTEES: Added topic:', topic.trim());
+                    console.log('committeeController.createCommittee: Topic added successfully:', topic.trim());
                 }
             }
         }
 
         // Fetch all committees with topics for return
-        console.log('📋 COMMITTEES: Fetching updated committees list...');
+        console.log('committeeController.createCommittee: Updated committees list retrieval initiated');
         const allCommittees = await pool.query(`SELECT c.*, 
                                                 cat.title as category_title, 
                                                 cat.id AS category_id,
@@ -346,37 +309,25 @@ exports.createCommittee = async (req, res) => {
                                             GROUP BY c.id, cat.id, cat.title
                                             ORDER BY c.order_num ASC, c.created_at ASC`);
         
-        console.log('✅ COMMITTEES: Committee created successfully');
+        console.log('committeeController.createCommittee: Function completed successfully - committee created');
         res.status(201).json({ committees: allCommittees.rows, message: 'Committee created successfully' });
     } catch (error) {
-        console.error('❌ COMMITTEES: Error occurred:', error.message);
-        console.error('📍 COMMITTEES: Error stack:', error.stack);
+        console.error('committeeController.createCommittee: Function failed with error:', error.message);
+        console.error('committeeController.createCommittee: Error details:', error.stack);
         res.status(500).json({ message: 'Server error' });
     }
 };
 
 // Update a committee
 exports.updateCommittee = async (req, res) => {
-    console.log('📝 COMMITTEES: Update committee request received');
-    console.log('📦 FULL REQUEST BODY:', JSON.stringify(req.body, null, 2));
-    console.log('🆔 Committee ID:', req.params.id);
-    console.log('🏷️ Name:', req.body.name);
-    console.log('🏢 Category ID:', req.body.category_id);
-    console.log('📄 Description length:', req.body.description ? req.body.description.length : 0);
-    console.log('🖼️ Photo provided:', !!req.body.photo);
-    console.log('🖼️ Photo type:', typeof req.body.photo);
-    console.log('🖼️ Photo value (first 100 chars):', req.body.photo ? req.body.photo.substring(0, 100) + '...' : null);
-    console.log('✉️ Committee letter:', req.body.committee_letter);
-    console.log('📊 Position order:', req.body.position_order);
-    console.log('📝 Topics provided:', !!req.body.topics);
-    console.log('📝 Topics type:', typeof req.body.topics);
-    console.log('📝 Topics length:', req.body.topics ? req.body.topics.length : 0);
+    console.log('committeeController.updateCommittee: Function called - committee update request received');
+    console.log('committeeController.updateCommittee: Request data validation initiated');
 
     const { id } = req.params;
     const { name, category_id, description, photo, committee_letter, position_order, topics } = req.body;
 
     if (!id || !category_id) {
-        console.log('❌ COMMITTEES: Missing required fields');
+        console.log('committeeController.updateCommittee: Required field validation failed - missing data');
         return res.status(400).json({ message: 'Missing required fields' });
     }
 
@@ -385,51 +336,47 @@ exports.updateCommittee = async (req, res) => {
 
         // Handle image upload if provided
         if (photo && typeof photo === 'string') {
-            console.log('☁️ COMMITTEES: Processing image upload...');
+            console.log('committeeController.updateCommittee: Image upload processing initiated');
             
             // Handle base64 image data from frontend
             let imageBuffer, fileName, mimeType;
             
-            console.log('📝 COMMITTEES: Photo is base64 string, processing...');
-            console.log('🔍 COMMITTEES: Raw photo string length:', photo.length);
-            console.log('🔍 COMMITTEES: Photo string start (first 150 chars):', photo.substring(0, 150));
+            console.log('committeeController.updateCommittee: Base64 image string processing started');
             
             // Extract filename from data URL if present
             let originalFilename = null;
             const nameMatch = photo.match(/data:[^;]+;name=([^;]+);/);
             if (nameMatch) {
                 originalFilename = decodeURIComponent(nameMatch[1]);
-                console.log('📁 COMMITTEES: Original filename found:', originalFilename);
+                console.log('committeeController.updateCommittee: Original filename extraction successful');
             } else {
-                console.log('⚠️ COMMITTEES: No filename found in data URL');
+                console.log('committeeController.updateCommittee: No filename found in data URL');
             }
             
             // Check if the data URL is properly formatted
             const dataUrlMatch = photo.match(/^data:([^;]+);(name=[^;]+;)?base64,(.+)$/);
             if (!dataUrlMatch) {
-                console.log('❌ COMMITTEES: Invalid data URL format');
-                console.log('🔍 COMMITTEES: Expected format: data:mime/type;name=filename;base64,data');
+                console.log('committeeController.updateCommittee: Data URL format validation failed');
                 throw new Error('Invalid base64 data URL format');
             }
             
             const mimeTypeFromUrl = dataUrlMatch[1];
             const base64Data = dataUrlMatch[3];
             
-            console.log('🎯 COMMITTEES: Extracted MIME type:', mimeTypeFromUrl);
-            console.log('🎯 COMMITTEES: Base64 data length:', base64Data.length);
-            console.log('🎯 COMMITTEES: Base64 data start (first 50 chars):', base64Data.substring(0, 50));
+            console.log('committeeController.updateCommittee: MIME type extraction completed');
+            console.log('committeeController.updateCommittee: Base64 data parsing completed');
             
             // Validate base64 data
             if (!base64Data || base64Data.length < 100) {
-                console.log('❌ COMMITTEES: Base64 data is too short or empty');
+                console.log('committeeController.updateCommittee: Base64 data validation failed');
                 throw new Error('Invalid base64 image data');
             }
             
             try {
                 imageBuffer = Buffer.from(base64Data, 'base64');
-                console.log('✅ COMMITTEES: Buffer created successfully');
+                console.log('committeeController.updateCommittee: Buffer creation successful');
             } catch (bufferError) {
-                console.log('❌ COMMITTEES: Failed to create buffer from base64:', bufferError.message);
+                console.log('committeeController.updateCommittee: Buffer creation failed:', bufferError.message);
                 throw new Error('Failed to process base64 image data');
             }
             
@@ -437,18 +384,12 @@ exports.updateCommittee = async (req, res) => {
             fileName = originalFilename || `committee_${Date.now()}.jpg`;
             mimeType = mimeTypeFromUrl || 'image/jpeg';
             
-            console.log('   - Using filename:', fileName);
-            console.log('   - MIME type:', mimeType);
-            console.log('   - Buffer size:', imageBuffer.length);
-            console.log('   - Buffer is valid:', imageBuffer && imageBuffer.length > 0);
+            console.log('committeeController.updateCommittee: Filename and MIME type configuration completed');
 
-            console.log('☁️ COMMITTEES: Uploading to Supabase storage...');
+            console.log('committeeController.updateCommittee: Supabase storage upload initiated');
             
             // Debug the buffer before upload
-            console.log('🔍 COMMITTEES: Pre-upload buffer validation:');
-            console.log('   - Buffer length:', imageBuffer.length);
-            console.log('   - Buffer start (hex):', imageBuffer.slice(0, 20).toString('hex'));
-            console.log('   - Is valid JPEG header:', imageBuffer.slice(0, 3).toString('hex') === 'ffd8ff');
+            console.log('committeeController.updateCommittee: Pre-upload buffer validation completed');
             
             const { data, error } = await supabase.storage
                 .from('committee-images')
@@ -459,14 +400,12 @@ exports.updateCommittee = async (req, res) => {
                 });
 
             if (error) {
-                console.log('❌ COMMITTEES: Supabase upload error:', error.message);
-                console.log('🔍 COMMITTEES: Full error object:', JSON.stringify(error, null, 2));
+                console.log('committeeController.updateCommittee: Supabase upload failed:', error.message);
                 throw error;
             }
 
-            console.log('✅ COMMITTEES: Image uploaded successfully');
-            console.log('📊 COMMITTEES: Upload response data:', data);
-            console.log('🔗 COMMITTEES: Getting public URL...');
+            console.log('committeeController.updateCommittee: Image upload completed successfully');
+            console.log('committeeController.updateCommittee: Public URL generation initiated');
             
             // Get the public URL
             const { data: publicUrlData } = supabase.storage
@@ -474,7 +413,7 @@ exports.updateCommittee = async (req, res) => {
                 .getPublicUrl(fileName);
 
             imageUrl = publicUrlData.publicUrl;
-            console.log('🔗 COMMITTEES: Public URL:', imageUrl);
+            console.log('committeeController.updateCommittee: Public URL generation completed');
         }
 
         // Build update query dynamically
@@ -520,7 +459,7 @@ exports.updateCommittee = async (req, res) => {
 
         updateValues.push(id);
 
-        console.log('💾 COMMITTEES: Updating committee in database...');
+        console.log('committeeController.updateCommittee: Database committee update initiated');
         await pool.query(
             `UPDATE committees SET ${updateFields.join(', ')}, updated_at = CURRENT_TIMESTAMP WHERE id = $${paramCount}`,
             updateValues
@@ -528,11 +467,11 @@ exports.updateCommittee = async (req, res) => {
 
         // Update topics if provided
         if (topics !== undefined) {
-            console.log('📝 COMMITTEES: Updating topics...');
+            console.log('committeeController.updateCommittee: Topics update processing initiated');
             
             // Delete existing topics
             await pool.query('DELETE FROM committee_topics WHERE committee_id = $1', [id]);
-            console.log('🗑️ COMMITTEES: Existing topics deleted');
+            console.log('committeeController.updateCommittee: Existing topics deletion completed');
             
             // Add new topics
             if (Array.isArray(topics) && topics.length > 0) {
@@ -542,14 +481,14 @@ exports.updateCommittee = async (req, res) => {
                             'INSERT INTO committee_topics (committee_id, topic) VALUES ($1, $2)',
                             [id, topic.trim()]
                         );
-                        console.log('✅ COMMITTEES: Added topic:', topic.trim());
+                        console.log('committeeController.updateCommittee: Topic added successfully:', topic.trim());
                     }
                 }
             }
         }
 
         // Fetch all committees with topics for return
-        console.log('📋 COMMITTEES: Fetching updated committees list...');
+        console.log('committeeController.updateCommittee: Updated committees list retrieval initiated');
         const allCommittees = await pool.query(`SELECT c.*, 
                                                 cat.title as category_title, 
                                                 cat.id AS category_id,
@@ -567,36 +506,35 @@ exports.updateCommittee = async (req, res) => {
                                             GROUP BY c.id, cat.id, cat.title
                                             ORDER BY c.order_num ASC, c.created_at ASC`);
 
-        console.log('✅ COMMITTEES: Committee updated successfully');
+        console.log('committeeController.updateCommittee: Function completed successfully - committee updated');
         res.status(200).json({ committees: allCommittees.rows, message: 'Committee updated successfully' });
     } catch (error) {
-        console.error('❌ COMMITTEES: Error occurred:', error.message);
-        console.error('📍 COMMITTEES: Error stack:', error.stack);
+        console.error('committeeController.updateCommittee: Function failed with error:', error.message);
+        console.error('committeeController.updateCommittee: Error details:', error.stack);
         res.status(500).json({ message: 'Server error' });
     }
 };
 
 // Delete a committee
 exports.deleteCommittee = async (req, res) => {
-    console.log('📝 COMMITTEES: Delete committee request received');
-    console.log('🆔 Committee ID:', req.params.id);
+    console.log('committeeController.deleteCommittee: Function called - committee deletion request received');
 
     const { id } = req.params;
 
     if (!id) {
-        console.log('❌ COMMITTEES: Missing committee ID');
+        console.log('committeeController.deleteCommittee: Committee ID validation failed - missing ID');
         return res.status(400).json({ message: 'Committee ID is required' });
     }
 
     try {
-        console.log('🗑️ COMMITTEES: Deleting topics for committee...');
+        console.log('committeeController.deleteCommittee: Topics deletion for committee initiated');
         await pool.query('DELETE FROM committee_topics WHERE committee_id = $1', [id]);
         
-        console.log('🗑️ COMMITTEES: Deleting committee from database...');
+        console.log('committeeController.deleteCommittee: Committee database deletion initiated');
         await pool.query('DELETE FROM committees WHERE id = $1', [id]);
 
         // Fetch all committees with topics for return
-        console.log('📋 COMMITTEES: Fetching updated committees list...');
+        console.log('committeeController.deleteCommittee: Updated committees list retrieval initiated');
         const allCommittees = await pool.query(`SELECT c.*, 
                                                 cat.title as category_title, 
                                                 cat.id AS category_id,
@@ -614,80 +552,77 @@ exports.deleteCommittee = async (req, res) => {
                                             GROUP BY c.id, cat.id, cat.title
                                             ORDER BY c.order_num ASC, c.created_at ASC`);
 
-        console.log('✅ COMMITTEES: Committee deleted successfully');
+        console.log('committeeController.deleteCommittee: Function completed successfully - committee deleted');
         res.status(200).json({ committees: allCommittees.rows, message: 'Committee deleted successfully' });
     } catch (error) {
-        console.error('❌ COMMITTEES: Error occurred:', error.message);
-        console.error('📍 COMMITTEES: Error stack:', error.stack);
+        console.error('committeeController.deleteCommittee: Function failed with error:', error.message);
+        console.error('committeeController.deleteCommittee: Error details:', error.stack);
         res.status(500).json({ message: 'Server error' });
     }
 };
 
 // Create a new category
 exports.createCategory = async (req, res) => {
-    console.log('📝 COMMITTEES: Create category request received');
-    console.log('📦 FULL REQUEST BODY:', JSON.stringify(req.body, null, 2));
-    console.log('🏷️ Title:', req.body.title);
+    console.log('committeeController.createCategory: Function called - category creation request received');
     
     const { title } = req.body;
 
     if (!title) {
-        console.log('❌ COMMITTEES: Missing category title');
+        console.log('committeeController.createCategory: Category title validation failed - missing title');
         return res.status(400).json({ message: 'Category title is required' });
     }
 
     try {
-        console.log('💾 COMMITTEES: Creating category in database...');
+        console.log('committeeController.createCategory: Database category insertion initiated');
         const result = await pool.query(
             'INSERT INTO categories (title) VALUES ($1) RETURNING *',
             [title]
         );
         
         const newCategory = result.rows[0];
-        console.log('✅ COMMITTEES: Category created with ID:', newCategory.id);
+        console.log('committeeController.createCategory: Category database insertion successful - ID:', newCategory.id);
 
         // Fetch all categories for return
-        console.log('📋 COMMITTEES: Fetching updated categories list...');
+        console.log('committeeController.createCategory: Updated categories list retrieval initiated');
         const allCategories = await pool.query('SELECT * FROM categories ORDER BY title ASC');
 
-        console.log('✅ COMMITTEES: Category created successfully');
+        console.log('committeeController.createCategory: Function completed successfully - category created');
         res.status(201).json({ 
             categories: allCategories.rows, 
             newCategory: newCategory,
             message: 'Category created successfully' 
         });
     } catch (error) {
-        console.error('❌ COMMITTEES: Error occurred:', error.message);
-        console.error('📍 COMMITTEES: Error stack:', error.stack);
+        console.error('committeeController.createCategory: Function failed with error:', error.message);
+        console.error('committeeController.createCategory: Error details:', error.stack);
         res.status(500).json({ message: 'Server error' });
     }
 };
 
 // Update committee positions/order
 exports.updateCommitteePositions = async (req, res) => {
-    console.log('📝 COMMITTEES: Update committee positions request received');
-    console.log('📦 FULL REQUEST BODY:', JSON.stringify(req.body, null, 2));
+    console.log('committeeController.updateCommitteePositions: Function called - position update request received');
     
     const { committees } = req.body;
 
     if (!committees || !Array.isArray(committees)) {
-        console.log('❌ COMMITTEES: Invalid committees data');
+        console.log('committeeController.updateCommitteePositions: Committee data validation failed - invalid format');
         return res.status(400).json({ message: 'Invalid committees data' });
     }
 
     try {
-        console.log('💾 COMMITTEES: Updating committee positions...');
+        console.log('committeeController.updateCommitteePositions: Committee positions update processing initiated');
         
         for (const committee of committees) {
             await pool.query(
                 'UPDATE committees SET order_num = $1 WHERE id = $2',
                 [committee.order_num, committee.id]
             );
-            console.log(`✅ COMMITTEES: Updated position for committee ${committee.id} to ${committee.order_num}`);
+            console.log('committeeController.updateCommitteePositions: Position updated for committee ID:', committee.id, 'to order:', committee.order_num);
         }
 
         // Fetch all committees with topics for return
-        console.log('📋 COMMITTEES: Fetching updated committees list...');
+        console.log('committeeController.updateCommitteePositions: Updated committees list retrieval initiated');
         const allCommittees = await pool.query(`SELECT c.*, 
                                                 cat.title as category_title, 
                                                 cat.id AS category_id,
@@ -705,11 +640,11 @@ exports.updateCommitteePositions = async (req, res) => {
                                             GROUP BY c.id, cat.id, cat.title
                                             ORDER BY c.order_num ASC, c.created_at ASC`);
 
-        console.log('✅ COMMITTEES: Positions updated successfully');
+        console.log('committeeController.updateCommitteePositions: Function completed successfully - positions updated');
         res.status(200).json({ committees: allCommittees.rows, message: 'Committee positions updated successfully' });
     } catch (error) {
-        console.error('❌ COMMITTEES: Error occurred:', error.message);
-        console.error('📍 COMMITTEES: Error stack:', error.stack);
+        console.error('committeeController.updateCommitteePositions: Function failed with error:', error.message);
+        console.error('committeeController.updateCommitteePositions: Error details:', error.stack);
         res.status(500).json({ message: 'Server error' });
     }
 };

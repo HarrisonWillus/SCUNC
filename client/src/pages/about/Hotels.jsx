@@ -5,6 +5,7 @@ import { MapPin, Clock, Star, Info, Building2, Wifi, Car } from 'lucide-react';
 import { SEOHelmet } from '../../components/SEOHelmet';
 import '../../assets/css/aboutSubclass.css';
 import { useHotels } from '../../utils/useHotels';
+import { ToastContainer } from 'react-toastify';
 
 const Hotels = () => {
   const { isAdmin, setShowAnimation, showAnimation, hotels, loading } = useAppContext();
@@ -155,6 +156,8 @@ const Hotels = () => {
 
         {isAdmin && <HotelManager />}
       </section>
+
+      <ToastContainer position="bottom-right" autoClose={3000} />
     </main>
     </>
   )

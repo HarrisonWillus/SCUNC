@@ -1,14 +1,14 @@
 import { useEffect } from 'react';
+import { toast } from 'react-toastify';
 import { useAppContext } from './appContext';
 
 const useCommittees = () => {
-    const { setCommittees, setCategories, setLoading, setMessage, sendHeaders } = useAppContext();
+    const { setCommittees, setCategories, setLoading, sendHeaders } = useAppContext();
 
     // Fetch all committees
     const fetchCommittees = async () => {
         console.log('fetchCommittees start');
         setLoading(true);
-        setMessage({ error: null, success: null, warning: null });
 
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/committees`, {
@@ -17,14 +17,14 @@ const useCommittees = () => {
             });
 
             const data = await response.json();
-            console.log('Fetched committees data:', data);
             if (response.ok) {
                 setCommittees(data.committees || []);
+                console.log('Committees set in context:', data.committees || []);
             } else {
-                setMessage({ error: data.error || 'Failed to fetch committees' });
+                console.error(data.error || 'Failed to fetch committees');
             }
         } catch (error) {
-            setMessage({ error: 'An error occurred while fetching committees' });
+            console.error('An error occurred while fetching committees');
         } finally {
             console.log('fetchCommittees finish');
             setLoading(false);
@@ -34,7 +34,6 @@ const useCommittees = () => {
     const fetchCategories = async () => {
         console.log('fetchCategories start');
         setLoading(true);
-        setMessage({ error: null, success: null, warning: null });
 
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/committees/category`, {
@@ -46,11 +45,12 @@ const useCommittees = () => {
 
             if (response.ok) {
                 setCategories(data.categories || []);
+                console.log('Categories set in context:');
             } else {
-                setMessage({ error: data.error || 'Failed to fetch categories' });
+                console.error(data.error || 'Failed to fetch categories');
             }
         } catch (error) {
-            setMessage({ error: 'An error occurred while fetching categories' });
+            console.error('An error occurred while fetching categories');
         } finally {
             console.log('fetchCategories finish');
             setLoading(false);
@@ -61,7 +61,6 @@ const useCommittees = () => {
     const createNewCommittee = async (title, description, category_id, image, background_guide, topics) => {
         console.log('createNewCommittee start');
         setLoading(true);
-        setMessage({ error: null, success: null, warning: null });
 
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/committees`, {
@@ -74,12 +73,15 @@ const useCommittees = () => {
 
             if (response.ok) {
                 setCommittees(data.committees);
-                setMessage({ success: data.message });
+                toast.success("Committee created successfully!");
+                console.log("Committee created successfully:", data.message);
             } else {
-                setMessage({ error: data.error || 'Failed to create committee' });
+                toast.error(data.error || 'Failed to create committee');
+                console.error('Committee creation failed:', data.error || 'Unknown error');
             }
         } catch (error) {
-            setMessage({ error: 'An error occurred while creating committee' });
+            toast.error('An error occurred while creating committee');
+            console.error('Committee creation error:', error);  
         } finally {
             console.log('createNewCommittee finish');
             setLoading(false);
@@ -90,7 +92,6 @@ const useCommittees = () => {
     const updateCommittee = async (id, title, description, category_id, image, background_guide, order_num, topics) => {
         console.log('updateCommittee start');
         setLoading(true);
-        setMessage({ error: null, success: null, warning: null });
 
         try {
             const requestBody = { 
@@ -113,12 +114,15 @@ const useCommittees = () => {
 
             if (response.ok) {
                 setCommittees(data.committees);
-                setMessage({ success: data.message });
+                toast.success(data.message);
+                console.log("Committee updated successfully:", data.message);
             } else {
-                setMessage({ error: data.error || 'Failed to update committee' });
+                toast.error(data.error || 'Failed to update committee');
+                console.error('Committee update failed:', data.error || 'Unknown error');
             }
         } catch (error) {
-            setMessage({ error: 'An error occurred while updating committee' });
+            toast.error('An error occurred while updating committee');
+            console.error('Committee update error:', error);
         } finally {
             console.log('updateCommittee finish');
             setLoading(false);
@@ -129,7 +133,6 @@ const useCommittees = () => {
     const deleteCommittee = async (id) => {
         console.log('deleteCommittee start');
         setLoading(true);
-        setMessage({ error: null, success: null, warning: null });
 
         try {
             const requestHeaders = { ...sendHeaders, Authorization: `Bearer ${sessionStorage.getItem('token')}` };
@@ -143,12 +146,15 @@ const useCommittees = () => {
 
             if (response.ok) {
                 setCommittees(data.committees);
-                setMessage({ success: data.message });
+                toast.success(data.message);
+                console.log("Committee deleted successfully:", data.message);
             } else {
-                setMessage({ error: data.error || 'Failed to delete committee' });
+                toast.error(data.error || 'Failed to delete committee');
+                console.error('Committee deletion failed:', data.error || 'Unknown error');
             }
         } catch (error) {
-            setMessage({ error: 'An error occurred while deleting committee' });
+            toast.error('An error occurred while deleting committee');
+            console.error('Committee deletion error:', error);
         } finally {
             console.log('deleteCommittee finish');
             setLoading(false);
@@ -158,7 +164,6 @@ const useCommittees = () => {
     const createCategory = async (title) => {
         console.log('createCategory start');
         setLoading(true);
-        setMessage({ error: null, success: null, warning: null });
 
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/committees/category`, {
@@ -170,16 +175,16 @@ const useCommittees = () => {
             const data = await response.json();
 
             if (response.ok) {
+                toast.success(data.message);
                 console.log('Category created successfully:', data.message);
-                setMessage({ success: data.message });
                 await fetchCategories(); // Refresh categories
             } else {
-                console.log('Category creation failed:', data.error);
-                setMessage({ error: data.error || 'Failed to create category' });
+                toast.error(data.error || 'Failed to create category');
+                console.error('Category creation failed:', data.error || 'Unknown error');
             }
         } catch (error) {
-            console.log('Category creation error:', error);
-            setMessage({ error: 'An error occurred while creating category' });
+            toast.error('An error occurred while creating category');
+            console.error('Category creation error:', error);
         } finally {
             console.log('createCategory finish');
             setLoading(false);

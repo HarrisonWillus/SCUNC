@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ChevronRight, Users, Globe, Award, ArrowDown } from 'lucide-react';
 import { SEOHelmet } from '../../components/SEOHelmet';
+import { ToastContainer } from 'react-toastify';
 import '../../assets/css/about.css';
 import { aboutInfo, infoCardInfo } from '../formData';
 import TestimonialCard from '../../components/cards/TestimonialCard';
@@ -167,6 +168,8 @@ const About = () => {
       )}
 
       <AddQuote />
+
+      <ToastContainer position="bottom-right" autoClose={3000} />
     </main>
     </>
   )
