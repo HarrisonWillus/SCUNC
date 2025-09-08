@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Mail, User, MessageSquare } from 'lucide-react';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { useAppContext } from '../utils/appContext';
 import { useContact } from '../utils/useContact';
 import { SEOHelmet } from '../components/SEOHelmet';
@@ -147,8 +147,6 @@ const Contact = () => {
           </form>
         </div>
       </section>
-
-      <ToastContainer position="bottom-right" autoClose={3000} />
     </main>
     </>
   )

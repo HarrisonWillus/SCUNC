@@ -327,7 +327,7 @@
   transition: color 0.3s ease;
 }
 
-.form-input,
+.register-input,
 .form-textarea {
   width: 100%;
   padding: 1.2rem 1.2rem 1.2rem 3rem;
@@ -341,7 +341,7 @@
   box-sizing: border-box;
 }
 
-.form-input:focus,
+.register-input:focus,
 .form-textarea:focus {
   outline: none;
   border-color: var(--color-pitt-gold);
@@ -349,12 +349,12 @@
   transform: translateY(-2px);
 }
 
-.form-input:focus ~ .input-icon,
+.register-input:focus ~ .input-icon,
 .form-textarea:focus ~ .input-icon {
   color: var(--color-pitt-gold);
 }
 
-.form-input::placeholder,
+.register-input::placeholder,
 .form-textarea::placeholder {
   color: #a0aec0;
   opacity: 1;
@@ -730,7 +730,7 @@
     border-radius: 20px;
   }
   
-  .form-input,
+  .register-input,
   .form-textarea {
     padding: 1rem 1rem 1rem 2.75rem;
   }

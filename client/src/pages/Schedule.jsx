@@ -4,7 +4,6 @@ import ScheduleBuilder from '../components/adminButtons/ScheduleBuilder';
 import { useAppContext } from '../utils/appContext';
 import { useScheduleWorkflow } from '../utils/useScheduleWorkflow';
 import { SEOHelmet } from '../components/SEOHelmet';
-import { ToastContainer } from 'react-toastify';
 import '../assets/css/schedule.css';
 import { MapPin, Calendar } from 'lucide-react';
 
@@ -42,7 +41,6 @@ const Schedule = () => {
       )}
       <ScheduleBuilder />
 
-      <ToastContainer position="bottom-right" autoClose={3000} />
     </main>
     </>
   );

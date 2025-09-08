@@ -3,7 +3,6 @@ import AddSecretariat from '../../components/adminButtons/AddSecretariat';
 import AddQuote from '../../components/adminButtons/AddQuote';
 import SecretariateOrderManager from '../../components/adminButtons/SecretariateOrderManager';
 import { SEOHelmet } from '../../components/SEOHelmet';
-import { ToastContainer } from 'react-toastify';
 
 // context and hooks
 import { usePeople } from '../../utils/usePeople';
@@ -78,8 +77,6 @@ const Secretariat = () => {
             }}
           />
         )}
-
-        <ToastContainer position="bottom-right" autoClose={3000} />
     </main>
     </>
   )

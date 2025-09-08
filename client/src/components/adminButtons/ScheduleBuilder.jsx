@@ -20,7 +20,7 @@ import { toast } from 'react-toastify';
 import '../../assets/css/scheduleBuilder.css';
 
 const ScheduleBuilder = () => {
-    const { showAnimation, setShowAnimation } = useAppContext();
+    const { showAnimation, setShowAnimation, loading } = useAppContext();
     const {
         currentSchedule,
         days,

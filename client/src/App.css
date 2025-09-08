@@ -85,48 +85,38 @@ a {
 .page-button:hover:before {
     width: 100%;
 }
-
-.admin-buttons {
+.admin-floating-controls {
     position: fixed;
-    right: 3rem;
-    bottom: 3rem;
-    padding: 1rem;
-    animation: slidesOnScreen .75s forwards;
-    z-index: 100;
-}
-
-@keyframes slidesOnScreen {
-    0% {
-        transform: translateX(100vw);
-    }
-    100% {
-        transform: translateX(0);
-    }
-}
-
-.admin-controls {
-    position: fixed;
-    right: 3rem;
-    bottom: 3rem;
+    bottom: 2rem;
+    right: 2rem;
     display: flex;
+    flex-direction: column;
     gap: 1rem;
-    z-index: 100;
+    z-index: 1000;
 }
 
-.admin-controls .admin-buttons {
+.admin-fab {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.04);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(1.2px);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    color: var(--color-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    cursor: pointer;
     position: relative;
-    right: auto;
-    bottom: auto;
-    margin: 0;
-    animation: slidesOnScreen .75s forwards;
+    overflow: hidden;
+    z-index: 1;
 }
 
-.admin-buttons:after, .save-button:after{
-    background-color: var(--color-secondary);
-}
-
-.admin-buttons:before, .save-button:before {
-    background-color: var(--color-primary);
+.admin-fab:hover {
+  transform: scale(1.1);
+  box-shadow: 0 12px 35px rgba(0, 53, 148, 0.4);
 }
 
 .form-button:before {
@@ -293,8 +283,17 @@ fieldset {
     min-height: 100vh;
 }
 
+.add-icons {
+    padding: .75rem .75rem .75rem 2.75rem;
+}
 @media screen and (max-width: 770px) {
-    .admin-buttons {
-        bottom: 8rem;
+    .admin-floating-controls {
+        bottom: 1rem;
+        right: 1rem;
+    }
+
+    .admin-fab {
+        width: 50px;
+        height: 50px;
     }
 }

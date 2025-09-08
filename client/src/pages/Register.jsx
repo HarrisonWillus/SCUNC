@@ -1,5 +1,5 @@
 import { useEffect, useState} from 'react';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { User, Mail, Users, Phone, School, Calendar } from 'lucide-react';
 import { useAppContext } from '../utils/appContext';
 import { SEOHelmet } from '../components/SEOHelmet';
@@ -194,7 +194,7 @@ const Register = () => {
                           <div className='input-wrapper'>
                             <IconComponent className='input-icon' size={20} />
                             <input
-                              className='form-input'
+                              className='register-input'
                               type={item.type}
                               name={item.name}
                               placeholder={`Enter ${item.title.toLowerCase()}`}
@@ -259,7 +259,7 @@ const Register = () => {
 
           {/* Admin Toggle */}
           {isAdmin && (
-            <div className="checkbox-wrapper-34 admin-buttons">
+            <div className="checkbox-wrapper-34 admin-floating-controls">
               <input 
                 className='tgl tgl-ios' 
                 id='toggle-34' 
@@ -272,8 +272,6 @@ const Register = () => {
           )}
         </div>
       </section>
-
-      <ToastContainer position="bottom-right" autoClose={3000} />
     </main>
     </>
   )

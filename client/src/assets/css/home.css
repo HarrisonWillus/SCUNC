@@ -204,7 +204,7 @@
 .scroll-indicator {
     position: absolute;
     bottom: 7rem;
-    left: 48.5%;
+    left: 50%;
     background-color: transparent;
     border: none;
     outline: none;
@@ -402,7 +402,7 @@
     }
 
     .scroll-indicator {
-        left: 42.5%;
+        left: 50%;
     }
 
     .home-header {

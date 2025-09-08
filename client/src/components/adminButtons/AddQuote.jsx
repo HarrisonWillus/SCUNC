@@ -8,7 +8,7 @@ import { useQuotes } from '../../utils/useQuotes';
 const AddQuote = () => {
     // Context and Hooks
     const { secretariates, loading, showAnimation, showQuoteManager, setShowQuoteManager, quotes } = useAppContext();
-    const { fetchQuotes, addQuote, updateQuote, deleteQuote } = useQuotes();
+    const { addQuote, updateQuote, deleteQuote } = useQuotes();
 
     // Local State
     const [showAddModal, setShowAddModal] = useState(false);
@@ -24,13 +24,6 @@ const AddQuote = () => {
 
     // Get current selected quote
     const selectedQuote = quotes[selectedQuoteIndex] || null;
-
-    // Fetch quotes on component mount
-    useEffect(() => {
-        // console.log('Fetching quotes...');
-        fetchQuotes();
-        // eslint-disable-next-line
-    }, []);
 
     // Initialize form data when selected quote changes
     useEffect(() => {

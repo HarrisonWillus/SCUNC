@@ -4,7 +4,7 @@ import { useAppContext } from '../../utils/appContext';
 import { useAuth } from '../../utils/useAuth';
 import logo from '../../assets/pittmunlogo.png';
 import '../../assets/css/LoginCard.css';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const LoginCard = () => {
@@ -143,23 +143,6 @@ const LoginCard = () => {
           </a>
         </div>
       </div>
-      <ToastContainer 
-        position="top-right"
-        autoClose={4000}
-        hideProgressBar={true}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-        toastStyle={{
-          backgroundColor: 'var(--color-pitt-blue)',
-          color: 'white',
-          fontWeight: '500'
-        }}
-      />
     </div>
   );
 };

@@ -3,6 +3,7 @@ import { lazy, Suspense } from 'react';
 import { SpeedInsights } from "@vercel/speed-insights/react"
 import { OrganizationStructuredData } from './components/OrganizationStructuredData';
 import { AppProvider } from './utils/appContext';
+import { ToastContainer } from 'react-toastify';
 
 // Components (keep these as regular imports since they're used on every page)
 import Navbar from './components/Navbar';
@@ -94,6 +95,7 @@ const AppContent = () => {
         {location.pathname !== '/admin-login' && <Footer />}
       </div>
       <SpeedInsights />
+      <ToastContainer position="bottom-right" autoClose={3000} />
     </div>
   );
 };

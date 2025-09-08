@@ -25,6 +25,7 @@ export const AppProvider = ({ children }) => {
   // Logout function
   const logout = () => {
     sessionStorage.removeItem('token');
+    setShowAnimation(false);
     setIsAdmin(false);
     toast.info('You have been logged out successfully.');
   };

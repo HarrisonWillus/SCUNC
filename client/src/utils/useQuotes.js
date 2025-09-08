@@ -1,8 +1,11 @@
+import { useEffect } from "react";
 import { useAppContext } from "./appContext";
+import { usePeople } from "./usePeople";
 import { toast } from "react-toastify";
 
 export const useQuotes = () => {
     const { setQuotes, sendHeaders, setLoading } = useAppContext();
+    const { fetchSecretariates } = usePeople();
 
     const fetchQuotes = async () => {
         setLoading(true);
@@ -116,6 +119,12 @@ export const useQuotes = () => {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        fetchQuotes();
+        fetchSecretariates();
+        // eslint-disable-next-line
+    }, []);
 
     return { fetchQuotes, addQuote, updateQuote, deleteQuote };
 }

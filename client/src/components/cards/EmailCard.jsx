@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { useAppContext } from '../../utils/appContext';
 import { XIcon, ChevronUp } from 'lucide-react';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { useContact } from '../../utils/useContact';
 import '../../assets/css/footer.css';
 
@@ -151,7 +151,6 @@ const EmailCard = () => {
 
             <button type='submit' className='my-contact_button' disabled={loading}>{loading ? 'Sending...' : 'Send Message'}</button>
         </form>
-        <ToastContainer position='top-right' autoClose={4000} />
     </div>
   )
 }

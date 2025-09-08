@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAppContext } from '../utils/appContext';
 import { SEOHelmet } from '../components/SEOHelmet';
-import { ToastContainer } from 'react-toastify';
 import { 
   ArrowLeft, 
   Download, 
@@ -172,8 +171,6 @@ const CommitteeDetails = () => {
       )}
 
       <AddCommittee />
-
-      <ToastContainer position="bottom-right" autoClose={3000} />
     </div>
     </>
   );

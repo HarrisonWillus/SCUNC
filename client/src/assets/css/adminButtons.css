@@ -946,7 +946,7 @@
 .form-group input,
 .form-group textarea {
   width: 100%;
-  padding: 0.75rem .75rem .75rem 2.75rem;
+  padding: 0.75rem;
   border: 2px solid var(--color-pitt-silver);
   border-radius: 8px;
   font-size: 1rem;
