@@ -145,7 +145,7 @@ describe('Secretariate Controller Tests', () => {
       await createSecretariate(req, res);
 
       expect(mockUpload).toHaveBeenCalledWith(
-        expect.stringMatching(/^secretariat_\d+_profile\.jpg$/),
+        expect.stringMatching('profile.jpg'),
         req.file.buffer,
         {
           cacheControl: '3600',
@@ -383,7 +383,7 @@ describe('Secretariate Controller Tests', () => {
       await updateSecretariate(req, res);
 
       expect(mockUpload).toHaveBeenCalledWith(
-        expect.stringMatching(/^secretariat_\d+_new-profile\.jpg$/),
+        expect.stringMatching('new-profile.jpg'),
         req.file.buffer,
         {
           cacheControl: '3600',

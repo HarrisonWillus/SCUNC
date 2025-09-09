@@ -44,7 +44,13 @@ exports.createSecretariate = async (req, res) => {
                 size: req.file.size
             });
             
-            const fileName = `secretariat_${Date.now()}_${req.file.originalname}`;
+            let fileName;
+            if (req.file.originalname) {
+                fileName = req.file.originalname;
+            } else {
+                fileName = `secretariat_${Date.now()}.jpg`;
+            }
+
             const { data, error } = await supabase.storage
                 .from('secretariate-pfp')
                 .upload(fileName, req.file.buffer, {
@@ -181,7 +187,12 @@ exports.updateSecretariate = async (req, res) => {
                 size: req.file.size
             });
             
-            const fileName = `secretariat_${Date.now()}_${req.file.originalname}`;
+            let fileName;
+            if(req.file.originalname) {
+                fileName = req.file.originalname;
+            } else {
+                fileName = `secretariat_${Date.now()}.jpg`;
+            }
             const { data, error } = await supabase.storage
                 .from('secretariate-pfp')
                 .upload(fileName, req.file.buffer, {
