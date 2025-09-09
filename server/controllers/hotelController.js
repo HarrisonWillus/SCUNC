@@ -239,22 +239,24 @@ exports.updateHotel = async (req, res) => {
     console.log('UPDATE HOTEL: Function called - hotel update request received');
     
     const { id } = req.params;
-    const { name, description, image, link, amenities, amenities_id } = req.body;
+    const { name, description, image, link, amenities } = req.body;
+
+    console.log('UPDATE HOTEL: Request data', req.body);
 
     try {
         // First, get the current record to compare with new data
         console.log('UPDATE HOTEL: Current record retrieval for comparison initiated');
         const currentRecord = await pool.query('SELECT * FROM hotels WHERE id = $1', [id]);
-        const currentamenitiesRecord = await pool.query('SELECT * FROM hotel_amenities WHERE id = $1', [amenities_id]);
+        const currentamenitiesRecord = await pool.query('SELECT * FROM hotel_extras WHERE hotel_id = $1', [id]);
 
-        if (currentRecord.rows.length === 0 || currentamenitiesRecord.rows.length === 0) {
+        if (currentRecord.rows.length === 0) {
             console.log('UPDATE HOTEL: Hotel record not found for ID:', id, '\n');
             return res.status(404).json({ message: 'Hotel not found' });
         }
 
         const current = currentRecord.rows[0];
-        const currentamenities = currentamenitiesRecord.rows[0];
         console.log('UPDATE HOTEL: Current record data retrieved successfully');
+        console.log('UPDATE HOTEL: Current amenities count:', currentamenitiesRecord.rows.length);
 
         // Build update fields and values dynamically based on what's actually changed
         const updateFields = [];
@@ -262,7 +264,7 @@ exports.updateHotel = async (req, res) => {
         let valueIndex = 1;
 
         // Check and update name if it's different
-        if (name && name.trim() !== current.name) {
+        if (name && typeof name === 'string' && name.trim() !== current.name) {
             console.log('UPDATE HOTEL: Name field update detected');
             updateFields.push(`name = $${valueIndex}`);
             updateValues.push(name.trim());
@@ -272,7 +274,7 @@ exports.updateHotel = async (req, res) => {
         }
 
         // Check and update description if it's different
-        if (description && description.trim() !== current.description) {
+        if (description && typeof description === 'string' && description.trim() !== current.description) {
             console.log('UPDATE HOTEL: Description field update detected');
             updateFields.push(`description = $${valueIndex}`);
             updateValues.push(description.trim());
@@ -282,24 +284,59 @@ exports.updateHotel = async (req, res) => {
         }
 
         // Check and update link if it's different
-        if (link !== undefined && link !== current.link) {
+        if (link !== undefined && link !== current.hotel_link) {
             console.log('UPDATE HOTEL: Link field update detected');
-            updateFields.push(`link = $${valueIndex}`);
+            updateFields.push(`hotel_link = $${valueIndex}`);
             updateValues.push(link);
             valueIndex++;
         } else {
             console.log('UPDATE HOTEL: Link field unchanged - keeping existing value');
         }
 
-        if (amenities !== undefined && amenities !== currentamenities.info) {
-            updateFields.push(`info = $${valueIndex}`);
-            updateValues.push(amenities);
-            valueIndex++;
+        // Handle amenities updates separately - compare arrays and update hotel_extras table
+        if (amenities !== undefined && Array.isArray(amenities) && amenities.length >= 0) {
+            console.log('UPDATE HOTEL: Amenities update processing initiated');
+            
+            // Get current amenities for comparison
+            const currentAmenities = currentamenitiesRecord.rows.map(row => row.info);
+            console.log('UPDATE HOTEL: Current amenities:', currentAmenities);
+            console.log('UPDATE HOTEL: New amenities:', amenities);
+            
+            // Check if amenities actually changed
+            const amenitiesChanged = JSON.stringify(currentAmenities.sort()) !== JSON.stringify(amenities.sort());
+            
+            if (amenitiesChanged) {
+                console.log('UPDATE HOTEL: Amenities have changed - updating hotel_extras table');
+                
+                // Delete all existing amenities for this hotel
+                await pool.query('DELETE FROM hotel_extras WHERE hotel_id = $1', [id]);
+                console.log('UPDATE HOTEL: Existing amenities deleted');
+                
+                // Insert new amenities
+                if (amenities.length > 0) {
+                    console.log('UPDATE HOTEL: Inserting new amenities - count:', amenities.length);
+                    for (let i = 0; i < amenities.length; i++) {
+                        const amenity = amenities[i];
+                        console.log('UPDATE HOTEL: Inserting amenity:', i + 1, 'of', amenities.length, '-', amenity);
+                        await pool.query(
+                            'INSERT INTO hotel_extras (hotel_id, info) VALUES ($1, $2)',
+                            [id, amenity]
+                        );
+                    }
+                    console.log('UPDATE HOTEL: All new amenities inserted successfully');
+                } else {
+                    console.log('UPDATE HOTEL: No new amenities to insert - hotel_extras cleared');
+                }
+            } else {
+                console.log('UPDATE HOTEL: Amenities unchanged - keeping existing amenities');
+            }
+        } else {
+            console.log('UPDATE HOTEL: No amenities provided or invalid format - keeping existing amenities');
         }
 
         // Handle image upload only if new image is provided
         let newPublicUrl = null;
-        if (image && image !== current.image_url) {
+        if (image && image !== current.picture_url) {
             console.log('UPDATE HOTEL: New image upload processing initiated');
             
             // Handle base64 image data from frontend
@@ -386,7 +423,7 @@ exports.updateHotel = async (req, res) => {
             newPublicUrl = publicUrlData.publicUrl;
             console.log('UPDATE HOTEL: New public URL generation completed');
             
-            updateFields.push(`image_url = $${valueIndex}`);
+            updateFields.push(`picture_url = $${valueIndex}`);
             updateValues.push(newPublicUrl);
             valueIndex++;
         } else {

@@ -10,6 +10,9 @@ router.post('/', uploadSinglePhoto, isAdmin, secretariateController.createSecret
 // Read all secretariates
 router.get('/', secretariateController.getAllSecretariates);
 
+// Update secretariate positions in bulk
+router.put('/positions', isAdmin, secretariateController.updateSecretariatePositions);
+
 // Update a secretariate
 router.put('/:id', uploadSinglePhoto, isAdmin, secretariateController.updateSecretariate);
 

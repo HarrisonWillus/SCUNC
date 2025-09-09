@@ -21,21 +21,24 @@ exports.getAllSecretariates = async (req, res) => {
 exports.createSecretariate = async (req, res) => {
     console.log('POST SECRETARIATES: Create secretariate request received and processing');
     console.log('POST SECRETARIATES: Full request body analysis:', JSON.stringify(req.body, null, 2));
-    console.log('POST SECRETARIATES: Name field validation:', req.body.name);
-    console.log('POST SECRETARIATES: Title:', req.body.title);
-    console.log('POST SECRETARIATES: Description length:', req.body.description ? req.body.description.length : 0);
-    console.log('POST SECRETARIATES: PFP provided:', !!req.body.pfp);
-    console.log('POST SECRETARIATES: PFP type:', typeof req.body.pfp);
-    console.log('POST SECRETARIATES: PFP value (first 100 chars):', req.body.pfp ? req.body.pfp.substring(0, 100) + '...' : null);
     
     const { name, title, description, pfp } = req.body;
 
-    if (!name || !title || !description || !pfp) {
+    if (!name || !title || !description) {
         console.log('POST SECRETARIATES: Missing required fields\n');
         return res.status(400).json({ message: 'Missing required fields' });
     }
 
+    let finalPfpUrl = pfp;
+    if(!finalPfpUrl) {
+        finalPfpUrl = 'https://czplyvbxvhcajpshwaos.supabase.co/storage/v1/object/public/secretariate-pfp/temporary_pfp.png'; // Default image URL
+        console.log('POST SECRETARIATES: No PFP provided, using default image URL');
+    }
+
     try {
+        let publicUrl = finalPfpUrl; // Default to the URL we have
+        
+        if(finalPfpUrl && finalPfpUrl.startsWith('data:')) {
         console.log('POST SECRETARIATES: Processing image upload...');
         
         // Handle base64 image data from frontend
@@ -182,11 +185,12 @@ exports.createSecretariate = async (req, res) => {
         } catch (testError) {
             console.log('POST SECRETARIATES: File accessibility test error:', testError.message);
         }
+        }
 
         console.log('POST SECRETARIATES: Inserting into database...');
         const result = await pool.query(
             'INSERT INTO secretariates (name, title, description, pfp_url) VALUES ($1, $2, $3, $4) RETURNING *',
-            [name, title, description, publicUrl]
+            [name, title, description, pfp ? publicUrl : pfp] // Use uploaded URL or default
         );
         
         console.log('POST SECRETARIATES: Created successfully with ID:', result.rows[0].id);
@@ -422,6 +426,51 @@ exports.updateSecretariate = async (req, res) => {
         res.status(200).json({ secretariate: allSecretariates.rows, message: 'Secretariate updated successfully' });
     } catch (error) {
         console.error('PUT SECRETARIATES: Error updating secretariate:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+// Update secretariate positions in bulk
+exports.updateSecretariatePositions = async (req, res) => {
+    console.log('PUT SECRETARIATES BULK: Bulk position update request received');
+    console.log('PUT SECRETARIATES BULK: Update data:', req.body);
+    
+    const { secretariates } = req.body;
+
+    if (!secretariates || !Array.isArray(secretariates)) {
+        console.log('PUT SECRETARIATES BULK: Invalid secretariates data\n');
+        return res.status(400).json({ message: 'Invalid secretariates data' });
+    }
+
+    try {
+        console.log('PUT SECRETARIATES BULK: Starting transaction for bulk update...');
+        
+        await pool.query('BEGIN');
+
+        // First, temporarily set all order_num to negative values to avoid conflicts
+        console.log('PUT SECRETARIATES BULK: Setting temporary order values...');
+        for (let i = 0; i < secretariates.length; i++) {
+            const { id } = secretariates[i];
+            await pool.query('UPDATE secretariates SET order_num = $1 WHERE id = $2', [-(i + 1), id]);
+        }
+
+        // Then update to final order values
+        console.log('PUT SECRETARIATES BULK: Setting final order values...');
+        for (let i = 0; i < secretariates.length; i++) {
+            const { id } = secretariates[i];
+            const newOrderNum = i + 1;
+            await pool.query('UPDATE secretariates SET order_num = $1 WHERE id = $2', [newOrderNum, id]);
+        }
+
+        await pool.query('COMMIT');
+        console.log('PUT SECRETARIATES BULK: Bulk update completed successfully');
+        
+        // Fetch all secretariates with proper ordering
+        const allSecretariates = await pool.query('SELECT * FROM secretariates ORDER BY order_num ASC');
+        res.status(200).json({ secretariate: allSecretariates.rows, message: 'Secretariate positions updated successfully' });
+    } catch (error) {
+        await pool.query('ROLLBACK');
+        console.error('PUT SECRETARIATES BULK: Error updating positions:', error);
         res.status(500).json({ message: 'Server error' });
     }
 };
