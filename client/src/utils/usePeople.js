@@ -30,16 +30,20 @@ export const usePeople = () => {
         }
     };
 
-    const createNewSecretariate = async (name, title, description, pfp) => {
+    const createNewSecretariate = async (formData) => {
         console.log('Starting createNewSecretariate...');
-        console.log('Secretariate data:', { name, title, description, pfp });
+        console.log('Secretariate FormData:', formData);
         setLoading(true);
 
         try {
+            // Remove Content-Type header for FormData to let browser set it with boundary
+            const headers = { ...sendHeaders, Authorization: `Bearer ${sessionStorage.getItem('token')}` };
+            delete headers['Content-Type'];
+
             const response = await fetch(`${process.env.REACT_APP_API_URL}/secretariates`, {
                 method: 'POST',
-                headers: { ...sendHeaders, Authorization: `Bearer ${sessionStorage.getItem('token')}` },
-                body: JSON.stringify({ name, title, description, pfp })
+                headers,
+                body: formData
             });
 
             const data = await response.json();

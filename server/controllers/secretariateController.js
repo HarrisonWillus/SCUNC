@@ -20,177 +20,63 @@ exports.getAllSecretariates = async (req, res) => {
 // Create a new Secretariate
 exports.createSecretariate = async (req, res) => {
     console.log('POST SECRETARIATES: Create secretariate request received and processing');
-    console.log('POST SECRETARIATES: Full request body analysis:', JSON.stringify(req.body, null, 2));
+    console.log('POST SECRETARIATES: Request Content-Type:', req.headers['content-type']);
+    console.log('POST SECRETARIATES: Request body:', req.body);
+    console.log('POST SECRETARIATES: Request file:', req.file);
     
-    const { name, title, description, pfp } = req.body;
+    const { name, title, description } = req.body;
 
     if (!name || !title || !description) {
         console.log('POST SECRETARIATES: Missing required fields\n');
         return res.status(400).json({ message: 'Missing required fields' });
     }
 
-    let finalPfpUrl = pfp;
-    if(!finalPfpUrl) {
-        finalPfpUrl = 'https://czplyvbxvhcajpshwaos.supabase.co/storage/v1/object/public/secretariate-pfp/temporary_pfp.png'; // Default image URL
-        console.log('POST SECRETARIATES: No PFP provided, using default image URL');
-    }
-
     try {
-        let publicUrl = finalPfpUrl; // Default to the URL we have
+        let publicUrl = null;
         
-        if(finalPfpUrl && finalPfpUrl.startsWith('data:')) {
-        console.log('POST SECRETARIATES: Processing image upload...');
-        
-        // Handle base64 image data from frontend
-        let imageBuffer, fileName, mimeType;
-        
-        if (typeof pfp === 'string') {
-            console.log('POST SECRETARIATES: PFP is base64 string, processing...');
-            console.log('POST SECRETARIATES: Raw PFP string length:', pfp.length);
-            console.log('POST SECRETARIATES: PFP string start (first 150 chars):', pfp.substring(0, 150));
-            
-            // Extract filename from data URL if present
-            let originalFilename = null;
-            const nameMatch = pfp.match(/data:[^;]+;name=([^;]+);/);
-            if (nameMatch) {
-                originalFilename = decodeURIComponent(nameMatch[1]);
-                console.log('POST SECRETARIATES: Original filename found:', originalFilename);
-            } else {
-                console.log('POST SECRETARIATES: No filename found in data URL');
-            }
-            
-            // Check if the data URL is properly formatted
-            const dataUrlMatch = pfp.match(/^data:([^;]+);(name=[^;]+;)?base64,(.+)$/);
-            if (!dataUrlMatch) {
-                console.log('POST SECRETARIATES: Invalid data URL format');
-                console.log('POST SECRETARIATES: Expected format: data:mime/type;name=filename;base64,data');
-                throw new Error('Invalid base64 data URL format');
-            }
-            
-            const mimeTypeFromUrl = dataUrlMatch[1];
-            const base64Data = dataUrlMatch[3];
-            
-            console.log('POST SECRETARIATES: Extracted MIME type:', mimeTypeFromUrl);
-            console.log('POST SECRETARIATES: Base64 data length:', base64Data.length);
-            console.log('POST SECRETARIATES: Base64 data start (first 50 chars):', base64Data.substring(0, 50));
-            
-            // Validate base64 data
-            if (!base64Data || base64Data.length < 100) {
-                console.log('POST SECRETARIATES: Base64 data is too short or empty');
-                throw new Error('Invalid base64 image data');
-            }
-            
-            try {
-                imageBuffer = Buffer.from(base64Data, 'base64');
-                console.log('POST SECRETARIATES: Buffer created successfully');
-            } catch (bufferError) {
-                console.log('POST SECRETARIATES: Failed to create buffer from base64:', bufferError.message);
-                throw new Error('Failed to process base64 image data');
-            }
-            
-            // Use exact original filename or fallback
-            fileName = originalFilename || `secretariat_${Date.now()}.jpg`;
-            mimeType = mimeTypeFromUrl || 'image/jpeg';
-            
-            console.log('POST SECRETARIATES: Using filename:', fileName);
-            console.log('POST SECRETARIATES: MIME type:', mimeType);
-            console.log('POST SECRETARIATES: Buffer size:', imageBuffer.length);
-            console.log('POST SECRETARIATES: Buffer is valid:', imageBuffer && imageBuffer.length > 0);
-        } else if (pfp && pfp.buffer) {
-            console.log('POST SECRETARIATES: PFP is file object, processing...');
-            imageBuffer = pfp.buffer;
-            fileName = pfp.originalname || `secretariat_${Date.now()}.jpg`;
-            mimeType = pfp.mimetype || 'image/jpeg';
-            
-            console.log('POST SECRETARIATES: Original filename:', fileName);
-            console.log('POST SECRETARIATES: MIME type:', mimeType);
-            console.log('POST SECRETARIATES: Buffer size:', imageBuffer.length);
-        } else {
-            console.log('POST SECRETARIATES: Invalid PFP format');
-            throw new Error('Invalid image format');
-        }
-
-        console.log('POST SECRETARIATES: Uploading to Supabase storage...');
-        
-        // Debug the buffer before upload
-        console.log('POST SECRETARIATES: Pre-upload buffer validation:');
-        console.log('POST SECRETARIATES: Buffer length:', imageBuffer.length);
-        console.log('POST SECRETARIATES: Buffer start (hex):', imageBuffer.slice(0, 20).toString('hex'));
-        console.log('POST SECRETARIATES: Is valid JPEG header:', imageBuffer.slice(0, 3).toString('hex') === 'ffd8ff');
-        
-        const { data, error } = await supabase.storage
-            .from('secretariate-pfp')
-            .upload(fileName, imageBuffer, {
-                cacheControl: '3600',
-                upsert: true,
-                contentType: mimeType
+        // Handle file upload from multer
+        if (req.file) {
+            console.log('POST SECRETARIATES: Processing file upload...');
+            console.log('POST SECRETARIATES: File details:', {
+                fieldname: req.file.fieldname,
+                originalname: req.file.originalname,
+                mimetype: req.file.mimetype,
+                size: req.file.size
             });
-
-        if (error) {
-            console.log('POST SECRETARIATES: Supabase upload error:', error.message);
-            console.log('POST SECRETARIATES: Full error object:', JSON.stringify(error, null, 2));
-            throw error;
-        }
-
-        console.log('POST SECRETARIATES: Image uploaded successfully');
-        console.log('POST SECRETARIATES: Upload response data:', data);
-        console.log('POST SECRETARIATES: Getting public URL...');
-        
-        // Get the public URL
-        const { data: publicUrlData } = supabase.storage
-            .from('secretariate-pfp')
-            .getPublicUrl(fileName);
-
-        const publicUrl = publicUrlData.publicUrl;
-        console.log('POST SECRETARIATES: Public URL:', publicUrl);
-        
-        // Test if the file is actually accessible
-        try {
-            console.log('POST SECRETARIATES: Testing file accessibility...');
             
-            // List all files in bucket to see if our file is there
-            const { data: listData, error: listError } = await supabase.storage
+            const fileName = `secretariat_${Date.now()}_${req.file.originalname}`;
+            const { data, error } = await supabase.storage
                 .from('secretariate-pfp')
-                .list('', { limit: 100 });
-            
-            if (listError) {
-                console.log('POST SECRETARIATES: Failed to list files:', listError.message);
-            } else {
-                console.log('POST SECRETARIATES: Files in bucket:', listData.map(file => `${file.name} (${file.metadata?.size || 'unknown size'})`));
-                const ourFile = listData.find(file => file.name === fileName);
-                if (ourFile) {
-                    console.log('POST SECRETARIATES: Our file found in bucket:', ourFile);
-                } else {
-                    console.log('POST SECRETARIATES: Our file NOT found in bucket listing');
-                }
+                .upload(fileName, req.file.buffer, {
+                    cacheControl: '3600',
+                    upsert: true,
+                    contentType: req.file.mimetype
+                });
+
+            if (error) {
+                console.log('POST SECRETARIATES: Supabase upload error:', error.message);
+                throw error;
             }
+
+            console.log('POST SECRETARIATES: Image uploaded successfully');
             
-            // Try to download the file
-            const { data: downloadData, error: downloadError } = await supabase.storage
+            // Get the public URL
+            const { data: publicUrlData } = supabase.storage
                 .from('secretariate-pfp')
-                .download(fileName);
-            
-            if (downloadError) {
-                console.log('POST SECRETARIATES: File download test failed:', downloadError.message);
-            } else {
-                console.log('POST SECRETARIATES: File is accessible, size:', downloadData.size);
-                console.log('POST SECRETARIATES: Downloaded file type:', downloadData.type);
-                
-                // Convert to buffer and check first few bytes
-                const arrayBuffer = await downloadData.arrayBuffer();
-                const downloadedBuffer = Buffer.from(arrayBuffer);
-                console.log('POST SECRETARIATES: Downloaded buffer start (hex):', downloadedBuffer.slice(0, 20).toString('hex'));
-                console.log('POST SECRETARIATES: Downloaded vs uploaded match:', downloadedBuffer.equals(imageBuffer));
-            }
-        } catch (testError) {
-            console.log('POST SECRETARIATES: File accessibility test error:', testError.message);
-        }
+                .getPublicUrl(fileName);
+
+            publicUrl = publicUrlData.publicUrl;
+            console.log('POST SECRETARIATES: Public URL:', publicUrl);
+        } else {
+            // Use default image if no file provided
+            publicUrl = 'https://czplyvbxvhcajpshwaos.supabase.co/storage/v1/object/public/secretariate-pfp/temporary_pfp.png';
+            console.log('POST SECRETARIATES: No file provided, using default image URL');
         }
 
         console.log('POST SECRETARIATES: Inserting into database...');
         const result = await pool.query(
             'INSERT INTO secretariates (name, title, description, pfp_url) VALUES ($1, $2, $3, $4) RETURNING *',
-            [name, title, description, pfp ? publicUrl : pfp] // Use uploaded URL or default
+            [name.trim(), title.trim(), description.trim(), publicUrl]
         );
         
         console.log('POST SECRETARIATES: Created successfully with ID:', result.rows[0].id);
@@ -208,13 +94,9 @@ exports.createSecretariate = async (req, res) => {
 exports.updateSecretariate = async (req, res) => {
     console.log('PUT SECRETARIATES: Update secretariate request received');
     console.log('PUT SECRETARIATES: ID:', req.params.id);
-    console.log('PUT SECRETARIATES: Name:', req.body.name);
-    console.log('PUT SECRETARIATES: Title:', req.body.title);
-    console.log('PUT SECRETARIATES: Description length:', req.body.description ? req.body.description.length : 0);
-    console.log('PUT SECRETARIATES: New PFP provided:', !!req.body.pfp);
-    console.log('PUT SECRETARIATES: PFP type:', typeof req.body.pfp);
-    console.log('PUT SECRETARIATES: PFP value (first 100 chars):', req.body.pfp);
-    console.log('PUT SECRETARIATES: Order num:', req.body.order_num);
+    console.log('PUT SECRETARIATES: Request body:', req.body);
+    console.log('PUT SECRETARIATES: Request file:', req.file);
+    console.log('PUT SECRETARIATES: Request pfp value:', req.body.pfp);
     
     const { id } = req.params;
     const { name, title, description, pfp, order_num } = req.body;
@@ -287,87 +169,25 @@ exports.updateSecretariate = async (req, res) => {
             console.log('PUT SECRETARIATES: Order number unchanged, keeping existing value');
         }
 
-        // Handle image upload only if new image is provided
+        // Handle image upload only if new file is provided
         let newPublicUrl = null;
-        if (pfp !== current.pfp_url) {
-            console.log('PUT SECRETARIATES: Processing new image upload...');
-            
-            // Handle base64 image data from frontend
-            let imageBuffer, fileName, mimeType;
-            
-            if (typeof pfp === 'string') {
-                console.log('PUT SECRETARIATES: PFP is base64 string, processing...');
-                console.log('PUT SECRETARIATES: Raw PFP string length:', pfp.length);
-                console.log('PUT SECRETARIATES: PFP string start (first 150 chars):', pfp.substring(0, 150));
-                
-                // Extract filename from data URL if present
-                let originalFilename = null;
-                const nameMatch = pfp.match(/data:[^;]+;name=([^;]+);/);
-                if (nameMatch) {
-                    originalFilename = decodeURIComponent(nameMatch[1]);
-                    console.log('PUT SECRETARIATES: Original filename found:', originalFilename);
-                } else {
-                    console.log('PUT SECRETARIATES: No filename found in data URL');
-                }
-                
-                // Check if the data URL is properly formatted
-                const dataUrlMatch = pfp.match(/^data:([^;]+);(name=[^;]+;)?base64,(.+)$/);
-                if (!dataUrlMatch) {
-                    console.log('PUT SECRETARIATES: Invalid data URL format');
-                    console.log('PUT SECRETARIATES: Expected format: data:mime/type;name=filename;base64,data');
-                    throw new Error('Invalid base64 data URL format');
-                }
-                
-                const mimeTypeFromUrl = dataUrlMatch[1];
-                const base64Data = dataUrlMatch[3];
-                
-                console.log('PUT SECRETARIATES: Extracted MIME type:', mimeTypeFromUrl);
-                console.log('PUT SECRETARIATES: Base64 data length:', base64Data.length);
-                console.log('PUT SECRETARIATES: Base64 data start (first 50 chars):', base64Data.substring(0, 50));
-                
-                // Validate base64 data
-                if (!base64Data || base64Data.length < 100) {
-                    console.log('PUT SECRETARIATES: Base64 data is too short or empty');
-                    throw new Error('Invalid base64 image data');
-                }
-                
-                try {
-                    imageBuffer = Buffer.from(base64Data, 'base64');
-                    console.log('PUT SECRETARIATES: Buffer created successfully');
-                } catch (bufferError) {
-                    console.log('PUT SECRETARIATES: Failed to create buffer from base64:', bufferError.message);
-                    throw new Error('Failed to process base64 image data');
-                }
-                
-                // Use exact original filename or fallback
-                fileName = originalFilename || `secretariat_${Date.now()}.jpg`;
-                mimeType = mimeTypeFromUrl || 'image/jpeg';
-                
-                console.log('PUT SECRETARIATES: Using filename:', fileName);
-                console.log('PUT SECRETARIATES: MIME type:', mimeType);
-                console.log('PUT SECRETARIATES: Buffer size:', imageBuffer.length);
-                console.log('PUT SECRETARIATES: Buffer is valid:', imageBuffer && imageBuffer.length > 0);
-            } else if (pfp && pfp.buffer) {
-                console.log('PUT SECRETARIATES: PFP is file object, processing...');
-                imageBuffer = pfp.buffer;
-                fileName = pfp.originalname || `secretariat_${Date.now()}.jpg`;
-                mimeType = pfp.mimetype || 'image/jpeg';
-                
-                console.log('PUT SECRETARIATES: Original filename:', fileName);
-                console.log('PUT SECRETARIATES: MIME type:', mimeType);
-                console.log('PUT SECRETARIATES: Buffer size:', imageBuffer.length);
-            } else {
-                console.log('PUT SECRETARIATES: Invalid PFP format');
-                throw new Error('Invalid image format');
-            }
 
-            console.log('PUT SECRETARIATES: Uploading to Supabase storage...');
+        if (req.file) {
+            console.log('PUT SECRETARIATES: Processing new file upload...');
+            console.log('PUT SECRETARIATES: File details:', {
+                fieldname: req.file.fieldname,
+                originalname: req.file.originalname,
+                mimetype: req.file.mimetype,
+                size: req.file.size
+            });
+            
+            const fileName = `secretariat_${Date.now()}_${req.file.originalname}`;
             const { data, error } = await supabase.storage
                 .from('secretariate-pfp')
-                .upload(fileName, imageBuffer, {
+                .upload(fileName, req.file.buffer, {
                     cacheControl: '3600',
                     upsert: true,
-                    contentType: mimeType
+                    contentType: req.file.mimetype
                 });
 
             if (error) {
@@ -389,8 +209,22 @@ exports.updateSecretariate = async (req, res) => {
             updateFields.push(`pfp_url = $${valueIndex}`);
             updateValues.push(newPublicUrl);
             valueIndex++;
+        } else if (pfp && pfp !== current.pfp_url) {
+            // Handle case where pfp URL is provided (not a file upload)
+            console.log('PUT SECRETARIATES: Using provided PFP URL');
+            updateFields.push(`pfp_url = $${valueIndex}`);
+            updateValues.push(pfp);
+            valueIndex++;
+        } else if (!pfp) {
+            // Explicitly setting to default (when user clicks "remove photo")
+            newPublicUrl = 'https://czplyvbxvhcajpshwaos.supabase.co/storage/v1/object/public/secretariate-pfp/temporary_pfp.png';
+            updateFields.push(`pfp_url = $${valueIndex}`);
+            updateValues.push(newPublicUrl);
+            valueIndex++;
+            console.log('PUT SECRETARIATES: Setting to default image (photo removed)');
         } else {
-            console.log('PUT SECRETARIATES: No new image provided, keeping existing image');
+            // No pfp parameter sent, keep existing image
+            console.log('PUT SECRETARIATES: No image changes, keeping existing image');
         }
 
         // Check if any fields need to be updated (excluding order_num which is handled separately)

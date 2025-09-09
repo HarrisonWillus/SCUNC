@@ -135,9 +135,16 @@ const AddSecretariat = () => {
         }
 
         try {
-            const pfpData = file ? await fileToBase64(file) : null;
+            const formDataToSend = new FormData();
+            formDataToSend.append('name', name.trim());
+            formDataToSend.append('title', title.trim());
+            formDataToSend.append('description', description.trim());
             
-            await createNewSecretariate(name.trim(), title.trim(), description.trim(), pfpData);
+            if (file) {
+                formDataToSend.append('photo', file);
+            }
+            
+            await createNewSecretariate(formDataToSend);
             
             // Reset form and close modal on success
             setShowAddModal(false);
@@ -182,16 +189,19 @@ const AddSecretariat = () => {
         }
 
         try {
-            const pfpData = file ? await fileToBase64(file) : formData.pfp_url;
+            const formDataToSend = new FormData();
+            formDataToSend.append('name', name.trim());
+            formDataToSend.append('title', title.trim());
+            formDataToSend.append('description', description.trim());
+            formDataToSend.append('order_num', selectedPerson.order_num);
             
-            await updateSecretariate(
-                selectedPerson.id,
-                name.trim(),
-                title.trim(),
-                description.trim(),
-                pfpData,
-                selectedPerson.order_num
-            );
+            if (file) {
+                formDataToSend.append('photo', file);
+            } else if (formData.pfp_url) {
+                formDataToSend.append('pfp', formData.pfp_url);
+            }
+            
+            await updateSecretariate(selectedPerson.id, formDataToSend);
             
             toast.success(`${name} has been updated successfully!`);
         } catch (error) {
@@ -221,24 +231,6 @@ const AddSecretariat = () => {
                 toast.error('Failed to delete secretariat member. Please try again.');
             }
         }
-    };
-
-    // Utility function to convert file to base64 with filename
-    const fileToBase64 = (file) => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => {
-                // Include the original filename in the data URL
-                const result = reader.result;
-                // Split the data URL at the comma to separate header from data
-                const [header, data] = result.split(',');
-                // Insert the filename parameter into the header
-                const base64WithFilename = `${header.replace(';base64', `;name=${encodeURIComponent(file.name)};base64`)},${data}`;
-                resolve(base64WithFilename);
-            };
-            reader.onerror = error => reject(error);
-        });
     };
 
     // Cleanup preview URL on unmount
@@ -369,7 +361,7 @@ const AddSecretariat = () => {
                                                         <Upload size={16} />
                                                         Change Photo
                                                     </label>
-                                                    {file && (
+                                                    {file ? (
                                                         <button 
                                                             type="button"
                                                             className='remove-photo-btn'
@@ -380,6 +372,21 @@ const AddSecretariat = () => {
                                                         >
                                                             <Trash2 size={16} />
                                                         </button>
+                                                    ) : (
+                                                        // Only show remove button if it's NOT the temporary image
+                                                        previewUrl !== 'https://czplyvbxvhcajpshwaos.supabase.co/storage/v1/object/public/secretariate-pfp/temporary_pfp.png' && (
+                                                            <button 
+                                                                type="button"
+                                                                className='remove-photo-btn'
+                                                                onClick={() => {
+                                                                    setFile(null);
+                                                                    setPreviewUrl('https://czplyvbxvhcajpshwaos.supabase.co/storage/v1/object/public/secretariate-pfp/temporary_pfp.png');
+                                                                    setFormData(prev => ({ ...prev, pfp_url: '' }));
+                                                                }}
+                                                            >
+                                                                <Trash2 size={16} />
+                                                            </button>
+                                                        )
                                                     )}
                                                 </div>
                                             </div>
