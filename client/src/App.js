@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import { SpeedInsights } from "@vercel/speed-insights/react"
+import { Analytics } from "@vercel/analytics/react"
 import { OrganizationStructuredData } from './components/OrganizationStructuredData';
 import { AppProvider } from './utils/appContext';
 import { ToastContainer } from 'react-toastify';
@@ -95,6 +96,7 @@ const AppContent = () => {
         {location.pathname !== '/admin-login' && <Footer />}
       </div>
       <SpeedInsights />
+      <Analytics />
       <ToastContainer position="bottom-right" autoClose={3000} />
     </div>
   );

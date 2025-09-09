@@ -13,7 +13,6 @@ export const AppProvider = ({ children }) => {
 
   // Utility States
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState({error: null, success: null, warning: null});
   const [showAnimation, setShowAnimation] = useState(false);
   const [showContact, setShowContact] = useState(false);
   const [showOrderManager, setShowOrderManager] = useState(false);
@@ -88,8 +87,6 @@ export const AppProvider = ({ children }) => {
         // Utility States
         loading,
         setLoading,
-        message,
-        setMessage,
         showAnimation,
         setShowAnimation,
         showContact,
