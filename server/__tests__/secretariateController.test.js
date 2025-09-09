@@ -53,7 +53,9 @@ describe('Secretariate Controller Tests', () => {
     // Reset request and response
     req = {
       body: {},
-      params: {}
+      params: {},
+      file: null, // Add file property for multer
+      headers: {}
     };
     res = {
       status: jest.fn().mockReturnThis(),
@@ -109,12 +111,18 @@ describe('Secretariate Controller Tests', () => {
       mockGetPublicUrl.mockReturnValue({ data: { publicUrl: 'https://test-url.com/image.jpg' } });
     });
 
-    test('should return 201 and create secretariate with image upload', async () => {
+    test('should return 201 and create secretariate with file upload', async () => {
       req.body = {
         name: 'John Doe',
         title: 'Secretary General',
-        description: 'Experienced leader in Model UN',
-        pfp: 'data:image/jpeg;name=profile.jpg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R+WdNNlhd3wjlhW5GHaMPEuePjfUNExKyIJP/Z'
+        description: 'Experienced leader in Model UN'
+      };
+      req.file = {
+        fieldname: 'photo',
+        originalname: 'profile.jpg',
+        mimetype: 'image/jpeg',
+        size: 12345,
+        buffer: Buffer.from('fake-image-data')
       };
 
       mockQuery
@@ -136,6 +144,15 @@ describe('Secretariate Controller Tests', () => {
 
       await createSecretariate(req, res);
 
+      expect(mockUpload).toHaveBeenCalledWith(
+        expect.stringMatching(/^secretariat_\d+_profile\.jpg$/),
+        req.file.buffer,
+        {
+          cacheControl: '3600',
+          upsert: true,
+          contentType: 'image/jpeg'
+        }
+      );
       expect(res.status).toHaveBeenCalledWith(201);
       expect(res.json).toHaveBeenCalledWith({
         secretariate: expect.any(Array),
@@ -187,8 +204,14 @@ describe('Secretariate Controller Tests', () => {
       req.body = {
         name: 'John Doe',
         title: 'Secretary General',
-        description: 'Description',
-        pfp: 'data:image/jpeg;name=profile.jpg;base64,validdata'
+        description: 'Description'
+      };
+      req.file = {
+        fieldname: 'photo',
+        originalname: 'profile.jpg',
+        mimetype: 'image/jpeg',
+        size: 12345,
+        buffer: Buffer.from('fake-image-data')
       };
 
       mockUpload.mockResolvedValue({ data: null, error: { message: 'Upload failed' } });
@@ -326,11 +349,19 @@ describe('Secretariate Controller Tests', () => {
       expect(res.json).toHaveBeenCalledWith({ message: 'Server error' });
     });
 
-    test('should handle image upload during update', async () => {
+    test('should handle file upload during update', async () => {
       req.params.id = '1';
       req.body = {
         name: 'Old Name', // Same name to avoid other changes
-        pfp: 'data:image/jpeg;name=new-profile.jpg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R+WdNNlhd3wjlhW5GHaMPEuePjfUNExKyIJP/Z'
+        title: 'Old Title',
+        description: 'Old Description'
+      };
+      req.file = {
+        fieldname: 'photo',
+        originalname: 'new-profile.jpg',
+        mimetype: 'image/jpeg',
+        size: 12345,
+        buffer: Buffer.from('fake-image-data')
       };
 
       mockQuery
@@ -338,7 +369,10 @@ describe('Secretariate Controller Tests', () => {
           rows: [{ 
             id: 1, 
             name: 'Old Name',
-            pfp_url: null // Different from new pfp so upload will be triggered
+            title: 'Old Title',
+            description: 'Old Description',
+            pfp_url: 'https://old-url.com/image.jpg',
+            order_num: 1
           }] 
         })
         .mockResolvedValueOnce({ rows: [] }) // Update result
@@ -348,8 +382,49 @@ describe('Secretariate Controller Tests', () => {
 
       await updateSecretariate(req, res);
 
-      expect(mockUpload).toHaveBeenCalled();
+      expect(mockUpload).toHaveBeenCalledWith(
+        expect.stringMatching(/^secretariat_\d+_new-profile\.jpg$/),
+        req.file.buffer,
+        {
+          cacheControl: '3600',
+          upsert: true,
+          contentType: 'image/jpeg'
+        }
+      );
       expect(res.status).toHaveBeenCalledWith(200);
+    });
+
+    test('should handle removing photo (set to default)', async () => {
+      req.params.id = '1';
+      req.body = {
+        name: 'Same Name',
+        title: 'Same Title', 
+        description: 'Same Description',
+        pfp: '', // Empty string to trigger default image
+        order_num: 1
+      };
+
+      mockQuery
+        .mockResolvedValueOnce({ 
+          rows: [{ 
+            id: 1, 
+            name: 'Same Name',
+            title: 'Same Title',
+            description: 'Same Description',
+            pfp_url: 'https://custom-image.com/image.jpg',
+            order_num: 1
+          }] 
+        })
+        .mockResolvedValueOnce({ rows: [] }) // Update result
+        .mockResolvedValueOnce({ rows: [] }); // Get all secretariates
+
+      await updateSecretariate(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(200);
+      expect(res.json).toHaveBeenCalledWith({
+        secretariate: expect.any(Array),
+        message: 'Secretariate updated successfully'
+      });
     });
   });
 
