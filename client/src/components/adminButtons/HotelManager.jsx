@@ -38,9 +38,9 @@ const HotelManager = () => {
             setFormData({
                 name: selectedHotel.name || '',
                 description: selectedHotel.description || '',
-                link: selectedHotel.link || '',
+                link: selectedHotel.hotel_link || '',
             });
-            setImagePreviewUrl(selectedHotel.image_url || '');
+            setImagePreviewUrl(selectedHotel.picture_url || '');
             // Set amenities from selected hotel
             setAmenities(selectedHotel.amenities ? selectedHotel.amenities.map(a => a.amenity || a) : []);
         } else if (showAddModal) {
@@ -213,7 +213,7 @@ const HotelManager = () => {
         }
 
         try {
-            const imageData = imageFile ? await fileToBase64(imageFile) : selectedHotel.image_url;
+            const imageData = imageFile ? await fileToBase64(imageFile) : selectedHotel.picture_url;
             
             await updateHotel(selectedHotel.id, {
                 name: name.trim(),
@@ -388,7 +388,7 @@ const HotelManager = () => {
                                                             className='remove-photo-btn'
                                                             onClick={() => {
                                                                 setImageFile(null);
-                                                                setImagePreviewUrl(selectedHotel?.image_url || '');
+                                                                setImagePreviewUrl(selectedHotel?.picture_url || '');
                                                             }}
                                                         >
                                                             <Trash2 size={16} />

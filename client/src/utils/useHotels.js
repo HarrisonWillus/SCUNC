@@ -99,15 +99,15 @@ const useHotels = () => {
         }
     };
 
-    const updateHotel = async (hotelId, name, description, image, link, extras, extras_title, extras_id) => {
+    const updateHotel = async (hotelId, hotelData) => {
         console.log('Starting updateHotel...');
         console.log('Hotel ID:', hotelId);
         console.log('Updates:', {
-            name,
-            description,
-            image,
-            link,
-            extras
+            name: hotelData.name,
+            description: hotelData.description,
+            image: hotelData.image ? 'Provided' : 'None',
+            link: hotelData.link,
+            amenities: hotelData.amenities
         });
         
         setLoading(true);
@@ -117,7 +117,13 @@ const useHotels = () => {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/hotels/${hotelId}`, {
                 method: 'PUT',
                 headers: getAuthHeaders(),
-                body: JSON.stringify({ name, description, image, link, extras, extras_title, extras_id })
+                body: JSON.stringify({
+                    name: hotelData.name,
+                    description: hotelData.description,
+                    image: hotelData.image,
+                    link: hotelData.link,
+                    amenities: hotelData.amenities
+                })
             });
 
             console.log('Response status:', response.status);
@@ -127,7 +133,7 @@ const useHotels = () => {
             if (response.ok) {
                 console.log('Hotel updated successfully');
                 toast.success('Hotel updated successfully!');
-                setHotels(data.hotels || []);
+                fetchHotels();
                 return data;
             } else {
                 console.error('Update error:', data);

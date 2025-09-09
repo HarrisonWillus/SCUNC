@@ -26,10 +26,14 @@ const letter = [
 
 const DEIinfo = [
   {title: 'Land Acknowledgement',
-    text: 'We respectfully acknowledge that the University of Pittsburgh is located on the ancestral lands of the Shawnee, Haudenosaunee (including the Seneca and Cayuga nations), '+
-    'Lenape, Miami, Huron-Wendat, and other Indigenous peoples. We also recognize the more recent displacements of African American and other minority communities in Pittsburgh, '+
-    'particularly in neighborhoods like the Hill District. We honor the enduring presence and contributions of all displaced communities, both past and present, and commit to respecting '+
-    'their histories, cultures, and contributions as we continue our work and learning in Oakland.'
+    text: 'We recognize that the University of Pittsburgh occupies the ancestral land of the Seneca, Adena culture, Hopewell culture, and Monongahela peoples, ' +
+    'who were later joined by refugees of other tribes (including the Delaware, Shawnee, Mingo, and Haudenosaunee), who were all forced off their homelands and displaced ' +
+    'by European colonists. We honor the original caretakers of this region and uplift their historic, unique, and enduring relationship with this land, which is their ancestral territory. ' +
+    'We pay our respects to their Elders and their past, present, and future people, community, and culture. While we cannot change the past, we commit to continued gratitude for the gifts ' +
+    'of nature, along with ongoing respect, care, and stewardship of the land, each other, and future generations. We are committed to learning and supporting indigenous communities in ' +
+    'the region today and in the future. We also recognize the more recent displacements of African American and other minority communities in Pittsburgh, particularly in neighborhoods ' +
+    'like the Hill District. We honor the enduring presence and contributions of all displaced communities, both past and present, and commit to respecting their histories, cultures, ' +
+    'and contributions as we continue our work and learning in Oakland.'
   },
   {title: 'Our Commitment to Inclusion',
     text: 

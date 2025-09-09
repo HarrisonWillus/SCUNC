@@ -61,16 +61,60 @@ export const usePeople = () => {
         }
     };
 
-    const updateSecretariate = async (id, name, title, description, pfp, order_num) => {
+    const updateSecretariatePositions = async (secretariates) => {
         setLoading(true);
-        console.log('Starting updateSecretariate...');
-        console.log('Update data:', { id, name, title, description, pfp, order_num });
+        console.log('Starting updateSecretariatePositions...');
+        console.log('Secretariates data:', secretariates);
 
         try {
-            const response = await fetch(`${process.env.REACT_APP_API_URL}/secretariates/${id}`, {
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/secretariates/positions`, {
                 method: 'PUT',
                 headers: { ...sendHeaders, Authorization: `Bearer ${sessionStorage.getItem('token')}` },
-                body: JSON.stringify({ name, title, description, pfp, order_num }) // Send FormData directly
+                body: JSON.stringify({ secretariates })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                console.log('Secretariate positions updated successfully:', data.secretariate);
+                setSecretariates(data.secretariate);
+                toast.success('Secretariate positions updated successfully!');
+            } else {
+                console.error('Failed to update secretariate positions:', data.error || 'Unknown error');
+                toast.error('Failed to update secretariate positions');
+            }
+        } catch (error) {
+            console.error('Update positions error:', error);
+            toast.error('An error occurred while updating secretariate positions');
+        } finally {
+            console.log('Finished updateSecretariatePositions');
+            setLoading(false);
+        }
+    };
+
+    const updateSecretariate = async (id, updateData) => {
+        setLoading(true);
+        console.log('Starting updateSecretariate...');
+        console.log('Update data:', { id, updateData });
+
+        try {
+            let body;
+            let headers = { ...sendHeaders, Authorization: `Bearer ${sessionStorage.getItem('token')}` };
+
+            // If updateData is FormData (for full updates with potential file uploads)
+            if (updateData instanceof FormData) {
+                body = updateData;
+                // Don't set Content-Type header, let browser set it with boundary for FormData
+                delete headers['Content-Type'];
+            } else {
+                // For simple updates (like order_num only), send as JSON
+                body = JSON.stringify(updateData);
+            }
+
+            const response = await fetch(`${process.env.REACT_APP_API_URL}/secretariates/${id}`, {
+                method: 'PUT',
+                headers,
+                body
             });
 
             const data = await response.json();
@@ -126,6 +170,7 @@ export const usePeople = () => {
         fetchSecretariates,
         createNewSecretariate,
         updateSecretariate,
+        updateSecretariatePositions,
         deleteSecretariate
     };
 }

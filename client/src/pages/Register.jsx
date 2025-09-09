@@ -121,7 +121,7 @@ const Register = () => {
                 <div className='pricing-card-header'>
                   <Calendar size={24} />
                   <h3>Early Registration</h3>
-                  <p className='pricing-dates'>September 2nd - November 21st</p>
+                  <p className='pricing-dates'>September 9nd - November 21st</p>
                 </div>
                 <div className='pricing-details'>
                   <div className='price-item'>

@@ -109,9 +109,9 @@ const SortableSecretariateItem = ({ person, index, totalCount, onMoveUp, onMoveD
 
 // Main Order Manager Component
 const SecretariateOrderManager = ({ secretariates, onClose }) => {
-  const [orderedSecretariates, setOrderedSecretariates] = useState([...secretariates]);
+  const [currentSecretariates, setCurrentSecretariates] = useState([...secretariates]);
   const [isSaving, setIsSaving] = useState(false);
-  const { updateSecretariate } = usePeople();
+  const { updateSecretariatePositions } = usePeople();
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -124,7 +124,7 @@ const SecretariateOrderManager = ({ secretariates, onClose }) => {
     const { active, over } = event;
 
     if (active.id !== over.id) {
-      setOrderedSecretariates((items) => {
+      setCurrentSecretariates((items) => {
         const oldIndex = items.findIndex(item => item.id === active.id);
         const newIndex = items.findIndex(item => item.id === over.id);
 
@@ -142,7 +142,7 @@ const SecretariateOrderManager = ({ secretariates, onClose }) => {
   const handleMoveUp = (currentIndex) => {
     if (currentIndex === 0) return;
     
-    const newItems = [...orderedSecretariates];
+    const newItems = [...currentSecretariates];
     [newItems[currentIndex], newItems[currentIndex - 1]] = [newItems[currentIndex - 1], newItems[currentIndex]];
     
     const updatedItems = newItems.map((item, index) => ({
@@ -150,13 +150,13 @@ const SecretariateOrderManager = ({ secretariates, onClose }) => {
       order_num: index + 1
     }));
     
-    setOrderedSecretariates(updatedItems);
+    setCurrentSecretariates(updatedItems);
   };
 
   const handleMoveDown = (currentIndex) => {
-    if (currentIndex === orderedSecretariates.length - 1) return;
+    if (currentIndex === currentSecretariates.length - 1) return;
     
-    const newItems = [...orderedSecretariates];
+    const newItems = [...currentSecretariates];
     [newItems[currentIndex], newItems[currentIndex + 1]] = [newItems[currentIndex + 1], newItems[currentIndex]];
     
     const updatedItems = newItems.map((item, index) => ({
@@ -164,31 +164,20 @@ const SecretariateOrderManager = ({ secretariates, onClose }) => {
       order_num: index + 1
     }));
     
-    setOrderedSecretariates(updatedItems);
+    setCurrentSecretariates(updatedItems);
   };
 
   const handleSave = async () => {
     setIsSaving(true);
     
     try {
-      // Update each secretariate with their new order number
-      const updatePromises = orderedSecretariates.map(async (person, index) => {
-        const newOrderNum = index + 1;
-        
-        // Only update if the order number actually changed
-        if (person.order_num !== newOrderNum) {
-          const formData = new FormData();
-          formData.append('name', person.name);
-          formData.append('title', person.title);
-          formData.append('description', person.description || '');
-          formData.append('order_num', newOrderNum.toString());
-          formData.append('pfp', person.pfp_url); // Keep existing image
-          
-          return updateSecretariate(person.id, formData);
-        }
-      });
+      // Send all secretariates in their current order for bulk update
+      const orderedSecretariates = currentSecretariates.map((person, index) => ({
+        id: person.id,
+        order_num: index + 1
+      }));
 
-      await Promise.all(updatePromises.filter(Boolean)); // Filter out undefined promises
+      await updateSecretariatePositions(orderedSecretariates);
       
       toast.success('Secretariat order updated successfully!');
       onClose();
@@ -201,7 +190,7 @@ const SecretariateOrderManager = ({ secretariates, onClose }) => {
   };
 
   const hasChanges = () => {
-    return orderedSecretariates.some((person, index) => {
+    return currentSecretariates.some((person, index) => {
       const originalPerson = secretariates.find(s => s.id === person.id);
       return originalPerson && originalPerson.order_num !== (index + 1);
     });
@@ -229,16 +218,16 @@ const SecretariateOrderManager = ({ secretariates, onClose }) => {
             onDragEnd={handleDragEnd}
           >
             <SortableContext
-              items={orderedSecretariates.map(s => s.id)}
+              items={currentSecretariates.map(s => s.id)}
               strategy={verticalListSortingStrategy}
             >
               <div className="sortable-list">
-                {orderedSecretariates.map((person, index) => (
+                {currentSecretariates.map((person, index) => (
                   <SortableSecretariateItem
                     key={person.id}
                     person={person}
                     index={index}
-                    totalCount={orderedSecretariates.length}
+                    totalCount={currentSecretariates.length}
                     onMoveUp={handleMoveUp}
                     onMoveDown={handleMoveDown}
                   />
