@@ -25,7 +25,7 @@ exports.registerSchool = async (req, res) => {
 
     if(!personEmail || !schoolName || !numDelegates || !headDName || !headDCP || !primEmail) {
         console.log('POST SCHOOLS: Required field validation failed - missing data');
-        return res.status(400).json({ message: 'Missing required fields', status: 400 });
+        return res.status(400).json({ message: 'Missing required fields' });
     }
 
     console.log('POST SCHOOLS: Duplicate school name validation initiated');

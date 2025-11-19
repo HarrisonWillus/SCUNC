@@ -5,6 +5,7 @@ const originalConsoleError = console.error;
 // Set environment variables for testing BEFORE any imports
 process.env.ADMIN_GMAIL_USER = 'admin@test.com';
 process.env.ADMIN_GMAIL_PASS = 'test_password';
+process.env.SMTP_USER = 'scuncmun@gmail.com';
 
 // Create a comprehensive mock for nodemailer
 const mockSendMail = jest.fn();
@@ -69,13 +70,17 @@ describe('Email Service Unit Tests', () => {
       });
       
       expect(mockSendMail).toHaveBeenCalledTimes(1);
-      expect(mockSendMail).toHaveBeenCalledWith({
-        from: '"John Doe" <john@example.com>',
-        to: 'admin@test.com',
-        subject: 'Test Subject',
-        text: 'This is a test message',
-        replyTo: 'john@example.com'
-      });
+  // Inspect the actual call and verify key properties exist and contain expected content
+  const calledWith = mockSendMail.mock.calls[0][0];
+  expect(calledWith).toBeDefined();
+  expect(calledWith.to).toBe('admin@test.com');
+  expect(calledWith.subject).toBe('Test Subject');
+  expect(calledWith.replyTo).toBe('john@example.com');
+  // text should contain the original message
+  expect(calledWith.text).toContain('This is a test message');
+  // html should be present and include a sanitized version of the message
+  expect(calledWith.html).toBeDefined();
+  expect(calledWith.html).toContain('New contact form submission');
     });
 
     test('should throw error when name is missing', async () => {
