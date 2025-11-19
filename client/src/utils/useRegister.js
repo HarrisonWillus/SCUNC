@@ -9,7 +9,10 @@ export const useRegister = () => {
     const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
     const fetchSchools = async () => {
-        setLoading(true);
+        const currentToken = sessionStorage.getItem("token");
+        if(!currentToken) {
+            return;
+        }
 
         await fetch(`${process.env.REACT_APP_API_URL}/schools`, {
             method: 'GET',
@@ -18,7 +21,6 @@ export const useRegister = () => {
         .then(response => response.json())
         .then(data => {
             console.log('Fetched schools data:', data);
-            setLoading(false);
             
             // Check if data is an array (successful response) or has an error
             if (!data.message) {
@@ -34,7 +36,6 @@ export const useRegister = () => {
             }
         })
         .catch((error) => {
-            setLoading(false);
             console.error('Error fetching schools:', error);
             setSchools([]);
         })
@@ -69,27 +70,26 @@ export const useRegister = () => {
         setLoading(true);
         console.log('Registering school with data:', formData);
 
-        await fetch(`${process.env.REACT_APP_API_URL}/schools/register`, {
-            method: 'POST',
-            headers: { ...sendHeaders, Authorization: `Bearer ${sessionStorage.getItem('token')}` },
-            body: formData // Send FormData directly, don't set Content-Type header
-        })
-        .then(response => response.json())
-        .then(data => {
+        try {
+            const res = await fetch(`${process.env.REACT_APP_API_URL}/schools/register`, {
+                method: 'POST',
+                headers: { 'x-api-key': process.env.REACT_APP_API_KEY },
+                body: formData
+            });
+            const data = await res.json();
             setLoading(false);
-            if (data.message) {
+            if (data.ok) {
                 console.log('Registration successful:', data.message);
-                toast.success(data.message);
-            } else if (data.error) {
-                console.error('Registration error:', data.error);
-                toast.error(data.error);
+                    toast.success(data.message);
+                } else {
+                    console.error('Registration error:', data.error);
+                    throw new Error(data.error || 'Registration failed');
             }
-        })
-        .catch(error => {
+        } catch (error) {
             setLoading(false);
             console.error('Registration failed:', error);
             toast.error('Registration failed. Please try again.');
-        })
+        }
     };
 
     const changeRegistrationStatus = async (newStatus) => {

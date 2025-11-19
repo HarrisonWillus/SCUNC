@@ -943,27 +943,6 @@
   font-size: 0.9rem;
 }
 
-.form-group input,
-.form-group textarea {
-  width: 100%;
-  padding: 0.75rem;
-  border: 2px solid var(--color-pitt-silver);
-  border-radius: 8px;
-  font-size: 1rem;
-  font-family: inherit;
-  background: var(--color-pitt-white);
-  color: var(--color-pitt-blue);
-  transition: all 0.3s ease;
-  box-sizing: border-box;
-}
-
-.form-group input:focus,
-.form-group textarea:focus {
-  outline: none;
-  border-color: var(--color-pitt-gold);
-  box-shadow: 0 0 0 3px rgba(255, 184, 28, 0.1);
-}
-
 .form-group textarea {
   resize: vertical;
   min-height: 100px;

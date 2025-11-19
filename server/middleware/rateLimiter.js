@@ -5,7 +5,7 @@ const registerRateLimit = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 5,
     message: {
-        error: 'Too many registration attempts from this IP, please try again after 15 minutes.'
+        error: 'Too many registration attempts, please try again after 15 minutes.'
     },
     standardHeaders: true,
     legacyHeaders: false,
@@ -21,7 +21,7 @@ const registerRateLimit = rateLimit({
         console.log('Step 4: User-Agent string examination:', req.headers['user-agent']);
         console.log('Step 5: Request path verification:', req.path);
         res.status(429).json({
-            error: 'Too many registration attempts from this IP, please try again after 15 minutes.'
+            error: 'Too many registration attempts, please try again after 15 minutes.'
         });
     }
 });
@@ -30,7 +30,7 @@ const emailRateLimit = rateLimit({
     windowMs: 10 * 60 * 1000, // 10 minutes
     max: 3,
     message: {
-        error: 'Too many email attempts from this IP, please try again after 10 minutes.'
+        error: 'Too many email attempts, please try again after 10 minutes.'
     },
     standardHeaders: true,
     legacyHeaders: false,
@@ -45,7 +45,7 @@ const emailRateLimit = rateLimit({
         console.log('Step 3: User-Agent string examination:', req.headers['user-agent']);
         console.log('Step 4: Request body content analysis:', req.body);
         res.status(429).json({
-            error: 'Too many email attempts from this IP, please try again after 10 minutes.'
+            error: 'Too many email attempts, please try again after 10 minutes.'
         });
     }
 });

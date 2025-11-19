@@ -1,20 +1,15 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useAppContext } from '../utils/appContext';
 import '../assets/css/footer.css';
 import { InstagramIcon } from 'lucide-react';
-import EmailCard from './cards/EmailCard';
 
 const Footer = () => {
-  const { setShowContact } = useAppContext();
-  const [hovered, setHovered] = useState(false);
 
   return (
     <main className='footer'>
       <section className='footer-grid'>
         <div className='footer-content'>
           <h3 className='footer-title'>SCUNC</h3>
-          <p className='footer-link'>Steel City United Nations Conference <br/>University of Pittsburgh<br/>February 26th - March 1st 2026</p>
+          <p style={{fontWeight: 200, fontSize: '14px'}}>Steel City United Nations Conference <br/>University of Pittsburgh<br/>February 26th - March 1st 2026</p>
         </div>
         <div className='footer-content'> 
            <h3 className='footer-title'>Resources</h3>
@@ -44,11 +39,8 @@ const Footer = () => {
       </section> 
       
       <div className='credits'>
-        {hovered && <div className='credits-box'>Click my name to Learn More!</div>}
-        <p onMouseLeave={() => setHovered(false)} onMouseEnter={() => setHovered(true)} onClick={() => {setShowContact(true);}}>© 2025 Harrison Williams · John Carroll University</p>
+        <p>© 2025 Harrison Williams · John Carroll University</p>
       </div>
-
-      <EmailCard />
     </main>
   )
 }

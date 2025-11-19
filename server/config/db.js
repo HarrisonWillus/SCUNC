@@ -3,7 +3,7 @@ const { Pool } = require('pg');
 
 const poolConfig = process.env.NODE_ENV === 'production' ? {
     host: process.env.DB_HOST,
-    port: process.env.DB_PORT || 6543, // Transaction pooler port
+    port: process.env.DB_PORT, // Transaction pooler port
     user: process.env.DB_USER,
     password: process.env.DB_PASS,
     database: process.env.DB_NAME,
@@ -23,7 +23,7 @@ const poolConfig = process.env.NODE_ENV === 'production' ? {
     createRetryIntervalMillis: 200,
 } : {
     host: process.env.DB_HOST,
-    port: process.env.DB_PORT || 5432, // Direct connection for dev
+    port: process.env.DB_PORT, // Direct connection for dev
     user: process.env.DB_USER,
     password: process.env.DB_PASS,
     database: process.env.DB_NAME,
