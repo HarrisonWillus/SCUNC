@@ -5,8 +5,6 @@ const originalConsoleError = console.error;
 // Set environment variables for testing BEFORE any imports
 process.env.ADMIN_GMAIL_USER = 'admin@test.com';
 process.env.ADMIN_GMAIL_PASS = 'test_password';
-process.env.GMAIL_USER = 'personal@test.com';
-process.env.GMAIL_PASS = 'test_password';
 
 // Create a comprehensive mock for nodemailer
 const mockSendMail = jest.fn();
@@ -24,7 +22,7 @@ mockCreateTransport.mockReturnValue({
 });
 
 // Import AFTER mocking and environment setup
-const { sendContactEmailCore, sendBusinessEmailCore } = require('../utils/emailService');
+const { sendContactEmailCore } = require('../utils/emailService');
 
 describe('Email Service Unit Tests', () => {
   beforeAll(() => {
@@ -151,98 +149,6 @@ describe('Email Service Unit Tests', () => {
       };
 
       await expect(sendContactEmailCore(formData))
-        .rejects.toThrow('Error sending email');
-    });
-  });
-
-  describe('sendBusinessEmailCore', () => {
-    test('should successfully send business email with all parameters', async () => {
-      const formData = {
-        name: 'Jane Smith',
-        email: 'jane@company.com',
-        subject: 'Business Inquiry',
-        message: 'This is a business message',
-        organization: 'Company Inc',
-        referral: 'Website referral'
-      };
-
-      const result = await sendBusinessEmailCore(formData);
-
-      expect(result).toEqual({
-        success: true,
-        message: 'Email sent successfully!'
-      });
-      
-      expect(mockSendMail).toHaveBeenCalledTimes(1);
-      
-      const callArgs = mockSendMail.mock.calls[0][0];
-      expect(callArgs.from).toBe('"Jane Smith" <jane@company.com>');
-      expect(callArgs.to).toBe('personal@test.com');
-      expect(callArgs.subject).toBe('Business Inquiry');
-      expect(callArgs.replyTo).toBe('jane@company.com');
-      expect(callArgs.text).toContain('From: Jane Smith (jane@company.com)');
-      expect(callArgs.text).toContain('Organization: Company Inc');
-      expect(callArgs.text).toContain('Message: This is a business message');
-      expect(callArgs.text).toContain('Referral: Website referral');
-    });
-
-    test('should send business email with optional parameters as null', async () => {
-      const formData = {
-        name: 'Jane Smith',
-        email: 'jane@company.com',
-        subject: 'Business Inquiry',
-        message: 'This is a business message',
-        organization: null,
-        referral: null
-      };
-
-      const result = await sendBusinessEmailCore(formData);
-
-      expect(result).toEqual({
-        success: true,
-        message: 'Email sent successfully!'
-      });
-      
-      const callArgs = mockSendMail.mock.calls[0][0];
-      expect(callArgs.text).toContain('Organization: Not specified');
-      expect(callArgs.text).toContain('Referral: Direct contact');
-    });
-
-    test('should throw error for missing required business email parameters', async () => {
-      const formData = {
-        name: '',
-        email: 'jane@company.com',
-        subject: 'Subject',
-        message: 'Message'
-      };
-
-      await expect(sendBusinessEmailCore(formData))
-        .rejects.toThrow('Missing required email parameters');
-    });
-
-    test('should throw error for invalid business email format', async () => {
-      const formData = {
-        name: 'Jane Smith',
-        email: 'invalid-email',
-        subject: 'Business Inquiry',
-        message: 'Message'
-      };
-
-      await expect(sendBusinessEmailCore(formData))
-        .rejects.toThrow('Invalid email format');
-    });
-
-    test('should handle business email sending failure', async () => {
-      mockSendMail.mockRejectedValue(new Error('Authentication failed'));
-
-      const formData = {
-        name: 'Jane Smith',
-        email: 'jane@company.com',
-        subject: 'Business Inquiry',
-        message: 'Message'
-      };
-
-      await expect(sendBusinessEmailCore(formData))
         .rejects.toThrow('Error sending email');
     });
   });
