@@ -82,7 +82,16 @@ const sendContactEmailCore = async (formData) => {
   const cleanSubject = escapeHtml(subject);
   const cleanMessage = escapeHtml(message).replace(/\n/g, '<br />');
 
-  const receivedAt = new Date().toLocaleString();
+  const receivedAt = new Date().toLocaleString('en-US', {
+    timeZone: 'America/New_York',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true
+  });
 
   const htmlBody = `
     <div style="font-family: Arial, Helvetica, sans-serif; color: #111; line-height:1.5;">

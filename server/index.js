@@ -6,26 +6,43 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 // Configure CORS to allow credentials
+const allowedOrigins = [
+  process.env.CLIENT_URL_DEV, // for local development
+  process.env.CLIENT_URL_TEST, // for testing/staging
+  process.env.CLIENT_URL_PROD // for production
+].filter(Boolean);
+
 const corsOptions = {
-  origin: [
-    process.env.CLIENT_URL_DEV, // for local development
-    process.env.CLIENT_URL_TEST, // for testing/staging
-    process.env.CLIENT_URL_PROD // for production
-  ],
+  origin: (origin, callback) => {
+    // origin === undefined for non-browser requests (curl, server-to-server)
+    if (!origin) {
+      console.log(`CORS: no origin (non-browser request) — allowing`);
+      return callback(null, true);
+    }
+
+    const allowed = allowedOrigins.includes(origin);
+    if (allowed) {
+      console.log(`CORS: allowing origin ${origin}`);
+      return callback(null, true);
+    } else {
+      console.warn(`CORS: rejecting origin ${origin}`);
+      return callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   optionsSuccessStatus: 200,
-  allowedHeaders: ['Content-Type', 'x-api-key', 'Authorization']
+  allowedHeaders: ['Origin', 'Content-Type', 'x-api-key', 'Authorization'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 };
 
 const validateApiKey = require('./middleware/validAPIKey');
 
-app.use((req, res, next) => {
-    if (req.headers['x-forwarded-for'] && !app.get('trust proxy')) {
-        app.set('trust proxy', 1);
-        console.log('✅ Auto-enabled trust proxy due to X-Forwarded-For header');
-    }
-    next();
+app.set('trust proxy', 1); // trust first proxy
+
+app.get('/health', (req, res) => {
+    res.status(200).send("OK");
 });
+
 app.use(cors(corsOptions));
 app.use(validateApiKey);
 

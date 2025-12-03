@@ -117,7 +117,7 @@ const Register = () => {
             </div>
             
             <div className='pricing-grid'>
-              <div className='pricing-card early'>
+              {/* <div className='pricing-card early'>
                 <div className='pricing-card-header'>
                   <Calendar size={24} />
                   <h3>Early Registration</h3>
@@ -134,9 +134,9 @@ const Register = () => {
                   </div>
                 </div>
                 <div className='pricing-badge best-value'>Best Value</div>
-              </div>
+              </div> */}
 
-              <div className='pricing-card normal'>
+              <div className='pricing-card early'>
                 <div className='pricing-card-header'>
                   <Calendar size={24} />
                   <h3>Normal Registration</h3>
@@ -152,6 +152,7 @@ const Register = () => {
                     <span className='price-value'>$75</span>
                   </div>
                 </div>
+                <div className='pricing-badge best-value'>Best Value</div>
               </div>
 
               <div className='pricing-card late'>
