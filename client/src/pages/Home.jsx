@@ -9,6 +9,7 @@ const Home = () => {
 
   useEffect(() => {
     setIsLoaded(true);
+    
   }, []);
 
   const scrollToLetter = () => {

@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { SpeedInsights } from "@vercel/speed-insights/react"
 import { Analytics } from "@vercel/analytics/react"
 import { OrganizationStructuredData } from './components/OrganizationStructuredData';
@@ -66,6 +66,27 @@ const LoadingSpinner = () => (
 // Component that uses useLocation (must be inside Router)
 const AppContent = () => {
   const location = useLocation();
+
+  useEffect(() => {
+    const hasVisited = sessionStorage.getItem('hasVisited');
+
+    if (!hasVisited) {
+      // First visit - fetch health status
+      fetch(`${process.env.REACT_APP_API_URL}/health`, {
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Health status:', data);
+          // Set session storage to indicate user has visited
+          sessionStorage.setItem('hasVisited', 'true');
+        })
+        .catch(error => {
+          console.error('Health check failed:', error);
+          // Still set the session storage even if health check fails
+          sessionStorage.setItem('hasVisited', 'true');
+        });
+    }
+  }, []);
 
   return (
     <div>
