@@ -16,16 +16,29 @@ const corsOptions = {
   origin: (origin, callback) => {
     // origin === undefined for non-browser requests (curl, server-to-server)
     if (!origin) {
-      console.log(`CORS: no origin (non-browser request) — allowing`);
+      console.group('🌐 CORS Request');
+      console.log('Status: ✅ ALLOWED');
+      console.log('Type: Non-browser request (curl, server-to-server)');
+      console.log('Origin: undefined');
+      console.groupEnd();
       return callback(null, true);
     }
 
     const allowed = allowedOrigins.includes(origin);
     if (allowed) {
-      console.log(`CORS: allowing origin ${origin}`);
+      console.group('🌐 CORS Request');
+      console.log('Status: ✅ ALLOWED');
+      console.log('Origin:', origin);
+      console.log('Matched against allowed origins:', allowedOrigins.length, 'configured');
+      console.groupEnd();
       return callback(null, true);
     } else {
-      console.warn(`CORS: rejecting origin ${origin}`);
+      console.group('🚫 CORS Request BLOCKED');
+      console.log('Status: ❌ REJECTED');
+      console.log('Origin:', origin);
+      console.log('Reason: Not in allowed origins list');
+      console.log('Allowed origins:', allowedOrigins);
+      console.groupEnd();
       return callback(new Error('Not allowed by CORS'));
     }
   },
@@ -44,6 +57,23 @@ app.get('/health', (req, res) => {
 });
 
 app.use(cors(corsOptions));
+
+// Detailed request logging middleware for debugging
+app.use((req, res, next) => {
+  // Only log API requests (skip static files, etc.)
+  if (req.path.startsWith('/api/') || req.path === '/health') {
+    console.group('📥 Incoming Request');
+    console.log('Method:', req.method);
+    console.log('Path:', req.path);
+    console.log('Origin:', req.headers.origin || 'none');
+    console.log('User-Agent:', req.headers['user-agent'] || 'unknown');
+    console.log('API Key Present:', !!req.headers['x-api-key']);
+    console.log('Timestamp:', new Date().toISOString());
+    console.groupEnd();
+  }
+  next();
+});
+
 app.use(validateApiKey);
 
 // Import routes
